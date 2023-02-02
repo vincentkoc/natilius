@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# natilius - 🐚 Automated One-Click Mac Developer Enviroment
+# natilius - 🐚 Automated One-Click Mac Developer Environment
 # 
 # Copyright (C) 2023 Vincent Koc (@koconder)
 #
@@ -16,10 +16,6 @@
 # You should have received a copy of the GNU General Public License along with this
 # program. If not, see http://www.gnu.org/licenses/.
 #
-# Insparation
-# https://gist.github.com/bradp/bea76b16d3325f5c47d4
-# https://gist.github.com/vraravam/5e28ca1720c9dddacdc0e6db61e093fe
-# https://github.com/ptb/mac-setup/blob/develop/mac-setup.command
 
 ############################
 #
