@@ -1,8 +1,8 @@
-# natilius
+# Natilius
 
-![natilius ontop of a laptop](assets/natilius_image.png)
+![Natilius ontop of a laptop](assets/natilius_image.png)
 
-**natilius** (🐚) is an automated one-click mac developer enviroment script.
+**Natilius** (🐚) is an automated one-click mac developer enviroment script.
 
 This script is designed to setup a mac from a fresh OS X install:
 
@@ -13,9 +13,9 @@ This script is designed to setup a mac from a fresh OS X install:
 * Configure development enviroment (Python, Java, Go, NodeJS)
 * Setup various Mac OS preferences
 * Sync and install dotfiles with [mackup](https://github.com/lra/mackup)
+* Secure your mac, based on my earlier work on [ostemper](https://github.com/koconder/ostemper)
 
-
-## Install
+## How to Run Natilius
 
 Run the following command in your terminal:
 
@@ -23,9 +23,9 @@ Run the following command in your terminal:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/koconder/natilius/HEAD/natilius.sh)"
 ```
 
-## Story of natilius
+## Story of Natilius
 
-This project was born after switching between many mac OS devices as an engineer and data specalist. This project aims to assist in the use of quickly having all the small enviromental ascepts taken-care of. This project is used in conjunction with [my mackup compatible dotfiles](https://github.com/koconder/dotfiles).
+This project was born after switching between many mac OS devices as an engineer and data specalist, the last switch was after water damage. This project aims to assist in the use of quickly having all the small enviromental ascepts taken-care of. This project is used in conjunction with [my mackup compatible dotfiles](https://github.com/koconder/dotfiles).
 
 ## License
 
