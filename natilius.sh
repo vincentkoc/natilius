@@ -407,18 +407,16 @@ echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisabling Safari's thumbnail cache for History and Top Sites\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2 > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable debug, developer and inspector menus\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.Safari IncludeInternalDebugMenu -bool true > /dev/null 2>&1
+    defaults write com.apple.Safari IncludeDevelopMenu -bool true > /dev/null 2>&1
+    defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true > /dev/null 2>&1
+    defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true > /dev/null 2>&1
+    defaults write NSGlobalDomain WebKitDeveloperExtras -bool true > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow full URLs\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool true > /dev/null 2>&1
 
-#"Enabling Safari's debug menu"
-defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-#"Enabling the Develop menu and the Web Inspector in Safari"
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
-# Safari Show Full URL
-defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool "true"
-#"Adding a context menu item for showing the Web Inspector in web views"
-defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 exit 0
 
