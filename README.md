@@ -26,6 +26,11 @@ Run the following command in your terminal:
 
 This project was born after switching between many mac OS devices as an engineer and data specalist, the last switch was after water damage. This project aims to assist in the use of quickly having all the small enviromental ascepts taken-care of. This project is used in conjunction with [my mackup compatible dotfiles](https://github.com/koconder/dotfiles).
 
+I have taken inspiration from the following other Mac config/setup scripts for Natilius:
+* https://gist.github.com/bradp/bea76b16d3325f5c47d4
+* https://gist.github.com/vraravam/5e28ca1720c9dddacdc0e6db61e093fe
+* https://github.com/ptb/mac-setup/blob/develop/mac-setup.command
+
 ## License
 
 Code is under the [GNU General Public License (GPL) v3 License](LICENSE.md).
