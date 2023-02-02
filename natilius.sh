@@ -262,6 +262,7 @@ echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m
 # Setup enviroment
 #
 ############################
+
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSetting up custom home directories...\033[0m" | tee -a $LOGFILE
 for a in "${DIRS[@]}";
@@ -378,7 +379,46 @@ echo -e "\033[0;36mUpdating preferences (Display)...\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain AppleFontSmoothing -int 2 > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling dark mode\033[0m" | tee -a $LOGFILE
-    defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
+    defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark" > /dev/null 2>&1
+
+# Apple Mail Related Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Apple Mail)...\033[0m" | tee -a $LOGFILE
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSetting email addresses to copy as 'foo@example.com' instead of 'Foo Bar <foo@example.com>'\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSetting default view to date descending and threaded\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes" > /dev/null 2>&1
+    defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes" > /dev/null 2>&1
+    defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date" > /dev/null 2>&1
+
+
+# Safari Related Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mHiding Safari's sidebar in Top Site\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.Safari ShowSidebarInTopSites -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisabling Safari's thumbnail cache for History and Top Sites\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisabling Safari's thumbnail cache for History and Top Sites\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2 > /dev/null 2>&1
+
+
+
+#"Enabling Safari's debug menu"
+defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+#"Enabling the Develop menu and the Web Inspector in Safari"
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
+# Safari Show Full URL
+defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool "true"
+#"Adding a context menu item for showing the Web Inspector in web views"
+defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 exit 0
 
@@ -403,22 +443,6 @@ defaults write com.apple.LaunchServices LSQuarantine -bool false
 defaults write com.apple.CrashReporter DialogType -string "none"
 
 
-###### PRINT
-
-
-
-###### DISPLAY
-
-
-###### MAIL
-
-#"Setting email addresses to copy as 'foo@example.com' instead of 'Foo Bar <foo@example.com>' in Mail.app"
-defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
-# Mail
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
-
 
 
 #"Preventing Time Machine from prompting to use new hard drives as backup volume"
@@ -434,20 +458,6 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 ###### SAFARI
 
-#"Hiding Safari's sidebar in Top Sites"
-defaults write com.apple.Safari ShowSidebarInTopSites -bool false
-#"Disabling Safari's thumbnail cache for History and Top Sites"
-defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
-#"Enabling Safari's debug menu"
-defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-#"Enabling the Develop menu and the Web Inspector in Safari"
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
-# Safari Show Full URL
-defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool "true"
-#"Adding a context menu item for showing the Web Inspector in web views"
-defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 ###### VSCODE
 
