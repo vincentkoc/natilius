@@ -56,6 +56,33 @@ KILLAPPS=(
     SystemUIServer
 )
 
+# Casks
+CASKS=(
+    homebrew/cask
+    homebrew/cask-versions
+    homebrew/cask-fonts
+)
+
+# App Store
+APPSTORE=(
+    # Magnet https://apps.apple.com/au/app/magnet/id441258766?mt=12
+    441258766
+    # Amphetamine https://apps.apple.com/us/app/amphetamine/id937984704?mt=12
+    937984704
+    # ShellHistory https://apps.apple.com/us/app/shellhistory/id1564015476
+    1564015476
+    # Fantastical https://apps.apple.com/us/app/fantastical-2/id975937182?mt=12&xcust=1675244233370vlst&xs=1
+    975937182
+    # Parcel https://apps.apple.com/us/app/parcel-delivery-tracking/id639968404?mt=12
+    639968404
+    # Kerberos Ticket Autorenewal https://apps.apple.com/app/id1246781916
+    1246781916
+    # Endel https://apps.apple.com/us/app/endel-focus-relax-sleep/id1484348796?mt=12
+    1484348796
+    # Flow https://apps.apple.com/au/app/flow-focus-pomodoro-timer/id1423210932
+    1423210932
+)
+
 # Homebrew packages to install
 PACKAGES=(
     awscli
@@ -626,7 +653,7 @@ echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
 
 ############################
 #
-# Kill apps
+# Kill apps (to apply changes)
 #
 ############################
 
@@ -637,116 +664,99 @@ for a in "${KILLAPPS[@]}";
 do killall -q $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mClosing app [$a]\033[0m" 2>/dev/null || true
 done
 
+############################
+#
+# Homebrew Casks
+#
+############################
+
+# Privacy related Security Tweaks
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mInstalling homebrew casks...\033[0m" | tee -a $LOGFILE
+for a in "${CASKS[@]}";
+do brew tap $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mClosing app [$a]\033[0m" 2>/dev/null | tee -a $LOGFILE || true
+done
+
 exit 0
 
-
-# echo "Setting up Touch ID for sudo..."
-# read -p "Press [Enter] key after this..."
-
-# Check for Homebrew
-# Install if we don't have it
-if test ! $(which brew); then
-  echo "Installing homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-else
-  echo "Homebrew installed; updating..."
-  brew update
-fi
-
-# Brew update
-echo "Updating homebrew..."
-brew update
-brew upgrade
-
-# Homebrew casks
-echo "Tapping homebrew casks..."
-brew tap homebrew/cask
-brew tap homebrew/cask-versions
-brew tap homebrew/cask-fonts
+############################
+#
+# Homebrew Java
+#
+############################
 
 # Install Mac OS App Store Apps
 # echo "Installing Mac App Store Apps..."
 # brew install mas
 #
-## 441258766   Magnet        (2.11.0)
-## 937984704   Amphetamine   (5.2.2)
-## 1564015476  ShellHistory  (2.0.0)
-## 975937182   Fantastical   (3.7.6)
-## 639968404   Parcel        (7.6.6)
-#
-#
-# https://apps.apple.com/us/app/shellhistory/id1564015476
-# https://apps.apple.com/au/app/magnet/id441258766?mt=12
-# https://apps.apple.com/us/app/amphetamine/id937984704?mt=12
-# https://apps.apple.com/us/app/parcel-delivery-tracking/id639968404?mt=12
-# https://apps.apple.com/us/app/fantastical-2/id975937182?mt=12&xcust=1675244233370vlst&xs=1
-
-# Install OpenJDK Java
-echo "Installing Java (OpenJDK)..."
-brew tap AdoptOpenJDK/openjdk
-brew install --cask adoptopenjdk
-brew install --cask adoptopenjdk11
-
-# Install Homebrew packages
-
-echo "Installing packages..."
-brew install ${PACKAGES[@]}
-
-# Set Default Screensaver
-echo "Installing packages..."
-defaults -currentHost write com.apple.screensaver idleTime 120
-defaults -currentHost write com.apple.screensaver 
-defaults -currentHost write com.apple.screensaver moduleDict -dict path -string "/Users/$SUDO_USER/Library/Screen Savers/Aerial.saver" moduleName -string "Aerial" type -int 0 
-
-# Install Homebrew casks
-
-echo "Installing cask apps..."
-sudo -u $SUDO_USER brew install --appdir="/Applications" --cask ${CASKS[@]}
-
-# Install Other Misc Apps with Homebrew...
-echo "Installing Chat GPT client..."
-brew tap lencx/chatgpt https://github.com/lencx/ChatGPT.git
-sudo -u $SUDO_USER brew install --appdir="/Applications" --cask chatgpt --no-quarantine
-
-# Brew Cleanup
-echo "Cleaning homebrew..."
-brew cleanup
-
-# Setup Python
-# initi after install
-export PYENV_ROOT="$(pyenv root)"
-export PATH="$PYENV_ROOT/shims:$PATH"
-eval "$(pyenv init -)"
-
-which python
-pyenv versions
-pyenv install $PYVER
-pyenv global $PYVER
-pyenv versions
-which python
-
-# Mackup
-if [ -L ~/.mackup.cfg ] ; then
-    echo "mackup detected"
-    mackup backup
-else
-    rm -rf ~/.mackup.cfg
-    touch ~/.mackup.cfg
-    cat <<EOT >> ~/.mackup.cfg
-[storage]
-engine = icloud
-directory = dotfiles
-EOT
-    #mackup restore
-fi
-
-# Brew Doctor
-echo "Checking homebrew..."
-brew doctor
 
 
-# Rust
-rustup-init --profile default -y
-source "$HOME/.cargo/env"
-rustup update
-rustc --version
+# # Install OpenJDK Java
+# echo "Installing Java (OpenJDK)..."
+# brew tap AdoptOpenJDK/openjdk
+# brew install --cask adoptopenjdk
+# brew install --cask adoptopenjdk11
+
+# # Install Homebrew packages
+
+# echo "Installing packages..."
+# brew install ${PACKAGES[@]}
+
+# # Set Default Screensaver
+# echo "Installing packages..."
+# defaults -currentHost write com.apple.screensaver idleTime 120
+# defaults -currentHost write com.apple.screensaver 
+# defaults -currentHost write com.apple.screensaver moduleDict -dict path -string "/Users/$SUDO_USER/Library/Screen Savers/Aerial.saver" moduleName -string "Aerial" type -int 0 
+
+# # Install Homebrew casks
+
+# echo "Installing cask apps..."
+# sudo -u $SUDO_USER brew install --appdir="/Applications" --cask ${CASKS[@]}
+
+# # Install Other Misc Apps with Homebrew...
+# echo "Installing Chat GPT client..."
+# brew tap lencx/chatgpt https://github.com/lencx/ChatGPT.git
+# sudo -u $SUDO_USER brew install --appdir="/Applications" --cask chatgpt --no-quarantine
+
+# # Brew Cleanup
+# echo "Cleaning homebrew..."
+# brew cleanup
+
+# # Setup Python
+# # initi after install
+# export PYENV_ROOT="$(pyenv root)"
+# export PATH="$PYENV_ROOT/shims:$PATH"
+# eval "$(pyenv init -)"
+
+# which python
+# pyenv versions
+# pyenv install $PYVER
+# pyenv global $PYVER
+# pyenv versions
+# which python
+
+# # Mackup
+# if [ -L ~/.mackup.cfg ] ; then
+#     echo "mackup detected"
+#     mackup backup
+# else
+#     rm -rf ~/.mackup.cfg
+#     touch ~/.mackup.cfg
+#     cat <<EOT >> ~/.mackup.cfg
+# [storage]
+# engine = icloud
+# directory = dotfiles
+# EOT
+#     #mackup restore
+# fi
+
+# # Brew Doctor
+# echo "Checking homebrew..."
+# brew doctor
+
+
+# # Rust
+# rustup-init --profile default -y
+# source "$HOME/.cargo/env"
+# rustup update
+# rustc --version
