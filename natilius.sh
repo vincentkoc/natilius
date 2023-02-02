@@ -49,7 +49,7 @@ KILLAPPS=(
     Finder
     Dock
     Mail
-    Safari
+    # Safari
     iTunes
     iCal
     Address\ Book
@@ -245,7 +245,7 @@ sudo -v
 echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPassword validated\033[0m" | tee -a $LOGFILE
 
 # iCloud Drive
-echo -e
+echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mChecking to see if iCloud drive has been mounted...\033[0m" | tee -a $LOGFILE
 if [ -d ~/Library/Mobile\ Documents/com~apple~CloudDocs/ ]; then
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36miCloud Drive is located\033[0m" | tee -a $LOGFILE
@@ -253,6 +253,27 @@ else
     echo -e "\033[0;31mError iCloud Drive not setup [~/Library/Mobile\ Documents/com~apple~CloudDocs/]... Exiting\033[0m" | tee -a $LOGFILE
     exit 0
 fi
+
+# xcode install
+rm /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress 2> /dev/null || true
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if Command Line Tools for Xcode is installed...\033[0m" | tee -a $LOGFILE
+xcode-select -p &> /dev/null
+if [ $? -ne 0 ]; then
+    echo -e "\033[0;33m[ ! ]\033[0m \033[0;36mCommand Line Tools for Xcode not found. Installing from softwareupdate…\033[0m" | tee -a $LOGFILE
+    # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
+    touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
+    PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
+    softwareupdate -i "$PROD" --verbose;
+else
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mCommand Line Tools for Xcode is already installed\033[0m" | tee -a $LOGFILE
+fi
+
+# Mac OS updates
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if any Mac OS updates and installing...\033[0m" | tee -a $LOGFILE
+sudo softwareupdate --install --all | tee -a $LOGFILE
+echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUpdate checks completed\033[0m" | tee -a $LOGFILE
 
 # Homebrew
 echo -e
@@ -539,20 +560,22 @@ echo -e "\033[0;36mSecurity tweaks (Critical)...\033[0m" | tee -a $LOGFILE
         fi
     done <<< "$NETWORKADAPTERS"
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable infared\033[0m" | tee -a $LOGFILE
-    defaults write /Library/Preferences/com.apple.driver.AppleIRController DeviceEnabled -int 0 > /dev/null 2>&1
+    # echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable infared\033[0m" | tee -a $LOGFILE
+    # defaults write /Library/Preferences/com.apple.driver.AppleIRController DeviceEnabled -int 0 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable SSH\033[0m" | tee -a $LOGFILE
-    launchctl unload -w /System/Library/LaunchDaemons/ssh.plist > /dev/null 2>&1
+    # echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable SSH\033[0m" | tee -a $LOGFILE
+    # sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable gatekeeper (code signing verification)\033[0m" | tee -a $LOGFILE
     sudo spctl --master-enable
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable filevault (disk encryption)\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ! ]\033[0m \033[0;36m...You may be asked for login again, please keep recovery key safe\033[0m" | tee -a $LOGFILE
-    echo -e
-    sudo fdesetup enable
-    echo -e
+    if [[ $(sudo fdesetup status) != "FileVault is On." ]];then
+        sudosudo fdesetup enable
+    else
+        echo -e "\033[0;33m[ ✓ ]\033[0m \033[0;36mAlready enabled... skipping...\033[0m" | tee -a $LOGFILE
+    fi
 
 # Login related Security Tweaks
 echo -e | tee -a $LOGFILE
@@ -574,19 +597,17 @@ echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSecurity tweaks (Updates)...\033[0m" | tee -a $LOGFILE
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Updates: Time machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
-    defaults write /Library/Preferences/com.apple.TimeMachine RequiresACPower -bool false > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.TimeMachine RequiresACPower -bool false > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Updates: Enabling scheduled updates\033[0m" | tee -a $LOGFILE
     softwareupdate --schedule on > /dev/null 2>&1
-    defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true > /dev/null 2>&1
-    defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -bool true > /dev/null 2>&1
-    defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true > /dev/null 2>&1
-    defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -bool true > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Updates: Check for App Updates daily, not just once a week\033[0m" | tee -a $LOGFILE
     defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1 > /dev/null 2>&1
-
-exit 0
 
 # Privacy related Security Tweaks
 echo -e | tee -a $LOGFILE
@@ -596,48 +617,31 @@ echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
     defaults write com.apple.safari SendDoNotTrackHTTPHeader -int 1 > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable potential DNS leaks\033[0m" | tee -a $LOGFILE
-    defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool YES > /dev/null 2>&1
-
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mEnabling scheduled updates\033[0m" | tee -a $LOGFILE
-    softwareupdate --schedule on > /dev/null 2>&1
-    defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true > /dev/null 2>&1
-    defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -bool true > /dev/null 2>&1
-    defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true > /dev/null 2>&1
-    defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool YES > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable search data leaking in safari\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari UniversalSearchEnabled -bool false > /dev/null 2>&1
     defaults write com.apple.Safari SuppressSearchSuggestions -bool true > /dev/null 2>&1
     defaults write com.apple.Safari.plist WebsiteSpecificSearchEnabled -bool NO > /dev/null 2>&1
 
-
-#"Speeding up wake from sleep to 24 hours from an hour"
-# http://www.cultofmac.com/221392/quick-hack-speeds-up-retina-macbooks-wake-from-sleep-os-x-tips/
-# sudo pmset -a standbydelay 86400
+############################
+#
+# Kill apps
+#
+############################
 
 # Kill affected applications
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mRestarting apps after applying changes...\033[0m" | tee -a $LOGFILE
+for a in "${KILLAPPS[@]}";
+do killall $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mClosing app [$a]\033[0m" | tee -a $LOGFILE
+done
 
-killall ${KILLAPPS[@]}
+exit 0
+
 
 # echo "Setting up Touch ID for sudo..."
 # read -p "Press [Enter] key after this..."
-
-# Only run if the tools are not installed yet
-# To check that try to print the SDK path
-xcode-select -p &> /dev/null
-if [ $? -ne 0 ]; then
-  echo "Command Line Tools for Xcode not found. Installing from softwareupdate…"
-# This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
-  touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
-  PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
-  softwareupdate -i "$PROD" --verbose;
-else
-  echo "Command Line Tools for Xcode have been installed."
-fi
-
-# find the CLI Tools update
-echo "Installing Mac OSX Updates..."
-sudo softwareupdate --install --all
 
 # Check for Homebrew
 # Install if we don't have it
