@@ -214,9 +214,9 @@ fi
 # Check OS
 if [[ $OSTYPE == 'darwin'* ]]; then
     OSVERSION=$(sw_vers -productVersion)
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mMac OS detected [macOS $OSVERSION, $OSTYPE]\033[0m" | tee -a $LOGFILE
-    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mRunning as $SUDO_USER\033[0m" | tee -a $LOGFILE
-    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mLocale set to $COUNTRYCODE\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mMac OS detected [macOS $OSVERSION, $OSTYPE]\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ! ]\033[0m \033[0;36mRunning as $SUDO_USER\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ! ]\033[0m \033[0;36mLocale set to $COUNTRYCODE\033[0m" | tee -a $LOGFILE
 else
     echo -e "\033[0;31mNatilius is only supported on Mac OS... Exiting\033[0m" | tee -a $LOGFILE
     exit 0
@@ -232,19 +232,19 @@ fi
 # Logging
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mLogging enabled...\033[0m" | tee -a $LOGFILE
-echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mLog file printing to [$LOGFILE]\033[0m" | tee -a $LOGFILE
+echo -e "\033[0;33m[ ! ]\033[0m \033[0;36mLog file printing to [$LOGFILE]\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 
 # Password for Sudo
 echo -e "\033[0;36mPlease provide local password (may auto-skip)...\033[0m" | tee -a $LOGFILE
 sudo -v
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPassword validated\033[0m" | tee -a $LOGFILE
+echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPassword validated\033[0m" | tee -a $LOGFILE
 
 # iCloud Drive
 echo -e
 echo -e "\033[0;36mChecking to see if iCloud drive has been mounted...\033[0m" | tee -a $LOGFILE
 if [ -d ~/Library/Mobile\ Documents/com~apple~CloudDocs/ ]; then
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36miCloud Drive is located\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36miCloud Drive is located\033[0m" | tee -a $LOGFILE
 else
     echo -e "\033[0;31mError iCloud Drive not setup [~/Library/Mobile\ Documents/com~apple~CloudDocs/]... Exiting\033[0m" | tee -a $LOGFILE
     exit 0
@@ -254,13 +254,13 @@ fi
 echo -e
 echo -e "\033[0;36mChecking to see if homebrew is installed...\033[0m" | tee -a $LOGFILE
 if [[ $(command -v brew) == "" ]]; then
-    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mInstalling homebrew...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ! ]\033[0m \033[0;36mInstalling homebrew...\033[0m" | tee -a $LOGFILE
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | tee -a $LOGFILE
     export PATH="/usr/local/bin:$PATH"
-    echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
     #exit 0
 else
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUpdating homebrew\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUpdating homebrew\033[0m" | tee -a $LOGFILE
     brew update && brew upgrade | tee -a $LOGFILE
 fi
 
@@ -268,7 +268,7 @@ fi
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mClosing System Preferences pane if open...\033[0m" | tee -a $LOGFILE
 osascript -e 'tell application "System Preferences" to quit' | tee -a $LOGFILE
-echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m" | tee -a $LOGFILE
+echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m" | tee -a $LOGFILE
 
 ############################
 #
@@ -279,84 +279,84 @@ echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSetting up custom home directories...\033[0m" | tee -a $LOGFILE
 for a in "${DIRS[@]}";
-do mkdir -p $a && echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m" | tee -a $LOGFILE
+do mkdir -p $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m" | tee -a $LOGFILE
 done
 
 # Finder Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Expanding the save panel by default\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Expanding the save panel by default\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true > /dev/null 2>&1
     defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true > /dev/null 2>&1
     defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true > /dev/null 2>&1
     defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Disable the “reopen windows when logging back in” option\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Disable the “reopen windows when logging back in” option\033[0m" | tee -a $LOGFILE
     defaults write com.apple.loginwindow TALLogoutSavesState -bool false > /dev/null 2>&1
     defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Show status and path bar in Finder\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Show status and path bar in Finder\033[0m" | tee -a $LOGFILE
     defaults write com.apple.finder ShowStatusBar -bool true > /dev/null 2>&1
     defaults write com.apple.finder ShowPathbar -bool true> /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Use column view in all Finder windows by default\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Use column view in all Finder windows by default\033[0m" | tee -a $LOGFILE
     defaults write com.apple.finder FXPreferredViewStyle -string "clmv" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Allow text selection in Quick Look\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Allow text selection in Quick Look\033[0m" | tee -a $LOGFILE
     defaults write com.apple.finder QLEnableTextSelection -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Smaller sidebar icons\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Smaller sidebar icons\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Show hidden ~/Library folder\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Show hidden ~/Library folder\033[0m" | tee -a $LOGFILE
     chflags nohidden ~/Library > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Show all hidden files and extensions\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Show all hidden files and extensions\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain AppleShowAllExtensions -bool true > /dev/null 2>&1
     defaults write com.apple.Finder AppleShowAllFiles YES > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Showing icons for hard drives, servers, removables on the desktop\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Showing icons for hard drives, servers, removables on the desktop\033[0m" | tee -a $LOGFILE
     defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Folders allways ontop\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Folders allways ontop\033[0m" | tee -a $LOGFILE
     defaults write com.apple.finder "_FXSortFoldersFirst" -bool true > /dev/null 2>&1
     defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Search Scope set to current folder\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Search Scope set to current folder\033[0m" | tee -a $LOGFILE
     defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Avoiding the creation of .DS_Store files on non-physical volumes\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Avoiding the creation of .DS_Store files on non-physical volumes\033[0m" | tee -a $LOGFILE
     defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true > /dev/null 2>&1
     defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Enabling snap-to-grid for icons on the desktop and in other icon views\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Enabling snap-to-grid for icons on the desktop and in other icon views\033[0m" | tee -a $LOGFILE
     /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
     /usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
     /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Disabling the warning when changing a file extension\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Disabling the warning when changing a file extension\033[0m" | tee -a $LOGFILE
     defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: When switching applications, switch to respective space\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: When switching applications, switch to respective space\033[0m" | tee -a $LOGFILE
     defaults write -g AppleSpacesSwitchOnActivate -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Disable smart quotes and dashes when typing\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Disable smart quotes and dashes when typing\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false > /dev/null 2>&1
     defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Finder: Disable automatic period substitution and capitalisation when typing\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Disable automatic period substitution and capitalisation when typing\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false > /dev/null 2>&1
     defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false > /dev/null 2>&1
 
-    # echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable auto-correct\033[0m" | tee -a $LOGFILE
+    # echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable auto-correct\033[0m" | tee -a $LOGFILE
     # defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false > /dev/null 2>&1
 
 # Dock Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Dock)...\033[0m" | tee -a $LOGFILE
  
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Dock: Setting Dock to auto-hide, delay and sizing\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Dock: Setting Dock to auto-hide, delay and sizing\033[0m" | tee -a $LOGFILE
     defaults write com.apple.dock autohide -bool true > /dev/null 2>&1
     defaults write com.apple.dock autohide-delay -float 0 > /dev/null 2>&1
     defaults write com.apple.dock autohide-time-modifier -float "0.5" > /dev/null 2>&1
@@ -367,35 +367,35 @@ echo -e "\033[0;36mUpdating preferences (Dock)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Input & Keyboard)...\033[0m" | tee -a $LOGFILE
  
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Input: Scroll direction not natural\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Scroll direction not natural\033[0m" | tee -a $LOGFILE
     defaults write -g com.apple.swipescrolldirection -bool NO > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Input: Enable full keyboard access for all controls/modals\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Enable full keyboard access for all controls/modals\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain AppleKeyboardUIMode -int 3 > /dev/null 2>&1
 
 # Screenshotting Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Screenshotting)...\033[0m" | tee -a $LOGFILE
  
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Screenshots: Setting format to PNG\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Screenshots: Setting format to PNG\033[0m" | tee -a $LOGFILE
     defaults write com.apple.screencapture type -string "png" > /dev/null 2>&1
     defaults write com.apple.screencapture name "Screenshot" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Screenshots: Disable shadows\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Screenshots: Disable shadows\033[0m" | tee -a $LOGFILE
     defaults write com.apple.screencapture disable-shadow -bool true > /dev/null 2>&1
 
 # Terminal Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Terminal)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Terminal: Enabling UTF-8 for Terminal.app\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Terminal: Enabling UTF-8 for Terminal.app\033[0m" | tee -a $LOGFILE
     defaults write com.apple.terminal StringEncodings -array 4 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Terminal: Setting the Pro theme by default\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Terminal: Setting the Pro theme by default\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Terminal "Default Window Settings" -string "Pro" > /dev/null 2>&1
     defaults write com.apple.Terminal "Startup Window Settings" -string "Pro" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Terminal: X11 follow focus mouse\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Terminal: X11 follow focus mouse\033[0m" | tee -a $LOGFILE
     defaults write com.apple.terminal FocusFollowsMouse -string YES > /dev/null 2>&1
     defaults write org.x.X11 wm_ffm -bool true > /dev/null 2>&1
 
@@ -403,27 +403,27 @@ echo -e "\033[0;36mUpdating preferences (Terminal)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Print)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Print: Auto quit app once the print jobs done\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Print: Auto quit app once the print jobs done\033[0m" | tee -a $LOGFILE
     defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true > /dev/null 2>&1
 
 # Display Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Display)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Display: Enabling subpixel font rendering on non-Apple LCDs\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Display: Enabling subpixel font rendering on non-Apple LCDs\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain AppleFontSmoothing -int 2 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Display: Enabling dark mode\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Display: Enabling dark mode\033[0m" | tee -a $LOGFILE
     defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark" > /dev/null 2>&1
 
 # Apple Mail Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Apple Mail)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Mail: Setting email addresses to copy as 'foo@e.com' instead of 'Foo' <foo@e.com>'\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Mail: Setting email addresses to copy as 'foo@e.com' instead of 'Foo' <foo@e.com>'\033[0m" | tee -a $LOGFILE
     defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Mail: Setting default view to date descending and threaded\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Mail: Setting default view to date descending and threaded\033[0m" | tee -a $LOGFILE
     defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes" > /dev/null 2>&1
     defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes" > /dev/null 2>&1
     defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date" > /dev/null 2>&1
@@ -433,20 +433,20 @@ echo -e "\033[0;36mUpdating preferences (Apple Mail)...\033[0m" | tee -a $LOGFIL
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Safari: Hiding sidebar in Top Site\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Safari: Hiding sidebar in Top Site\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari ShowSidebarInTopSites -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Safari: Disabling thumbnail cache\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Safari: Disabling thumbnail cache\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Safari: Enable debug, developer and inspector menus\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Safari: Enable debug, developer and inspector menus\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari IncludeInternalDebugMenu -bool true > /dev/null 2>&1
     defaults write com.apple.Safari IncludeDevelopMenu -bool true > /dev/null 2>&1
     defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true > /dev/null 2>&1
     defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true > /dev/null 2>&1
     defaults write NSGlobalDomain WebKitDeveloperExtras -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Safari: Show full URLs\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Safari: Show full URLs\033[0m" | tee -a $LOGFILE
     defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool true > /dev/null 2>&1
     defaults write com.apple.safari ShowOverlayStatusBar -int 1
 
@@ -454,37 +454,37 @@ echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: System apps to show temprarture in celsius\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: System apps to show temprarture in celsius\033[0m" | tee -a $LOGFILE
     defaults write -g AppleTemperatureUnit -string "Celsius" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: Menubar Battery Percentage\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Menubar Battery Percentage\033[0m" | tee -a $LOGFILE
     defaults write com.apple.menuextra.battery ShowTime -string "NO" > /dev/null 2>&1
     defaults write com.apple.menuextra.battery ShowPercent -string "YES" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: Menubar hide spotlight and wifi\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Menubar hide spotlight and wifi\033[0m" | tee -a $LOGFILE
     defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1 > /dev/null 2>&1
     defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: Menubar format time (EEE d MMM HH:mm) \033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Menubar format time (EEE d MMM HH:mm) \033[0m" | tee -a $LOGFILE
     defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm\"" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: Disable the sound effects on boot\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Disable the sound effects on boot\033[0m" | tee -a $LOGFILE
     sudo nvram SystemAudioVolume=" " > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: iOS charing chime when plugged into magsafe\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: iOS charing chime when plugged into magsafe\033[0m" | tee -a $LOGFILE
     defaults write com.apple.PowerChime ChimeOnAllHardware -bool true > /dev/null 2>&1
     open /System/Library/CoreServices/PowerChime.app > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: Preventing Time Machine from prompting to use new backup volumes\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Preventing Time Machine from prompting to use new backup volumes\033[0m" | tee -a $LOGFILE
     defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: Remove duplicates in the 'Open With' menu\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Remove duplicates in the 'Open With' menu\033[0m" | tee -a $LOGFILE
     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: Stop 'Photos' app from opening automatically\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Stop 'Photos' app from opening automatically\033[0m" | tee -a $LOGFILE
     defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPref > Other: Disable quartine on download messages nusiance\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Disable quartine on download messages nusiance\033[0m" | tee -a $LOGFILE
     defaults write com.apple.LaunchServices LSQuarantine -bool false > /dev/null 2>&1
 
 # Other App Specific Preferences
@@ -492,22 +492,22 @@ echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (App specific preferences)...\033[0m" | tee -a $LOGFILE
 
     # https://stackoverflow.com/questions/39972335/how-do-i-press-and-hold-a-key-and-have-it-repeat-in-vscode
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAllow pressing and holding a key to repeat it in VS Code\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mAllow pressing and holding a key to repeat it in VS Code\033[0m" | tee -a $LOGFILE
     defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mApple Text Editor to use plain text only\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mApple Text Editor to use plain text only\033[0m" | tee -a $LOGFILE
     defaults write com.apple.TextEdit RichText -int 0 > /dev/null 2>&1
     defaults write com.apple.TextEdit PlainTextEncoding -int 4 > /dev/null 2>&1
     defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mApple contacts set locale and allways show birth date\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mApple contacts set locale and allways show birth date\033[0m" | tee -a $LOGFILE
     defaults write com.apple.AddressBook ABBirthDayVisible -bool true > /dev/null 2>&1
     defaults write com.apple.AddressBook ABDefaultAddressCountryCode -string $COUNTRYCODE > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUnarchiver show folder after extract\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUnarchiver show folder after extract\033[0m" | tee -a $LOGFILE
     defaults write com.macpaw.site.theunarchiver openExtractedFolder -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDocker enable auto-update\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDocker enable auto-update\033[0m" | tee -a $LOGFILE
     defaults write com.docker.docker SUAutomaticallyUpdate -bool true > /dev/null 2>&1
     defaults write com.docker.docker SUEnableAutomaticChecks -bool true > /dev/null 2>&1
 
@@ -523,14 +523,14 @@ exit 0
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSecurity tweaks (Login/User)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mReveal system info (IP address, hostname, OS version, etc.) when clicking the clock in the login screen\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mReveal system info (IP address, hostname, OS version, etc.) when clicking the clock in the login screen\033[0m" | tee -a $LOGFILE
     sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mRequire password immediately after sleep or screen saver begins\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mRequire password immediately after sleep or screen saver begins\033[0m" | tee -a $LOGFILE
     defaults write com.apple.screensaver askForPassword -int 1 > /dev/null 2>&1
     defaults write com.apple.screensaver askForPasswordDelay -int 0 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable guest user\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable guest user\033[0m" | tee -a $LOGFILE
     sudo sysadminctl -guestAccount off > /dev/null 2>&1
     sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false > /dev/null 2>&1
 
@@ -538,28 +538,28 @@ echo -e "\033[0;36mSecurity tweaks (Login/User)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSecurity tweaks (Critical)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable Siri and Apple Analytics\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable Siri and Apple Analytics\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Siri "UserHasDeclinedEnable" -bool true > /dev/null 2>&1
     defaults write com.apple.Siri "StatusMenuVisible" -bool false > /dev/null 2>&1
     defaults write com.apple.assistant.support "Assistant Enabled" -bool false > /dev/null 2>&1
     defaults write com.apple.CrashReporter DialogType -string "none" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable IPV6 on Wi-fi and Ethernet adapters\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable IPV6 on Wi-fi and Ethernet adapters\033[0m" | tee -a $LOGFILE
     #TODO: Scan all adapters and replicate
     networksetup -setv6off Wi-Fi > /dev/null 2>&1
     networksetup -setv6off Ethernet > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable infared\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable infared\033[0m" | tee -a $LOGFILE
     defaults write /Library/Preferences/com.apple.driver.AppleIRController DeviceEnabled -int 0 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable SSH\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable SSH\033[0m" | tee -a $LOGFILE
     launchctl unload -w /System/Library/LaunchDaemons/ssh.plist > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable gatekeeper (code signing verification)\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mEnable gatekeeper (code signing verification)\033[0m" | tee -a $LOGFILE
     sudo spctl --master-enable
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable filevault (disk encryption)\033[0m" | tee -a $LOGFILE
-    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36m...You may be asked for login again, please keep recovery key safe\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mEnable filevault (disk encryption)\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ! ]\033[0m \033[0;36m...You may be asked for login again, please keep recovery key safe\033[0m" | tee -a $LOGFILE
     echo -e
     sudo fdesetup enable
     echo -e
@@ -568,17 +568,17 @@ echo -e "\033[0;36mSecurity tweaks (Critical)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSecurity tweaks (Updates)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mTime machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTime machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
     defaults write /Library/Preferences/com.apple.TimeMachine RequiresACPower -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling scheduled updates\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mEnabling scheduled updates\033[0m" | tee -a $LOGFILE
     softwareupdate --schedule on > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCheck for App Updates daily, not just once a week\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mCheck for App Updates daily, not just once a week\033[0m" | tee -a $LOGFILE
     defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1 > /dev/null 2>&1
 
 
@@ -586,20 +586,20 @@ echo -e "\033[0;36mSecurity tweaks (Updates)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSafari send do not track header\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSafari send do not track header\033[0m" | tee -a $LOGFILE
     defaults write com.apple.safari SendDoNotTrackHTTPHeader -int 1 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable potential DNS leaks\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable potential DNS leaks\033[0m" | tee -a $LOGFILE
     defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool YES > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling scheduled updates\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mEnabling scheduled updates\033[0m" | tee -a $LOGFILE
     softwareupdate --schedule on > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCheck for App Updates daily, not just once a week\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mCheck for App Updates daily, not just once a week\033[0m" | tee -a $LOGFILE
     defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1 > /dev/null 2>&1
 
 
