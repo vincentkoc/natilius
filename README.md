@@ -2,7 +2,7 @@
 
 <img src='assets/natilius_image.png' width='500'>
 
-**Natilius** (🐚) is an ⚡ automated one-click mac developer enviroment script.
+🐚 **Natilius** is a fully automated one-click mac developer enviroment script ⚡.
 
 This script is designed to setup a mac from a fresh OS X install:
 
