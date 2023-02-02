@@ -613,13 +613,13 @@ echo -e "\033[0;36mSecurity tweaks (Updates)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSafari send do not track header\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Privacy: Safari send do not track header\033[0m" | tee -a $LOGFILE
     defaults write com.apple.safari SendDoNotTrackHTTPHeader -int 1 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable potential DNS leaks\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Privacy: Disable potential DNS leaks\033[0m" | tee -a $LOGFILE
     sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool YES > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable search data leaking in safari\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Privacy: Disable search data leaking in safari\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari UniversalSearchEnabled -bool false > /dev/null 2>&1
     defaults write com.apple.Safari SuppressSearchSuggestions -bool true > /dev/null 2>&1
     defaults write com.apple.Safari.plist WebsiteSpecificSearchEnabled -bool NO > /dev/null 2>&1
