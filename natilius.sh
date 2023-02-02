@@ -83,7 +83,6 @@ PACKAGES=(
     node
     nodenv
     npm
-    nvm
     openssl
     pre-commit
     pyenv
@@ -91,6 +90,7 @@ PACKAGES=(
     pipenv
     rbenv
     readline
+    rustup-init
     speedtest-cli
     sqlite3
     terraform
@@ -136,6 +136,7 @@ CASKS=(
     mamp
     microsoft-office
     miro
+    muzzle
     mkchromecast
     mysqlworkbench
     netnewswire
@@ -637,3 +638,10 @@ fi
 # Brew Doctor
 echo "Checking homebrew..."
 brew doctor
+
+
+# Rust
+rustup-init --profile default -y
+source "$HOME/.cargo/env"
+rustup update
+rustc --version
