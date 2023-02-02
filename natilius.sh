@@ -487,6 +487,9 @@ echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee 
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mStop 'Photos' app from opening automatically\033[0m" | tee -a $LOGFILE
     defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable quartine on download messages nusiance\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.LaunchServices LSQuarantine -bool false > /dev/null 2>&1
+
 # Other App Specific Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (App specific preferences)...\033[0m" | tee -a $LOGFILE
@@ -526,32 +529,63 @@ echo -e "\033[0;36mSecurity tweaks (Generic)...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mTime machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
     defaults write /Library/Preferences/com.apple.TimeMachine RequiresACPower -bool false > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable Siri and Apple Analytics\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.Siri "UserHasDeclinedEnable" -bool true > /dev/null 2>&1
+    defaults write com.apple.Siri "StatusMenuVisible" -bool false > /dev/null 2>&1
+    defaults write com.apple.assistant.support "Assistant Enabled" -bool false > /dev/null 2>&1
+    defaults write com.apple.CrashReporter DialogType -string "none" > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mReveal system info (IP address, hostname, OS version, etc.) when clicking the clock in the login screen\033[0m" | tee -a $LOGFILE
+    sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mRequire password immediately after sleep or screen saver begins\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.screensaver askForPassword -int 1 > /dev/null 2>&1
+    defaults write com.apple.screensaver askForPasswordDelay -int 0 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable guest user\033[0m" | tee -a $LOGFILE
+    sudo sysadminctl -guestAccount off > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mTime machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
+    defaults write /Library/Preferences/com.apple.TimeMachine RequiresACPower -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mTime machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
+    defaults write /Library/Preferences/com.apple.TimeMachine RequiresACPower -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling scheduled updates\033[0m" | tee -a $LOGFILE
+    softwareupdate --schedule on > /dev/null 2>&1
+    defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true > /dev/null 2>&1
+    defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -bool true > /dev/null 2>&1
+    defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true > /dev/null 2>&1
+    defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCheck for App Updates daily, not just once a week\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable IPV6 on Wi-fi and Ethernet adapters\033[0m" | tee -a $LOGFILE
+    #TODO: Scan all adapters and replicate
+    networksetup -setv6off Wi-Fi > /dev/null 2>&1
+    networksetup -setv6off Ethernet > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable infared\033[0m" | tee -a $LOGFILE
+    defaults write /Library/Preferences/com.apple.driver.AppleIRController DeviceEnabled -int 0 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable SSH\033[0m" | tee -a $LOGFILE
+    launchctl unload -w /System/Library/LaunchDaemons/ssh.plist > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable gatekeeper (code signing verification)\033[0m" | tee -a $LOGFILE
+    sudo spctl --master-enable
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable filevault (disk encryption)\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36m...You may be asked for login again, please keep recovery key safe\033[0m" | tee -a $LOGFILE
+    echo -e
+    sudo fdesetup enable
+    echo -e
 
 ###### SECURITY
 
-# Disable Siri
-defaults write com.apple.Siri "UserHasDeclinedEnable" -bool true
-defaults write com.apple.Siri "StatusMenuVisible" -bool false
-defaults write com.apple.assistant.support "Assistant Enabled" -bool false
-#Reveal system info (IP address, hostname, OS version, etc.) when clicking the clock in the login screen
-sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
-# Require password immediately after sleep or screen saver begins
-defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 0
-#"Check for software updates daily, not just once per week"
-defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
-# Disable Guest User
-sudo sysadminctl -guestAccount off
-sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false
-#Disable quartine on download messages
+#
 defaults write com.apple.LaunchServices LSQuarantine -bool false
-# Disable Crash Report
-defaults write com.apple.CrashReporter DialogType -string "none"
-
-
-
-
-
 
 #"Speeding up wake from sleep to 24 hours from an hour"
 # http://www.cultofmac.com/221392/quick-hack-speeds-up-retina-macbooks-wake-from-sleep-os-x-tips/
