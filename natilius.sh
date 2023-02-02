@@ -454,12 +454,35 @@ echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee 
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mRemove duplicates in the 'Open With' menu\033[0m" | tee -a $LOGFILE
     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user > /dev/null 2>&1
 
+# Other App Specific Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (App specific preferences)...\033[0m" | tee -a $LOGFILE
+
+    # https://stackoverflow.com/questions/39972335/how-do-i-press-and-hold-a-key-and-have-it-repeat-in-vscode
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAllow pressing and holding a key to repeat it in VS Code\033[0m" | tee -a $LOGFILE
+    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mApple Text Editor to use plain text only\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.TextEdit RichText -int 0 > /dev/null 2>&1
+    defaults write com.apple.TextEdit PlainTextEncoding -int 4 > /dev/null 2>&1
+    defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4 > /dev/null 2>&1
+    
 exit 0
 
 
-# 
+# Text Editor
 
-# 
+
+# Contacts
+defaults write com.apple.AddressBook ABBirthDayVisible -bool true
+defaults write com.apple.AddressBook ABDefaultAddressCountryCode -string au
+
+# Unarchiver
+defaults write com.macpaw.site.theunarchiver openExtractedFolder -bool true
+
+# Docker
+defaults write com.docker.docker SUAutomaticallyUpdate -bool true
+defaults write com.docker.docker SUEnableAutomaticChecks -bool true
 
 
 ###### SECURITY
@@ -491,38 +514,6 @@ defaults write com.apple.CrashReporter DialogType -string "none"
 #"Speeding up wake from sleep to 24 hours from an hour"
 # http://www.cultofmac.com/221392/quick-hack-speeds-up-retina-macbooks-wake-from-sleep-os-x-tips/
 # sudo pmset -a standbydelay 86400
-
-###### VSCODE
-
-## Allow pressing and holding a key to repeat it in VS Code - https://stackoverflow.com/questions/39972335/how-do-i-press-and-hold-a-key-and-have-it-repeat-in-vscode
-defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
-
-###### MISC
-
-
-
-# Text Editor
-defaults write com.apple.TextEdit RichText -int 0
-defaults write com.apple.TextEdit PlainTextEncoding -int 4
-defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
-
-# Contacts
-defaults write com.apple.AddressBook ABBirthDayVisible -bool true
-defaults write com.apple.AddressBook ABDefaultAddressCountryCode -string au
-
-# Unarchiver
-defaults write com.macpaw.site.theunarchiver openExtractedFolder -bool true
-
-# Docker
-defaults write com.docker.docker SUAutomaticallyUpdate -bool true
-defaults write com.docker.docker SUEnableAutomaticChecks -bool true
-
-
-
-
-
-
-
 
 # Kill affected applications
 
