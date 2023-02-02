@@ -124,6 +124,7 @@ CASKS=(
     font-fira-code
     github
     gpg-suite
+    imageoptim
     iterm2
     keybase
     keycastr
@@ -193,7 +194,6 @@ cat << "EOF"
  location for dotfiles and configration.
 
  Starting Natilius...
-
 EOF
 
 ############################
@@ -207,6 +207,16 @@ if [[ `ioreg -rd1 -c IOPlatformExpertDevice | grep -i "UUID" | cut -c27-50` != "
     macUUID=`ioreg -rd1 -c IOPlatformExpertDevice | grep -i "UUID" | cut -c27-62`
 fi
 
+# Check OS
+if [[ $OSTYPE == 'darwin'* ]]; then
+    OSVERSION=$(sw_vers -productVersion)
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mMac OS detected [macOS $OSVERSION, $OSTYPE]\033[0m" | tee -a $LOGFILE
+else
+    echo -e "\033[0;31mNatilius is only supported on Mac OS... Exiting\033[0m" | tee -a $LOGFILE
+    exit 0
+fi
+
+
 ############################
 #
 # Check environment (Login, iCloud)
@@ -214,6 +224,7 @@ fi
 ############################
 
 # Logging
+echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mLogging enabled...\033[0m" | tee -a $LOGFILE
 echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mLog file printing to [$LOGFILE]\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
@@ -416,10 +427,39 @@ echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow full URLs\033[0m" | tee -a $LOGFILE
     defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool true > /dev/null 2>&1
 
+# Other OS Related Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee -a $LOGFILE
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSystem apps to show temprarture in celsius\033[0m" | tee -a $LOGFILE
+    defaults write -g AppleTemperatureUnit -string "Celsius" > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mMenubar Battery Percentage\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.menuextra.battery ShowTime -string "NO" > /dev/null 2>&1
+    defaults write com.apple.menuextra.battery ShowPercent -string "YES" > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mMenubar hide spotlight and wifi\033[0m" | tee -a $LOGFILE
+    defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1 > /dev/null 2>&1
+    defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mMenubar format time (EEE d MMM HH:mm) \033[0m" | tee -a $LOGFILE
+    defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm\"" > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable the sound effects on boot\033[0m" | tee -a $LOGFILE
+    sudo nvram SystemAudioVolume=" " > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreventing Time Machine from prompting to use new hard drives as backup volume\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mRemove duplicates in the 'Open With' menu\033[0m" | tee -a $LOGFILE
+    /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user > /dev/null 2>&1
 
 exit 0
 
 
+# 
+
+# 
 
 
 ###### SECURITY
@@ -459,22 +499,6 @@ defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 
 ###### MISC
 
-# Default Temperature units
-defaults write -g AppleTemperatureUnit -string "Celsius"
-# Battery Bar
-#defaults write com.apple.menuextra.battery ShowTime -string "YES"
-defaults write com.apple.menuextra.battery ShowPercent -string "YES"
-#Disable the sound effects on boot
-sudo nvram SystemAudioVolume=" "
-# Remove duplicates in the 'Open With' menu (also see 'lscleanup' alias)
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
-# Hide spotlight from Menu
-defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
-# Menu Bar
-defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm\""
-defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false
-#"Preventing Time Machine from prompting to use new hard drives as backup volume"
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 
 # Text Editor
