@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 #
 # natilius - 🐚 Automated One-Click Mac Developer Enviroment
 # 
@@ -17,12 +15,11 @@ set -euo pipefail
 # 
 # You should have received a copy of the GNU General Public License along with this
 # program. If not, see http://www.gnu.org/licenses/.
-
-
 #
 # Insparation
 # https://gist.github.com/bradp/bea76b16d3325f5c47d4
 # https://gist.github.com/vraravam/5e28ca1720c9dddacdc0e6db61e093fe
+#
 
 ############################
 #
@@ -30,6 +27,7 @@ set -euo pipefail
 #
 ############################
 
+set -euo pipefail
 SUDO_USER=$(whoami)
 TIMESTAMP=$(date +%s)
 LOGFILE="./atlas-setup-$TIMESTAMP.log"
