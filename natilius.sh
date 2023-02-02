@@ -30,7 +30,9 @@
 set -euo pipefail
 SUDO_USER=$(whoami)
 TIMESTAMP=$(date +%s)
-LOGFILE="./atlas-setup-$TIMESTAMP.log"
+LOGFILE="./natilius-setup-$TIMESTAMP.log"
+
+# Directories to generate
 DIRS=(
     ~/.mackup
     ~/.nvm
@@ -41,6 +43,8 @@ DIRS=(
     ~/GIT/_Stj
     ~/GIT/_Airbyte
 )
+
+# Apps to kill post setup to apply changes
 KILLAPPS=(
     Finder
     Dock
@@ -50,8 +54,9 @@ KILLAPPS=(
     iCal
     Address\ Book
     SystemUIServer
-
 )
+
+# Homebrew packages to install
 PACKAGES=(
     awscli
     ca-certificates
@@ -102,6 +107,8 @@ PACKAGES=(
     yamllint
     zlib
 )
+
+# Homebrew casks to install
 CASKS=(
     aerial
     airbuddy
@@ -209,17 +216,20 @@ fi
 # Check enviroment (Login, iCloud)
 #
 ############################
+
+# Logging
 echo -e "\033[0;36mLogging enabled...\033[0m"
-echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mLog file printing to [$LOGFILE]\033[0m"
+echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mLog file printing to [$LOGFILE]\033[0m"
 echo -e
 
+# Password for Sudo
 echo -e "\033[0;36mPlease provide local password (may auto-skip)...\033[0m"
 sudo -v
 echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPassword validated\033[0m"
 
+# iCloud Drive
 echo -e
 echo -e "\033[0;36mChecking to see if iCloud drive has been mounted...\033[0m"
-
 if [ -d ~/Library/Mobile\ Documents/com~apple~CloudDocs/ ]; then
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36miCloud Drive is located\033[0m"
 else
@@ -227,6 +237,20 @@ else
     exit 0
 fi
 
+# Homebrew
+echo -e
+echo -e "\033[0;36mChecking to see if homebrew is installed...\033[0m"
+if [[ $(command -v brew) == "" ]]; then
+    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mInstalling homebrew...\033[0m"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script...\033[0m"
+    exit 0
+else
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUpdating homebrew\033[0m"
+    brew update
+fi
+
+# Quit preferences pane
 echo -e 
 echo -e "\033[0;36mClosing System Preferences pane if open...\033[0m"
 osascript -e 'tell application "System Preferences" to quit'
