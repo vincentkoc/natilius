@@ -27,7 +27,7 @@
 #
 ############################
 
-trap 'ret=$?; test $ret -ne 0 && printf "\n   \e[31m\033[0m  natilius failed  \e[31m\033[0m\n" >&2; exit $ret' EXIT
+trap 'ret=$?; test $ret -ne 0 && printf "\n   \e[31m⚠️   natilius failed   ⚠️\033[0m\n" >&2; exit $ret' EXIT
 set -euo pipefail
 
 SUDO_USER=$(whoami)
@@ -289,7 +289,7 @@ echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUse column view in all Finder win
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv" > /dev/null 2>&1
 
 echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAllow text selection in Quick Look\033[0m"
-defaults write com.apple.finder QLEnableTextSelection -bool TRUE > /dev/null 2>&1
+defaults write com.apple.finder QLEnableTextSelection -bool true > /dev/null 2>&1
 
 echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSmaller sidebar icons\033[0m"
 defaults write NSGlobalDomain "NSTableViewDefaultSizeMode" -int "1" > /dev/null 2>&1
@@ -297,24 +297,33 @@ defaults write NSGlobalDomain "NSTableViewDefaultSizeMode" -int "1" > /dev/null 
 echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow hidden ~/Library folder\033[0m"
 chflags nohidden ~/Library > /dev/null 2>&1
 
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow all hidden files and extensions\033[0m"
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true > /dev/null 2>&1
+defaults write com.apple.Finder AppleShowAllFiles YES > /dev/null 2>&1
 
-#"Showing icons for hard drives, servers, and removable media on the desktop"
-defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShowing icons for hard drives, servers, and removable media on the desktop\033[0m"
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true > /dev/null 2>&1
 
-# Folders Ontop
-defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
-defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true"
-# Search Scope set to current folder
-defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf"
-#"Showing all filename extensions in Finder by default"
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-defaults write com.apple.Finder AppleShowAllFiles 1
-#"Avoiding the creation of .DS_Store files on network volumes"
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-#"Enabling snap-to-grid for icons on the desktop and in other icon views"
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mFolders allways ontop\033[0m"
+defaults write com.apple.finder "_FXSortFoldersFirst" -bool true > /dev/null 2>&1
+defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true" > /dev/null 2>&1
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSearch Scope set to current folder\033[0m"
+defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf" > /dev/null 2>&1
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAvoiding the creation of .DS_Store files on network volumes\033[0m"
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true > /dev/null 2>&1
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling snap-to-grid for icons on the desktop and in other icon views\033[0m"
+/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
+/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
+/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
+
+
+exit 0
+
+
+
 
 #Reveal system info (IP address, hostname, OS version, etc.) when clicking the clock in the login screen
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
