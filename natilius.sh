@@ -222,6 +222,10 @@ else
     exit 0
 fi
 
+# Warning
+echo -e "\033[0;31m⚠️   !! Warning: Use at your own risk, and ensure you have a backup !!   ⚠️\033[0m" | tee -a $LOGFILE
+read -r -s -p $'Press enter to continue...'
+echo -e
 
 ############################
 #
@@ -492,26 +496,24 @@ echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (App specific preferences)...\033[0m" | tee -a $LOGFILE
 
     # https://stackoverflow.com/questions/39972335/how-do-i-press-and-hold-a-key-and-have-it-repeat-in-vscode
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mAllow pressing and holding a key to repeat it in VS Code\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Allow pressing and holding a key to repeat it in VS Code\033[0m" | tee -a $LOGFILE
     defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mApple Text Editor to use plain text only\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Apple Text Editor to use plain text only\033[0m" | tee -a $LOGFILE
     defaults write com.apple.TextEdit RichText -int 0 > /dev/null 2>&1
     defaults write com.apple.TextEdit PlainTextEncoding -int 4 > /dev/null 2>&1
     defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mApple contacts set locale and allways show birth date\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Apple contacts set locale and allways show birth date\033[0m" | tee -a $LOGFILE
     defaults write com.apple.AddressBook ABBirthDayVisible -bool true > /dev/null 2>&1
     defaults write com.apple.AddressBook ABDefaultAddressCountryCode -string $COUNTRYCODE > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUnarchiver show folder after extract\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Unarchiver show folder after extract\033[0m" | tee -a $LOGFILE
     defaults write com.macpaw.site.theunarchiver openExtractedFolder -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDocker enable auto-update\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Docker enable auto-update\033[0m" | tee -a $LOGFILE
     defaults write com.docker.docker SUAutomaticallyUpdate -bool true > /dev/null 2>&1
     defaults write com.docker.docker SUEnableAutomaticChecks -bool true > /dev/null 2>&1
-
-exit 0
 
 ############################
 #
@@ -519,68 +521,70 @@ exit 0
 #
 ############################
 
-# Login related Security Tweaks
-echo -e | tee -a $LOGFILE
-echo -e "\033[0;36mSecurity tweaks (Login/User)...\033[0m" | tee -a $LOGFILE
-
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mReveal system info (IP address, hostname, OS version, etc.) when clicking the clock in the login screen\033[0m" | tee -a $LOGFILE
-    sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName > /dev/null 2>&1
-
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mRequire password immediately after sleep or screen saver begins\033[0m" | tee -a $LOGFILE
-    defaults write com.apple.screensaver askForPassword -int 1 > /dev/null 2>&1
-    defaults write com.apple.screensaver askForPasswordDelay -int 0 > /dev/null 2>&1
-
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable guest user\033[0m" | tee -a $LOGFILE
-    sudo sysadminctl -guestAccount off > /dev/null 2>&1
-    sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false > /dev/null 2>&1
-
 # Critical Security Tweaks
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSecurity tweaks (Critical)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable Siri and Apple Analytics\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable Siri and Apple Analytics\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Siri "UserHasDeclinedEnable" -bool true > /dev/null 2>&1
     defaults write com.apple.Siri "StatusMenuVisible" -bool false > /dev/null 2>&1
     defaults write com.apple.assistant.support "Assistant Enabled" -bool false > /dev/null 2>&1
-    defaults write com.apple.CrashReporter DialogType -string "none" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable IPV6 on Wi-fi and Ethernet adapters\033[0m" | tee -a $LOGFILE
-    #TODO: Scan all adapters and replicate
-    networksetup -setv6off Wi-Fi > /dev/null 2>&1
-    networksetup -setv6off Ethernet > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable IPV6 on Wi-fi and Ethernet adapters\033[0m" | tee -a $LOGFILE
+    NETWORKADAPTERS=$(networksetup -listallhardwareports | grep "Hardware Port:" | awk -F ': ' '{print $2}')
+    while read -r line; do
+        echo "Disabling ipv6 for: $line" | tee -a $LOGFILE
+        sudo networksetup -setv6off $line
+    done <<< "$NETWORKADAPTERS"
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable infared\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable infared\033[0m" | tee -a $LOGFILE
     defaults write /Library/Preferences/com.apple.driver.AppleIRController DeviceEnabled -int 0 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable SSH\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable SSH\033[0m" | tee -a $LOGFILE
     launchctl unload -w /System/Library/LaunchDaemons/ssh.plist > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mEnable gatekeeper (code signing verification)\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable gatekeeper (code signing verification)\033[0m" | tee -a $LOGFILE
     sudo spctl --master-enable
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mEnable filevault (disk encryption)\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable filevault (disk encryption)\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ! ]\033[0m \033[0;36m...You may be asked for login again, please keep recovery key safe\033[0m" | tee -a $LOGFILE
     echo -e
     sudo fdesetup enable
     echo -e
 
+# Login related Security Tweaks
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mSecurity tweaks (Login/User)...\033[0m" | tee -a $LOGFILE
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Login: Reveal system info (IP address etc.) when clicking the clock in the login screen\033[0m" | tee -a $LOGFILE
+    sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Login: Require password immediately after sleep or screen saver begins\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.screensaver askForPassword -int 1 > /dev/null 2>&1
+    defaults write com.apple.screensaver askForPasswordDelay -int 0 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Login: Disable guest user\033[0m" | tee -a $LOGFILE
+    sudo sysadminctl -guestAccount off > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false > /dev/null 2>&1
+
 # Update related Security Tweaks
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSecurity tweaks (Updates)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTime machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Updates: Time machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
     defaults write /Library/Preferences/com.apple.TimeMachine RequiresACPower -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mEnabling scheduled updates\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Updates: Enabling scheduled updates\033[0m" | tee -a $LOGFILE
     softwareupdate --schedule on > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mCheck for App Updates daily, not just once a week\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Updates: Check for App Updates daily, not just once a week\033[0m" | tee -a $LOGFILE
     defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1 > /dev/null 2>&1
 
+exit 0
 
 # Privacy related Security Tweaks
 echo -e | tee -a $LOGFILE
