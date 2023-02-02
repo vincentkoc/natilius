@@ -29,6 +29,7 @@ set -euo pipefail
 SUDO_USER=$(whoami)
 TIMESTAMP=$(date +%s)
 LOGFILE="./natilius-setup-$TIMESTAMP.log"
+COUNTRYCODE="au"
 
 # Directories to generate
 DIRS=(
@@ -211,6 +212,8 @@ fi
 if [[ $OSTYPE == 'darwin'* ]]; then
     OSVERSION=$(sw_vers -productVersion)
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mMac OS detected [macOS $OSVERSION, $OSTYPE]\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mRunning as $SUDO_USER\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mLocale set to $COUNTRYCODE\033[0m" | tee -a $LOGFILE
 else
     echo -e "\033[0;31mNatilius is only supported on Mac OS... Exiting\033[0m" | tee -a $LOGFILE
     exit 0
@@ -466,24 +469,19 @@ echo -e "\033[0;36mUpdating preferences (App specific preferences)...\033[0m" | 
     defaults write com.apple.TextEdit RichText -int 0 > /dev/null 2>&1
     defaults write com.apple.TextEdit PlainTextEncoding -int 4 > /dev/null 2>&1
     defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4 > /dev/null 2>&1
-    
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mApple contacts set locale and allways show birth date\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.AddressBook ABBirthDayVisible -bool true > /dev/null 2>&1
+    defaults write com.apple.AddressBook ABDefaultAddressCountryCode -string $COUNTRYCODE > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUnarchiver show folder after extract\033[0m" | tee -a $LOGFILE
+    defaults write com.macpaw.site.theunarchiver openExtractedFolder -bool true > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDocker enable auto-update\033[0m" | tee -a $LOGFILE
+    defaults write com.docker.docker SUAutomaticallyUpdate -bool true > /dev/null 2>&1
+    defaults write com.docker.docker SUEnableAutomaticChecks -bool true > /dev/null 2>&1
+
 exit 0
-
-
-# Text Editor
-
-
-# Contacts
-defaults write com.apple.AddressBook ABBirthDayVisible -bool true
-defaults write com.apple.AddressBook ABDefaultAddressCountryCode -string au
-
-# Unarchiver
-defaults write com.macpaw.site.theunarchiver openExtractedFolder -bool true
-
-# Docker
-defaults write com.docker.docker SUAutomaticallyUpdate -bool true
-defaults write com.docker.docker SUEnableAutomaticChecks -bool true
-
 
 ###### SECURITY
 
