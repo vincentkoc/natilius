@@ -276,7 +276,7 @@ echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSetting up custom home directories...\033[0m" | tee -a $LOGFILE
 for a in "${DIRS[@]}";
-do mkdir -p "[$a]" && echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m" | tee -a $LOGFILE
+do mkdir -p $a && echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m" | tee -a $LOGFILE
 done
 
 # Finder Related Preferences
