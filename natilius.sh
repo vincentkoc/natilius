@@ -30,6 +30,7 @@ SUDO_USER=$(whoami)
 TIMESTAMP=$(date +%s)
 LOGFILE="./natilius-setup-$TIMESTAMP.log"
 COUNTRYCODE="au"
+PYVER="3.9.11"
 
 # Directories to generate
 DIRS=(
@@ -287,6 +288,7 @@ echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m" | tee -a $LOGFILE
 
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mExpanding the save panel by default\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true > /dev/null 2>&1
+    defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true > /dev/null 2>&1
     defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true > /dev/null 2>&1
     defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true > /dev/null 2>&1
 
@@ -347,6 +349,7 @@ echo -e "\033[0;36mUpdating preferences (Dock)...\033[0m" | tee -a $LOGFILE
     defaults write com.apple.dock autohide-delay -float 0 > /dev/null 2>&1
     defaults write com.apple.dock autohide-time-modifier -float "0.5" > /dev/null 2>&1
     defaults write com.apple.dock tilesize -int 36 > /dev/null 2>&1
+    defaults write com.apple.dock show-process-indicators -bool true > /dev/null 2>&1
 
 # Input Related Preferences
 echo -e | tee -a $LOGFILE
@@ -609,14 +612,15 @@ echo "Cleaning homebrew..."
 brew cleanup
 
 # Setup Python
-echo 'export PYENV_ROOT="$(pyenv root)"' >> ~/.zshrc
-echo 'export PATH="$PYENV_ROOT/shims:$PATH"' >> ~/.zshrc
-echo 'eval "$(pyenv init --path)"' >> ~/.zprofile
-echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+# initi after install
+export PYENV_ROOT="$(pyenv root)"
+export PATH="$PYENV_ROOT/shims:$PATH"
+eval "$(pyenv init -)"
+
 which python
 pyenv versions
-pyenv install 3.9.11
-pyenv global 3.9.11
+pyenv install $PYVER
+pyenv global $PYVER
 pyenv versions
 which python
 
