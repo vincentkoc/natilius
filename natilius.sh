@@ -27,7 +27,7 @@
 #
 ############################
 
-trap 'ret=$?; test $ret -ne 0 && printf "\n   \e[31m⚠️   natilius failed   ⚠️\033[0m\n" >&2; exit $ret' EXIT
+trap 'ret=$?; test $ret -ne 0 && printf "\n   \e[31m⚠️   Natilius failed   ⚠️\033[0m\n" >&2; exit $ret' EXIT
 set -euo pipefail
 
 SUDO_USER=$(whoami)
