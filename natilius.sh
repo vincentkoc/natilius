@@ -136,6 +136,7 @@ CASKS=(
     mamp
     microsoft-office
     miro
+    mkchromecast
     mysqlworkbench
     netnewswire
     notion
