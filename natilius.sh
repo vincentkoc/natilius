@@ -270,54 +270,81 @@ for a in "${DIRS[@]}";
 do mkdir -p "[$a]" && echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m" | tee -a $LOGFILE
 done
 
+# Finder Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m" | tee -a $LOGFILE
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mExpanding the save panel by default\033[0m" | tee -a $LOGFILE
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true > /dev/null 2>&1
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true > /dev/null 2>&1
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mExpanding the save panel by default\033[0m" | tee -a $LOGFILE
+    defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true > /dev/null 2>&1
+    defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true > /dev/null 2>&1
+    defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable the “reopen windows when logging back in” option\033[0m" | tee -a $LOGFILE
-defaults write com.apple.loginwindow TALLogoutSavesState -bool false > /dev/null 2>&1
-defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable the “reopen windows when logging back in” option\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.loginwindow TALLogoutSavesState -bool false > /dev/null 2>&1
+    defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow status bar in Finder\033[0m" | tee -a $LOGFILE
-defaults write com.apple.finder ShowStatusBar -bool true > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow status and path bar in Finder\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.finder ShowStatusBar -bool true > /dev/null 2>&1
+    defaults write com.apple.finder ShowPathbar -bool true> /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUse column view in all Finder windows by default\033[0m" | tee -a $LOGFILE
-defaults write com.apple.finder FXPreferredViewStyle -string "clmv" > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUse column view in all Finder windows by default\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.finder FXPreferredViewStyle -string "clmv" > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAllow text selection in Quick Look\033[0m" | tee -a $LOGFILE
-defaults write com.apple.finder QLEnableTextSelection -bool true > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAllow text selection in Quick Look\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.finder QLEnableTextSelection -bool true > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSmaller sidebar icons\033[0m" | tee -a $LOGFILE
-defaults write NSGlobalDomain "NSTableViewDefaultSizeMode" -int "1" > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSmaller sidebar icons\033[0m" | tee -a $LOGFILE
+    defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1 > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow hidden ~/Library folder\033[0m" | tee -a $LOGFILE
-chflags nohidden ~/Library > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow hidden ~/Library folder\033[0m" | tee -a $LOGFILE
+    chflags nohidden ~/Library > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow all hidden files and extensions\033[0m" | tee -a $LOGFILE
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true > /dev/null 2>&1
-defaults write com.apple.Finder AppleShowAllFiles YES > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow all hidden files and extensions\033[0m" | tee -a $LOGFILE
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool true > /dev/null 2>&1
+    defaults write com.apple.Finder AppleShowAllFiles YES > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShowing icons for hard drives, servers, and removable media on the desktop\033[0m" | tee -a $LOGFILE
-defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShowing icons for hard drives, servers, and removable media on the desktop\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mFolders allways ontop\033[0m" | tee -a $LOGFILE
-defaults write com.apple.finder "_FXSortFoldersFirst" -bool true > /dev/null 2>&1
-defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true" > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mFolders allways ontop\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.finder "_FXSortFoldersFirst" -bool true > /dev/null 2>&1
+    defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true" > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSearch Scope set to current folder\033[0m" | tee -a $LOGFILE
-defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf" > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSearch Scope set to current folder\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf" > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAvoiding the creation of .DS_Store files on network volumes\033[0m" | tee -a $LOGFILE
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAvoiding the creation of .DS_Store files on network volumes\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling snap-to-grid for icons on the desktop and in other icon views\033[0m" | tee -a $LOGFILE
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling snap-to-grid for icons on the desktop and in other icon views\033[0m" | tee -a $LOGFILE
+    /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
+    /usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
+    /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisabling the warning when changing a file extension\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false > /dev/null 2>&1
+
+# Dock Related Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Dock)...\033[0m" | tee -a $LOGFILE
+ 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSetting Dock to auto-hide, delay and sizing\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.dock autohide -bool true > /dev/null 2>&1
+    defaults write com.apple.dock autohide-delay -float 0 > /dev/null 2>&1
+    defaults write com.apple.dock autohide-time-modifier -float "0.5" > /dev/null 2>&1
+    defaults write com.apple.dock tilesize -int 36 > /dev/null 2>&1
+
+# Input Related Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Input & Keyboard)...\033[0m" | tee -a $LOGFILE
+ 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mScroll direction not natural\033[0m" | tee -a $LOGFILE
+    defaults write -g com.apple.swipescrolldirection -bool NO > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable full keyboard access for all controls (e.g. enable Tab in modal dialogs)\033[0m" | tee -a $LOGFILE
+    defaults write NSGlobalDomain AppleKeyboardUIMode -int 3 > /dev/null 2>&1
+
+
 
 
 exit 0
@@ -330,14 +357,8 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo Hos
 # Require password immediately after sleep or screen saver begins
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
-
-
-
-#"Scroll direction not natural"
-defaults write -g com.apple.swipescrolldirection -bool NO
-# Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
-defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
-
+#"Check for software updates daily, not just once per week"
+defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
 
 
@@ -346,23 +367,16 @@ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 #"Automatically quit printer app once the print jobs complete"
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
-#"Check for software updates daily, not just once per week"
-defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+
 
 #"Enabling subpixel font rendering on non-Apple LCDs"
 defaults write NSGlobalDomain AppleFontSmoothing -int 2
 
 
-#"Disabling the warning when changing a file extension"
-defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
 
 
-#"Setting Dock to auto-hide and removing the auto-hiding delay"
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float "0.5"
-defaults write com.apple.dock "tilesize" -int "36"
+
 
 #"Setting email addresses to copy as 'foo@example.com' instead of 'Foo Bar <foo@example.com>' in Mail.app"
 defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
@@ -469,8 +483,6 @@ defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm\""
 defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false
 
-# Show Path Bar
-defaults write com.apple.finder "ShowPathbar" -bool "true"
 
 # Kill affected applications
 
