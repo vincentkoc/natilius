@@ -4,7 +4,7 @@
 
 **Natilius** is a fully automated one-click mac developer enviroment bootstrapper ⚡.
 
-Natilius is designed to take vanilla Mac OS X install and:
+It can take vanilla Mac OS X install and have it developer ready in one go, setting up:
 
 * Create any default/project folders
 * Configure various Mac OS preferences
