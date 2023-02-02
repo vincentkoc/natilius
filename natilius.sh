@@ -46,13 +46,13 @@ DIRS=(
 
 # Apps to kill post setup to apply changes
 KILLAPPS=(
-    Finder
-    Dock
-    Mail
-    # Safari
-    iTunes
-    iCal
     Address\ Book
+    Dock
+    Finder
+    Mail
+    iCal
+    iTunes
+    Safari
     SystemUIServer
 )
 
@@ -634,7 +634,7 @@ echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mRestarting apps after applying changes...\033[0m" | tee -a $LOGFILE
 for a in "${KILLAPPS[@]}";
-do killall $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mClosing app [$a]\033[0m" | tee -a $LOGFILE
+do killall -q $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mClosing app [$a]\033[0m" 2>/dev/null || true
 done
 
 exit 0
