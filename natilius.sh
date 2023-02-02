@@ -19,7 +19,7 @@
 # Insparation
 # https://gist.github.com/bradp/bea76b16d3325f5c47d4
 # https://gist.github.com/vraravam/5e28ca1720c9dddacdc0e6db61e093fe
-#
+# https://github.com/ptb/mac-setup/blob/develop/mac-setup.command
 
 ############################
 #
@@ -27,7 +27,9 @@
 #
 ############################
 
+trap 'ret=$?; test $ret -ne 0 && printf "\n   \e[31m\033[0m  natilius failed  \e[31m\033[0m\n" >&2; exit $ret' EXIT
 set -euo pipefail
+
 SUDO_USER=$(whoami)
 TIMESTAMP=$(date +%s)
 LOGFILE="./natilius-setup-$TIMESTAMP.log"
@@ -243,8 +245,9 @@ echo -e "\033[0;36mChecking to see if homebrew is installed...\033[0m"
 if [[ $(command -v brew) == "" ]]; then
     echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mInstalling homebrew...\033[0m"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script...\033[0m"
-    exit 0
+    export PATH="/usr/local/bin:$PATH"
+    echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script if you have issues...\033[0m"
+    #exit 0
 else
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUpdating homebrew\033[0m"
     brew update
