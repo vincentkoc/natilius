@@ -403,27 +403,27 @@ echo -e "\033[0;36mUpdating preferences (Terminal)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Print)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAutomatically quit printer app once the print jobs complete\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Print: Auto quit app once the print jobs done\033[0m" | tee -a $LOGFILE
     defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true > /dev/null 2>&1
 
 # Display Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Display)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling subpixel font rendering on non-Apple LCDs\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Display: Enabling subpixel font rendering on non-Apple LCDs\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain AppleFontSmoothing -int 2 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling dark mode\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Display: Enabling dark mode\033[0m" | tee -a $LOGFILE
     defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark" > /dev/null 2>&1
 
 # Apple Mail Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Apple Mail)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSetting email addresses to copy as 'foo@example.com' instead of 'Foo Bar <foo@example.com>'\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Mail: Setting email addresses to copy as 'foo@e.com' instead of 'Foo' <foo@e.com>'\033[0m" | tee -a $LOGFILE
     defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSetting default view to date descending and threaded\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Mail: Setting default view to date descending and threaded\033[0m" | tee -a $LOGFILE
     defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes" > /dev/null 2>&1
     defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes" > /dev/null 2>&1
     defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date" > /dev/null 2>&1
@@ -433,23 +433,20 @@ echo -e "\033[0;36mUpdating preferences (Apple Mail)...\033[0m" | tee -a $LOGFIL
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mHiding Safari's sidebar in Top Site\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Safari: Hiding sidebar in Top Site\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari ShowSidebarInTopSites -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisabling Safari's thumbnail cache for History and Top Sites\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Safari: Disabling thumbnail cache\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisabling Safari's thumbnail cache for History and Top Sites\033[0m" | tee -a $LOGFILE
-    defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2 > /dev/null 2>&1
-
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable debug, developer and inspector menus\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Safari: Enable debug, developer and inspector menus\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari IncludeInternalDebugMenu -bool true > /dev/null 2>&1
     defaults write com.apple.Safari IncludeDevelopMenu -bool true > /dev/null 2>&1
     defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true > /dev/null 2>&1
     defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true > /dev/null 2>&1
     defaults write NSGlobalDomain WebKitDeveloperExtras -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow full URLs\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Safari: Show full URLs\033[0m" | tee -a $LOGFILE
     defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool true > /dev/null 2>&1
     defaults write com.apple.safari ShowOverlayStatusBar -int 1
 
@@ -457,37 +454,37 @@ echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee -a $LOGFILE
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSystem apps to show temprarture in celsius\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: System apps to show temprarture in celsius\033[0m" | tee -a $LOGFILE
     defaults write -g AppleTemperatureUnit -string "Celsius" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mMenubar Battery Percentage\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: Menubar Battery Percentage\033[0m" | tee -a $LOGFILE
     defaults write com.apple.menuextra.battery ShowTime -string "NO" > /dev/null 2>&1
     defaults write com.apple.menuextra.battery ShowPercent -string "YES" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mMenubar hide spotlight and wifi\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: Menubar hide spotlight and wifi\033[0m" | tee -a $LOGFILE
     defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1 > /dev/null 2>&1
     defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mMenubar format time (EEE d MMM HH:mm) \033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: Menubar format time (EEE d MMM HH:mm) \033[0m" | tee -a $LOGFILE
     defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm\"" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable the sound effects on boot\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: Disable the sound effects on boot\033[0m" | tee -a $LOGFILE
     sudo nvram SystemAudioVolume=" " > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable iOS charing chime when plugged into magsafe\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: iOS charing chime when plugged into magsafe\033[0m" | tee -a $LOGFILE
     defaults write com.apple.PowerChime ChimeOnAllHardware -bool true > /dev/null 2>&1
     open /System/Library/CoreServices/PowerChime.app > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreventing Time Machine from prompting to use new hard drives as backup volume\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: Preventing Time Machine from prompting to use new backup volumes\033[0m" | tee -a $LOGFILE
     defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mRemove duplicates in the 'Open With' menu\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: Remove duplicates in the 'Open With' menu\033[0m" | tee -a $LOGFILE
     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mStop 'Photos' app from opening automatically\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: Stop 'Photos' app from opening automatically\033[0m" | tee -a $LOGFILE
     defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable quartine on download messages nusiance\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreferences > Other: Disable quartine on download messages nusiance\033[0m" | tee -a $LOGFILE
     defaults write com.apple.LaunchServices LSQuarantine -bool false > /dev/null 2>&1
 
 # Other App Specific Preferences
