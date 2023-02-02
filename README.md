@@ -1,10 +1,10 @@
-# Natilius
+# 🐚 Natilius
 
 <img src='assets/natilius_image.png' width='500'>
 
-🐚 **Natilius** is a fully automated one-click mac developer enviroment script ⚡.
+**Natilius** is a fully automated one-click mac developer enviroment bootstrapper ⚡.
 
-This script is designed to setup a mac from a fresh OS X install:
+Natilius is designed to take vanilla Mac OS X install and:
 
 * Create any default/project folders
 * Configure various Mac OS preferences
