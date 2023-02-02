@@ -29,4 +29,5 @@ This project was born after switching between many mac OS devices as an engineer
 ## License
 
 Code is under the [GNU General Public License (GPL) v3 License](LICENSE.md).
+
 Documentation is under the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/).
