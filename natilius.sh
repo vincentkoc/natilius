@@ -326,8 +326,9 @@ echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSearch Scope set to current folder\033[0m" | tee -a $LOGFILE
     defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf" > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAvoiding the creation of .DS_Store files on network volumes\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAvoiding the creation of .DS_Store files on non-physical volumes\033[0m" | tee -a $LOGFILE
     defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true > /dev/null 2>&1
+    defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling snap-to-grid for icons on the desktop and in other icon views\033[0m" | tee -a $LOGFILE
     /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
@@ -394,6 +395,10 @@ echo -e "\033[0;36mUpdating preferences (Terminal)...\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Terminal "Default Window Settings" -string "Pro" > /dev/null 2>&1
     defaults write com.apple.Terminal "Startup Window Settings" -string "Pro" > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mFix terminal follow focus mouse\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.terminal FocusFollowsMouse -string YES > /dev/null 2>&1
+    defaults write org.x.X11 wm_ffm -bool true > /dev/null 2>&1
+
 # Print Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Print)...\033[0m" | tee -a $LOGFILE
@@ -446,6 +451,7 @@ echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
 
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow full URLs\033[0m" | tee -a $LOGFILE
     defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool true > /dev/null 2>&1
+    defaults write com.apple.safari ShowOverlayStatusBar -int 1
 
 # Other OS Related Preferences
 echo -e | tee -a $LOGFILE
@@ -468,11 +474,18 @@ echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee 
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable the sound effects on boot\033[0m" | tee -a $LOGFILE
     sudo nvram SystemAudioVolume=" " > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable iOS charing chime when plugged into magsafe\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.PowerChime ChimeOnAllHardware -bool true > /dev/null 2>&1
+    open /System/Library/CoreServices/PowerChime.app > /dev/null 2>&1
+
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPreventing Time Machine from prompting to use new hard drives as backup volume\033[0m" | tee -a $LOGFILE
     defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mRemove duplicates in the 'Open With' menu\033[0m" | tee -a $LOGFILE
     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mStop 'Photos' app from opening automatically\033[0m" | tee -a $LOGFILE
+    defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true > /dev/null 2>&1
 
 # Other App Specific Preferences
 echo -e | tee -a $LOGFILE
@@ -499,6 +512,20 @@ echo -e "\033[0;36mUpdating preferences (App specific preferences)...\033[0m" | 
     defaults write com.docker.docker SUEnableAutomaticChecks -bool true > /dev/null 2>&1
 
 exit 0
+
+############################
+#
+# Security
+#
+############################
+
+# Generic Security Tweaks
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mSecurity tweaks (Generic)...\033[0m" | tee -a $LOGFILE
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mTime machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
+    defaults write /Library/Preferences/com.apple.TimeMachine RequiresACPower -bool false > /dev/null 2>&1
+
 
 ###### SECURITY
 
