@@ -6,14 +6,13 @@
 
 This script is designed to setup a mac from a fresh OS X install:
 
-* Setup any default folders
-* Install xcode toolkit required to install various things
-* Install homebrew
+* Create any default/project folders
+* Configure various Mac OS preferences
+* Install homebrew and xcode toolkit
 * Install various packages and apps required
-* Configure development enviroment (Python, Java, Go, NodeJS)
-* Setup various Mac OS preferences
-* Sync and install dotfiles with [mackup](https://github.com/lra/mackup)
-* Secure your mac, based on my earlier work on [ostemper](https://github.com/koconder/ostemper)
+* Stand-up development enviroments (Python, Java, Go, NodeJS)
+* Sync and install dotfiles/preferences with [mackup](https://github.com/lra/mackup)
+* Secure your mac _(based on my earlier work on [ostemper](https://github.com/koconder/ostemper))_
 
 ## How to Run Natilius
 
