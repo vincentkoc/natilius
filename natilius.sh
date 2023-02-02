@@ -257,6 +257,7 @@ fi
 echo -e 
 echo -e "\033[0;36mClosing System Preferences pane if open...\033[0m"
 osascript -e 'tell application "System Preferences" to quit'
+echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m"
 
 ############################
 #
@@ -269,27 +270,37 @@ for a in "${DIRS[@]}";
 do mkdir -p "[$a]" && echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m"
 done
 
-
+echo -e
 echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m"
-#"Expanding the save panel by default"
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
-# Disable the “reopen windows when logging back in” option
-# This works, although the checkbox will still appear to be checked,
-# and the command needs to be entered again for every restart.
-defaults write com.apple.loginwindow TALLogoutSavesState -bool false
-defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
-# Show status bar in Finder
-defaults write com.apple.finder ShowStatusBar -bool true
-#"Allow text selection in Quick Look"
-defaults write com.apple.finder QLEnableTextSelection -bool TRUE
-# Smaller sidebar icons
-defaults write NSGlobalDomain "NSTableViewDefaultSizeMode" -int "1"
-# Show the ~/Library folder
-chflags nohidden ~/Library
-#"Use column view in all Finder windows by default"
-defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mExpanding the save panel by default\033[0m"
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true > /dev/null 2>&1
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true > /dev/null 2>&1
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true > /dev/null 2>&1
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable the “reopen windows when logging back in” option\033[0m"
+defaults write com.apple.loginwindow TALLogoutSavesState -bool false > /dev/null 2>&1
+defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false > /dev/null 2>&1
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow status bar in Finder\033[0m"
+defaults write com.apple.finder ShowStatusBar -bool true > /dev/null 2>&1
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUse column view in all Finder windows by default\033[0m"
+defaults write com.apple.finder FXPreferredViewStyle -string "clmv" > /dev/null 2>&1
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAllow text selection in Quick Look\033[0m"
+defaults write com.apple.finder QLEnableTextSelection -bool TRUE > /dev/null 2>&1
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSmaller sidebar icons\033[0m"
+defaults write NSGlobalDomain "NSTableViewDefaultSizeMode" -int "1" > /dev/null 2>&1
+
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow hidden ~/Library folder\033[0m"
+chflags nohidden ~/Library > /dev/null 2>&1
+
+
+#"Showing icons for hard drives, servers, and removable media on the desktop"
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+
 # Folders Ontop
 defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
 defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true"
@@ -332,8 +343,6 @@ defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 #"Enabling subpixel font rendering on non-Apple LCDs"
 defaults write NSGlobalDomain AppleFontSmoothing -int 2
 
-#"Showing icons for hard drives, servers, and removable media on the desktop"
-defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
 
 #"Disabling the warning when changing a file extension"
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
