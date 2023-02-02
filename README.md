@@ -1,6 +1,6 @@
 # Natilius
 
-![Natilius ontop of a laptop](assets/natilius_image.png | width=200)
+<img src='assets/natilius_image.png' width='200'>
 
 **Natilius** (🐚) is an automated one-click mac developer enviroment script.
 
