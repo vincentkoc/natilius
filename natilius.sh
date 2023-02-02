@@ -250,7 +250,7 @@ if [[ $(command -v brew) == "" ]]; then
     #exit 0
 else
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUpdating homebrew\033[0m" | tee -a $LOGFILE
-    brew update | tee -a $LOGFILE
+    brew update && brew upgrade | tee -a $LOGFILE
 fi
 
 # Quit preferences pane
@@ -344,13 +344,38 @@ echo -e "\033[0;36mUpdating preferences (Input & Keyboard)...\033[0m" | tee -a $
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnable full keyboard access for all controls (e.g. enable Tab in modal dialogs)\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain AppleKeyboardUIMode -int 3 > /dev/null 2>&1
 
+# Screenshotting Related Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Screenshotting)...\033[0m" | tee -a $LOGFILE
+ 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSetting screenshot format to PNG\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.screencapture type -string "png" > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable shadow in screenshots\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.screencapture disable-shadow -bool true > /dev/null 2>&1
 
+# Terminal Related Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Terminal)...\033[0m" | tee -a $LOGFILE
+ 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling UTF-8 for Terminal.app\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.terminal StringEncodings -array 4 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSetting the Pro theme by default\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.Terminal "Default Window Settings" -string "Pro" > /dev/null 2>&1
+    defaults write com.apple.Terminal "Startup Window Settings" -string "Pro" > /dev/null 2>&1
+
+# Print Related Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Print)...\033[0m" | tee -a $LOGFILE
+ 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAutomatically quit printer app once the print jobs complete\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true > /dev/null 2>&1
 
 exit 0
 
 
-
+###### SECURITY
 
 #Reveal system info (IP address, hostname, OS version, etc.) when clicking the clock in the login screen
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
@@ -359,32 +384,36 @@ defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
 #"Check for software updates daily, not just once per week"
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+# Disable Guest User
+sudo sysadminctl -guestAccount off
+sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false
+#Disable quartine on download messages
+defaults write com.apple.LaunchServices LSQuarantine -bool false
+# Disable Crash Report
+defaults write com.apple.CrashReporter DialogType -string "none"
+
+
+###### PRINT
 
 
 
-
-
-#"Automatically quit printer app once the print jobs complete"
-defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
-
-
+###### DISPLAY
 
 #"Enabling subpixel font rendering on non-Apple LCDs"
 defaults write NSGlobalDomain AppleFontSmoothing -int 2
+# Dark Mode
+defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 
-
-
-
-
-
+###### MAIL
 
 #"Setting email addresses to copy as 'foo@example.com' instead of 'Foo Bar <foo@example.com>' in Mail.app"
 defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+# Mail
+defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
+defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes"
+defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
 
-#"Enabling UTF-8 ONLY in Terminal.app and setting the Pro theme by default"
-defaults write com.apple.terminal StringEncodings -array 4
-defaults write com.apple.Terminal "Default Window Settings" -string "Pro"
-defaults write com.apple.Terminal "Startup Window Settings" -string "Pro"
+
 
 #"Preventing Time Machine from prompting to use new hard drives as backup volume"
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
@@ -393,56 +422,54 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # http://www.cultofmac.com/221392/quick-hack-speeds-up-retina-macbooks-wake-from-sleep-os-x-tips/
 # sudo pmset -a standbydelay 86400
 
-#"Setting screenshot format to PNG"
-defaults write com.apple.screencapture type -string "png"
+###### SCREENSHOTS
 
-# Disable shadow in screenshots
-defaults write com.apple.screencapture disable-shadow -bool true
+
+
+###### SAFARI
 
 #"Hiding Safari's sidebar in Top Sites"
 defaults write com.apple.Safari ShowSidebarInTopSites -bool false
-
 #"Disabling Safari's thumbnail cache for History and Top Sites"
 defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
-
 #"Enabling Safari's debug menu"
 defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-
 #"Enabling the Develop menu and the Web Inspector in Safari"
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
 defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
 defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
-
 # Safari Show Full URL
 defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool "true"
-
 #"Adding a context menu item for showing the Web Inspector in web views"
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+
+###### VSCODE
 
 ## Allow pressing and holding a key to repeat it in VS Code - https://stackoverflow.com/questions/39972335/how-do-i-press-and-hold-a-key-and-have-it-repeat-in-vscode
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 
+###### MISC
+
 # Default Temperature units
 defaults write -g AppleTemperatureUnit -string "Celsius"
-
-# Disable Guest User
-sudo sysadminctl -guestAccount off
-sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false
-
 # Battery Bar
 #defaults write com.apple.menuextra.battery ShowTime -string "YES"
 defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 #Disable the sound effects on boot
 sudo nvram SystemAudioVolume=" "
-
-#Disable quartine on download messages
-defaults write com.apple.LaunchServices LSQuarantine -bool false
-
 # Remove duplicates in the 'Open With' menu (also see 'lscleanup' alias)
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+# Hide spotlight from Menu
+defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+# Disable Siri
+defaults write com.apple.Siri "UserHasDeclinedEnable" -bool true
+defaults write com.apple.Siri "StatusMenuVisible" -bool false
+defaults write com.apple.assistant.support "Assistant Enabled" -bool false
+# Menu Bar
+defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm\""
+defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false
 
-# Disable Crash Report
-defaults write com.apple.CrashReporter DialogType -string "none"
+
 
 # Text Editor
 defaults write com.apple.TextEdit RichText -int 0
@@ -463,25 +490,11 @@ defaults write com.macpaw.site.theunarchiver openExtractedFolder -bool true
 defaults write com.docker.docker SUAutomaticallyUpdate -bool true
 defaults write com.docker.docker SUEnableAutomaticChecks -bool true
 
-# Mail
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
 
-# Dark Mode
-defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 
-# Hide spotlight from Menu
-defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
 
-# Disable Siri
-defaults write com.apple.Siri "UserHasDeclinedEnable" -bool true
-defaults write com.apple.Siri "StatusMenuVisible" -bool false
-defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 
-# Menu Bar
-defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm\""
-defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false
+
 
 
 # Kill affected applications
@@ -491,21 +504,17 @@ killall ${KILLAPPS[@]}
 # echo "Setting up Touch ID for sudo..."
 # read -p "Press [Enter] key after this..."
 
-# Install xcode
-xcode-select --install > /dev/null 2>&1
-if [ 0 == $? ]; then
-    sleep 1
-    osascript <<EOD
-tell application "System Events"
-    tell process "Install Command Line Developer Tools"
-        keystroke return
-        click button "Agree" of window "License Agreement"
-    end tell
-end tell
-read -p "Press [Enter] key after this..."
-EOD
+# Only run if the tools are not installed yet
+# To check that try to print the SDK path
+xcode-select -p &> /dev/null
+if [ $? -ne 0 ]; then
+  echo "Command Line Tools for Xcode not found. Installing from softwareupdate…"
+# This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
+  touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
+  PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
+  softwareupdate -i "$PROD" --verbose;
 else
-    echo "Command Line Developer Tools are already installed!"
+  echo "Command Line Tools for Xcode have been installed."
 fi
 
 # find the CLI Tools update
