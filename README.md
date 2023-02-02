@@ -2,7 +2,7 @@
 
 <img src='assets/natilius_image.png' width='500'>
 
-**Natilius** is a fully automated one-click mac developer environment bootstrapper ⚡.
+**Natilius** is a fully automated one-click mac developer and engineering environment bootstrapper ⚡.
 
 It can take vanilla Mac OS X install and have it developer ready in one go, setting up:
 
