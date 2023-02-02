@@ -185,9 +185,9 @@ cat << "EOF"
  | | | ( ( | | |__| | | | |_| |___ |
  |_| |_|\_||_|\___)_|_|_|\____(___/ 
                                    
- Welcome to natilius
+ Welcome to Natilius
 
- natilius is an automated script to help speed up
+ Natilius is an automated script to help speed up
  development on a mac machine by scaffolding 
  all your key development apps, settings, dotfiles
  configration and have you up and running in no
@@ -196,7 +196,7 @@ cat << "EOF"
  This script assumes the iCloud as the primary
  location for dotfiles and configration.
 
- Starting natilius...
+ Starting Natilius...
 
 EOF
 
@@ -213,7 +213,7 @@ fi
 
 ############################
 #
-# Check enviroment (Login, iCloud)
+# Check environment (Login, iCloud)
 #
 ############################
 
@@ -259,7 +259,7 @@ echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m
 
 ############################
 #
-# Setup enviroment
+# Setup OS environment
 #
 ############################
 
