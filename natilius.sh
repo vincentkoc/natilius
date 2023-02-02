@@ -378,6 +378,7 @@ echo -e "\033[0;36mUpdating preferences (Screenshotting)...\033[0m" | tee -a $LO
  
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSetting screenshot format to PNG\033[0m" | tee -a $LOGFILE
     defaults write com.apple.screencapture type -string "png" > /dev/null 2>&1
+    defaults write com.apple.screencapture name "Screenshot" > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable shadow in screenshots\033[0m" | tee -a $LOGFILE
     defaults write com.apple.screencapture disable-shadow -bool true > /dev/null 2>&1
