@@ -220,101 +220,101 @@ fi
 ############################
 
 # Logging
-echo -e "\033[0;36mLogging enabled...\033[0m"
-echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mLog file printing to [$LOGFILE]\033[0m"
-echo -e
+echo -e "\033[0;36mLogging enabled...\033[0m" | tee -a $LOGFILE
+echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mLog file printing to [$LOGFILE]\033[0m" | tee -a $LOGFILE
+echo -e | tee -a $LOGFILE
 
 # Password for Sudo
-echo -e "\033[0;36mPlease provide local password (may auto-skip)...\033[0m"
+echo -e "\033[0;36mPlease provide local password (may auto-skip)...\033[0m" | tee -a $LOGFILE
 sudo -v
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPassword validated\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mPassword validated\033[0m" | tee -a $LOGFILE
 
 # iCloud Drive
 echo -e
-echo -e "\033[0;36mChecking to see if iCloud drive has been mounted...\033[0m"
+echo -e "\033[0;36mChecking to see if iCloud drive has been mounted...\033[0m" | tee -a $LOGFILE
 if [ -d ~/Library/Mobile\ Documents/com~apple~CloudDocs/ ]; then
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36miCloud Drive is located\033[0m"
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36miCloud Drive is located\033[0m" | tee -a $LOGFILE
 else
-    echo -e "\033[0;31mError iCloud Drive not setup [~/Library/Mobile\ Documents/com~apple~CloudDocs/]... Exiting\033[0m"
+    echo -e "\033[0;31mError iCloud Drive not setup [~/Library/Mobile\ Documents/com~apple~CloudDocs/]... Exiting\033[0m" | tee -a $LOGFILE
     exit 0
 fi
 
 # Homebrew
 echo -e
-echo -e "\033[0;36mChecking to see if homebrew is installed...\033[0m"
+echo -e "\033[0;36mChecking to see if homebrew is installed...\033[0m" | tee -a $LOGFILE
 if [[ $(command -v brew) == "" ]]; then
-    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mInstalling homebrew...\033[0m"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo -e "\033[0;33m[ !! ]\033[0m \033[0;36mInstalling homebrew...\033[0m" | tee -a $LOGFILE
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | tee -a $LOGFILE
     export PATH="/usr/local/bin:$PATH"
-    echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script if you have issues...\033[0m"
+    echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
     #exit 0
 else
-    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUpdating homebrew\033[0m"
-    brew update
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUpdating homebrew\033[0m" | tee -a $LOGFILE
+    brew update | tee -a $LOGFILE
 fi
 
 # Quit preferences pane
-echo -e 
-echo -e "\033[0;36mClosing System Preferences pane if open...\033[0m"
-osascript -e 'tell application "System Preferences" to quit'
-echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m"
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mClosing System Preferences pane if open...\033[0m" | tee -a $LOGFILE
+osascript -e 'tell application "System Preferences" to quit' | tee -a $LOGFILE
+echo -e "\033[0;33m[ ?? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m" | tee -a $LOGFILE
 
 ############################
 #
 # Setup enviroment
 #
 ############################
-echo -e
-echo -e "\033[0;36mSetting up custom home directories...\033[0m"
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mSetting up custom home directories...\033[0m" | tee -a $LOGFILE
 for a in "${DIRS[@]}";
-do mkdir -p "[$a]" && echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m"
+do mkdir -p "[$a]" && echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m" | tee -a $LOGFILE
 done
 
-echo -e
-echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m"
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m" | tee -a $LOGFILE
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mExpanding the save panel by default\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mExpanding the save panel by default\033[0m" | tee -a $LOGFILE
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true > /dev/null 2>&1
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true > /dev/null 2>&1
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable the “reopen windows when logging back in” option\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable the “reopen windows when logging back in” option\033[0m" | tee -a $LOGFILE
 defaults write com.apple.loginwindow TALLogoutSavesState -bool false > /dev/null 2>&1
 defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow status bar in Finder\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow status bar in Finder\033[0m" | tee -a $LOGFILE
 defaults write com.apple.finder ShowStatusBar -bool true > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUse column view in all Finder windows by default\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mUse column view in all Finder windows by default\033[0m" | tee -a $LOGFILE
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv" > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAllow text selection in Quick Look\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAllow text selection in Quick Look\033[0m" | tee -a $LOGFILE
 defaults write com.apple.finder QLEnableTextSelection -bool true > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSmaller sidebar icons\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSmaller sidebar icons\033[0m" | tee -a $LOGFILE
 defaults write NSGlobalDomain "NSTableViewDefaultSizeMode" -int "1" > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow hidden ~/Library folder\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow hidden ~/Library folder\033[0m" | tee -a $LOGFILE
 chflags nohidden ~/Library > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow all hidden files and extensions\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShow all hidden files and extensions\033[0m" | tee -a $LOGFILE
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true > /dev/null 2>&1
 defaults write com.apple.Finder AppleShowAllFiles YES > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShowing icons for hard drives, servers, and removable media on the desktop\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mShowing icons for hard drives, servers, and removable media on the desktop\033[0m" | tee -a $LOGFILE
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mFolders allways ontop\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mFolders allways ontop\033[0m" | tee -a $LOGFILE
 defaults write com.apple.finder "_FXSortFoldersFirst" -bool true > /dev/null 2>&1
 defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true" > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSearch Scope set to current folder\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mSearch Scope set to current folder\033[0m" | tee -a $LOGFILE
 defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf" > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAvoiding the creation of .DS_Store files on network volumes\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAvoiding the creation of .DS_Store files on network volumes\033[0m" | tee -a $LOGFILE
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true > /dev/null 2>&1
 
-echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling snap-to-grid for icons on the desktop and in other icon views\033[0m"
+echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling snap-to-grid for icons on the desktop and in other icon views\033[0m" | tee -a $LOGFILE
 /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
 /usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
 /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist > /dev/null 2>&1
