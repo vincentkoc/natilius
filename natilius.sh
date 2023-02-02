@@ -193,10 +193,8 @@ cat << "EOF"
  configration and have you up and running in no
  time. Developed by Vincent Koc (@koconder)
 
- To update some of the "Defaults" feel free to
- modify this script to your liking. This script
- assumes the iCloud as the primary location for
- dotfiles and configration.
+ This script assumes the iCloud as the primary
+ location for dotfiles and configration.
 
  Starting natilius...
 
@@ -357,7 +355,7 @@ echo -e "\033[0;36mUpdating preferences (Screenshotting)...\033[0m" | tee -a $LO
 # Terminal Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Terminal)...\033[0m" | tee -a $LOGFILE
- 
+
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling UTF-8 for Terminal.app\033[0m" | tee -a $LOGFILE
     defaults write com.apple.terminal StringEncodings -array 4 > /dev/null 2>&1
 
@@ -368,11 +366,23 @@ echo -e "\033[0;36mUpdating preferences (Terminal)...\033[0m" | tee -a $LOGFILE
 # Print Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Print)...\033[0m" | tee -a $LOGFILE
- 
+
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mAutomatically quit printer app once the print jobs complete\033[0m" | tee -a $LOGFILE
     defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true > /dev/null 2>&1
 
+# Display Related Preferences
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mUpdating preferences (Display)...\033[0m" | tee -a $LOGFILE
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling subpixel font rendering on non-Apple LCDs\033[0m" | tee -a $LOGFILE
+    defaults write NSGlobalDomain AppleFontSmoothing -int 2 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mEnabling dark mode\033[0m" | tee -a $LOGFILE
+    defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
+
 exit 0
+
+
 
 
 ###### SECURITY
@@ -399,10 +409,6 @@ defaults write com.apple.CrashReporter DialogType -string "none"
 
 ###### DISPLAY
 
-#"Enabling subpixel font rendering on non-Apple LCDs"
-defaults write NSGlobalDomain AppleFontSmoothing -int 2
-# Dark Mode
-defaults write "Apple Global Domain" "AppleInterfaceStyle" "Dark"
 
 ###### MAIL
 
