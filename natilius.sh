@@ -340,6 +340,17 @@ echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mWhen switching applications, switch to respective space\033[0m" | tee -a $LOGFILE
     defaults write -g AppleSpacesSwitchOnActivate -bool true > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable smart quotes and dashes when typing\033[0m" | tee -a $LOGFILE
+    defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false > /dev/null 2>&1
+    defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable automatic period substitution and capitalisation when typing\033[0m" | tee -a $LOGFILE
+    defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false > /dev/null 2>&1
+    defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false > /dev/null 2>&1
+
+    # echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisable auto-correct\033[0m" | tee -a $LOGFILE
+    # defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false > /dev/null 2>&1
+
 # Dock Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Dock)...\033[0m" | tee -a $LOGFILE
