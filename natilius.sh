@@ -323,6 +323,9 @@ echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mDisabling the warning when changing a file extension\033[0m" | tee -a $LOGFILE
     defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓✓ ]\033[0m \033[0;36mWhen switching applications, switch to respective space\033[0m" | tee -a $LOGFILE
+    defaults write -g AppleSpacesSwitchOnActivate -bool true > /dev/null 2>&1
+
 # Dock Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Dock)...\033[0m" | tee -a $LOGFILE
@@ -425,6 +428,10 @@ exit 0
 
 ###### SECURITY
 
+# Disable Siri
+defaults write com.apple.Siri "UserHasDeclinedEnable" -bool true
+defaults write com.apple.Siri "StatusMenuVisible" -bool false
+defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 #Reveal system info (IP address, hostname, OS version, etc.) when clicking the clock in the login screen
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 # Require password immediately after sleep or screen saver begins
@@ -443,19 +450,11 @@ defaults write com.apple.CrashReporter DialogType -string "none"
 
 
 
-#"Preventing Time Machine from prompting to use new hard drives as backup volume"
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+
 
 #"Speeding up wake from sleep to 24 hours from an hour"
 # http://www.cultofmac.com/221392/quick-hack-speeds-up-retina-macbooks-wake-from-sleep-os-x-tips/
 # sudo pmset -a standbydelay 86400
-
-###### SCREENSHOTS
-
-
-
-###### SAFARI
-
 
 ###### VSCODE
 
@@ -475,23 +474,17 @@ sudo nvram SystemAudioVolume=" "
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
 # Hide spotlight from Menu
 defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
-# Disable Siri
-defaults write com.apple.Siri "UserHasDeclinedEnable" -bool true
-defaults write com.apple.Siri "StatusMenuVisible" -bool false
-defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 # Menu Bar
 defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm\""
 defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false
-
+#"Preventing Time Machine from prompting to use new hard drives as backup volume"
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 
 # Text Editor
 defaults write com.apple.TextEdit RichText -int 0
 defaults write com.apple.TextEdit PlainTextEncoding -int 4
 defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
-
-# When switching applications, switch to respective space
-defaults write -g AppleSpacesSwitchOnActivate -bool true
 
 # Contacts
 defaults write com.apple.AddressBook ABBirthDayVisible -bool true
