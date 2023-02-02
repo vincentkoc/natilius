@@ -605,8 +605,10 @@ echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
     defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true > /dev/null 2>&1
     defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mCheck for App Updates daily, not just once a week\033[0m" | tee -a $LOGFILE
-    defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1 > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisable search data leaking in safari\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.Safari UniversalSearchEnabled -bool false > /dev/null 2>&1
+    defaults write com.apple.Safari SuppressSearchSuggestions -bool true > /dev/null 2>&1
+    defaults write com.apple.Safari.plist WebsiteSpecificSearchEnabled -bool NO > /dev/null 2>&1
 
 
 #"Speeding up wake from sleep to 24 hours from an hour"
