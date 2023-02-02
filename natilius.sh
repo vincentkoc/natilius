@@ -188,7 +188,7 @@ cat << "EOF"
  Welcome to natilius
 
  natilius is an automated script to help speed up
- development on a mac machine by scafholding 
+ development on a mac machine by scaffolding 
  all your key development apps, settings, dotfiles
  configration and have you up and running in no
  time. Developed by Vincent Koc (@koconder)
