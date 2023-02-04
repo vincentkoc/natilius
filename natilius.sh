@@ -511,6 +511,14 @@ echo -e "\033[0;36mUpdating preferences (Input & Keyboard)...\033[0m" | tee -a $
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Enable full keyboard access for all controls/modals\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain AppleKeyboardUIMode -int 3 > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Tap to click for this user and for the login screen\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true > /dev/null 2>&1
+    sudo defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 > /dev/null 2>&1
+    defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Silent clicking\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.AppleMultitouchTrackpad ActuationStrength -int 0
+
 # Screenshotting Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Screenshotting)...\033[0m" | tee -a $LOGFILE
@@ -598,6 +606,11 @@ echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Menubar Battery Percentage\033[0m" | tee -a $LOGFILE
     defaults write com.apple.menuextra.battery ShowTime -string "NO" > /dev/null 2>&1
     defaults write com.apple.menuextra.battery ShowPercent -string "YES" > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Disable Mission Control\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.dashboard mcx-disabled -bool true > /dev/null 2>&1
+    defaults write com.apple.dashboard enabled-state -int 1 > /dev/null 2>&1
+    defaults write com.apple.dock dashboard-in-overlay -bool true > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Menubar hide spotlight and wifi\033[0m" | tee -a $LOGFILE
     defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1 > /dev/null 2>&1
@@ -719,7 +732,7 @@ echo -e "\033[0;36mSecurity tweaks (Updates)...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Updates: Time machine dose not require AC power (magsafe)\033[0m" | tee -a $LOGFILE
     sudo defaults write /Library/Preferences/com.apple.TimeMachine RequiresACPower -bool false > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Updates: Enabling scheduled updates\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Updates: Enabling scheduled updates and background downloads\033[0m" | tee -a $LOGFILE
     softwareupdate --schedule on > /dev/null 2>&1
     sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true > /dev/null 2>&1
     sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -bool true > /dev/null 2>&1
