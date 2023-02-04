@@ -68,6 +68,8 @@ BREWTAPS=(
     homebrew/cask-versions
     homebrew/cask-fonts
     lencx/chatgpt
+    adoptopenjdk/openjdk
+    github/gh
 )
 
 # App Store
@@ -132,7 +134,7 @@ BREWPACKAGES=(
     fd
     fzf
     git
-    github/gh/gh
+    gh
     git-lfs
     glow
     go
@@ -144,6 +146,7 @@ BREWPACKAGES=(
     htop
     httpie
     icdiff
+    jenv
     jc
     jq
     kubectl
@@ -747,7 +750,7 @@ echo -e "\033[0;36mTapping homebrew casks...\033[0m" | tee -a $LOGFILE
 for a in "${BREWTAPS[@]}";
 do
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTapping cask [$a]\033[0m" | tee -a $LOGFILE
-    yes | brew tap $a | tee -a $LOGFILE
+    brew tap $a | tee -a $LOGFILE
     sleep 1
 done
 
@@ -763,7 +766,8 @@ echo -e "\033[0;36mInstalling homebrew packages...\033[0m" | tee -a $LOGFILE
 for a in "${BREWPACKAGES[@]}";
 do
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling package [$a]\033[0m" | tee -a $LOGFILE
-    yes | brew install $a | tee -a $LOGFILE
+    brew install $a | tee -a $LOGFILE
+    echo -e 
     sleep 2
 done
 
@@ -780,8 +784,12 @@ for a in "${BREWCASKS[@]}";
 do
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling cask [$a]\033[0m" | tee -a $LOGFILE
     sudo -u $SUDO_USER brew install --appdir="/Applications" --cask $a | tee -a $LOGFILE
+    echo -e 
     sleep 2
 done
+
+echo -e "\033[0;36mRunning post install clean-up\033[0m" | tee -a $LOGFILE
+brew cleanup
 
 exit 0
 
@@ -803,7 +811,14 @@ exit 0
 # echo "Installing Java (OpenJDK)..."
 # brew tap AdoptOpenJDK/openjdk
 # brew install --cask adoptopenjdk
-# brew install --cask adoptopenjdk11
+# brew install --cask adoptopenjdk16
+# jenv add /usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home 
+# > jenv local 17.0
+# > java -version                                                                                                                                     
+# openjdk version "17.0.1" 2021-10-19
+# OpenJDK Runtime Environment Homebrew (build 17.0.1+1)
+# OpenJDK 64-Bit Server VM Homebrew (build 17.0.1+1, mixed mode, sharing)
+# https://formulae.brew.sh/cask/temurin
 
 # # Install Homebrew packages
 
@@ -861,6 +876,7 @@ exit 0
 # # Brew Doctor
 # echo "Checking homebrew..."
 # brew doctor
+
 
 
 # # Rust
