@@ -70,6 +70,7 @@ BREWTAPS=(
     lencx/chatgpt
     adoptopenjdk/openjdk
     github/gh
+    r-lib/rig
 )
 
 # App Store
@@ -170,7 +171,7 @@ BREWPACKAGES=(
     pyenv-virtualenv
     pipenv
     procs
-    r
+    rig
     rbenv
     readline
     rustup-init
