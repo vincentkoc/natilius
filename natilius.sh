@@ -221,7 +221,8 @@ BREWCASKS=(
     microsoft-office
     miro
     muzzle
-    mkchromecast
+    #mkchromecast
+    #sunflowe??
     mysqlworkbench
     netnewswire
     notion
