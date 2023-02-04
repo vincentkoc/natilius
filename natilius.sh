@@ -516,8 +516,16 @@ echo -e "\033[0;36mUpdating preferences (Input & Keyboard)...\033[0m" | tee -a $
     sudo defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 > /dev/null 2>&1
     defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Silent clicking\033[0m" | tee -a $LOGFILE
-    defaults write com.apple.AppleMultitouchTrackpad ActuationStrength -int 0
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Silent clicking enabled\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.AppleMultitouchTrackpad ActuationStrength -int 0 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Adjust keyboard brightness in low light\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.BezelServices kDim -bool true > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor "Automatic Keyboard Enabled" -bool true > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Dim keyboard after idle time (1 minute)\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.BezelServices kDimTime -int 60 > /dev/null 2>&1
+    sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor "Keyboard Dim Time" -int 60 > /dev/null 2>&1
 
 # Screenshotting Related Preferences
 echo -e | tee -a $LOGFILE
