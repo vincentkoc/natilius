@@ -216,6 +216,7 @@ BREWCASKS=(
     gpg-suite
     imageoptim
     iterm2
+    kap
     keybase
     keycastr
     keyboard-maestro
