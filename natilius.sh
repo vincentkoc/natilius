@@ -121,6 +121,7 @@ APPSTORE=(
 # zoxide (z)
 #
 BREWPACKAGES=(
+    xquartz
     ack
     awscli
     bat
@@ -169,6 +170,7 @@ BREWPACKAGES=(
     pyenv-virtualenv
     pipenv
     procs
+    r
     rbenv
     readline
     rustup-init
