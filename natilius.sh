@@ -849,6 +849,11 @@ do
 done
 
 # espanso service register
+# espanso install accented-words
+# espanso install misspell-en-uk
+# espanso install misspell-en
+# espanso install numeronyms
+# espanso restart
 
 
 
