@@ -67,7 +67,7 @@ BREWTAPS=(
     homebrew/cask
     homebrew/cask-versions
     homebrew/cask-fonts
-    lencx/chatgpt https://github.com/lencx/ChatGPT.git
+    lencx/chatgpt
 )
 
 # App Store
@@ -743,7 +743,7 @@ done
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mTapping homebrew casks...\033[0m" | tee -a $LOGFILE
 for a in "${BREWTAPS[@]}";
-do brew tap $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTapping cask [$a]\033[0m" | tee -a $LOGFILE
+do yes | brew tap $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTapping cask [$a]\033[0m" | tee -a $LOGFILE && sleep 1
 done
 
 ############################
@@ -756,7 +756,7 @@ done
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mInstalling homebrew packages...\033[0m" | tee -a $LOGFILE
 for a in "${BREWPACKAGES[@]}";
-do brew install $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling package [$a]\033[0m" | tee -a $LOGFILE
+do yes | brew install $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling package [$a]\033[0m" | tee -a $LOGFILE && sleep 2
 done
 
 ############################
