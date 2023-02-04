@@ -62,11 +62,12 @@ KILLAPPS=(
     SystemUIServer
 )
 
-# Casks
-CASKS=(
+# Homebrew Casks to "tap"
+BREWTAPS=(
     homebrew/cask
     homebrew/cask-versions
     homebrew/cask-fonts
+    lencx/chatgpt https://github.com/lencx/ChatGPT.git
 )
 
 # App Store
@@ -117,7 +118,7 @@ APPSTORE=(
 # tokei
 # zoxide (z)
 #
-PACKAGES=(
+BREWPACKAGES=(
     ack
     awscli
     bat
@@ -188,7 +189,7 @@ PACKAGES=(
 )
 
 # Homebrew casks to install
-CASKS=(
+BREWCASKS=(
     aerial
     airbuddy
     alfred
@@ -717,7 +718,7 @@ echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari.plist WebsiteSpecificSearchEnabled -bool NO > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Privacy: Remove Google Software Updater\033[0m" | tee -a $LOGFILE
-    ~/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/ksinstall --nuke
+    ~/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/ksinstall --nuke 2>/dev/null | tee -a $LOGFILE || true
 
 ############################
 #
@@ -734,6 +735,32 @@ done
 
 ############################
 #
+# Homebrew Taps
+#
+############################
+
+# Privacy related Security Tweaks
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mTapping homebrew casks...\033[0m" | tee -a $LOGFILE
+for a in "${BREWTAPS[@]}";
+do brew tap $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTapping cask [$a]\033[0m" | tee -a $LOGFILE
+done
+
+############################
+#
+# Homebrew Packages
+#
+############################
+
+# Privacy related Security Tweaks
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mInstalling homebrew packages...\033[0m" | tee -a $LOGFILE
+for a in "${BREWPACKAGES[@]}";
+do brew install $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling package [$a]\033[0m" | tee -a $LOGFILE
+done
+
+############################
+#
 # Homebrew Casks
 #
 ############################
@@ -741,11 +768,13 @@ done
 # Privacy related Security Tweaks
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mInstalling homebrew casks...\033[0m" | tee -a $LOGFILE
-for a in "${CASKS[@]}";
-do brew tap $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mClosing app [$a]\033[0m" 2>/dev/null | tee -a $LOGFILE || true
+for a in "${BREWCASKS[@]}";
+do sudo -u $SUDO_USER brew install --appdir="/Applications" --cask $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling cask [$a]\033[0m" | tee -a $LOGFILE
 done
 
 exit 0
+
+# espanso service register
 
 ############################
 #
@@ -783,7 +812,7 @@ exit 0
 
 # # Install Other Misc Apps with Homebrew...
 # echo "Installing Chat GPT client..."
-# brew tap lencx/chatgpt https://github.com/lencx/ChatGPT.git
+# brew tap
 # sudo -u $SUDO_USER brew install --appdir="/Applications" --cask chatgpt --no-quarantine
 
 # # Brew Cleanup
