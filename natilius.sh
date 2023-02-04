@@ -122,7 +122,6 @@ APPSTORE=(
 # zoxide (z)
 #
 BREWPACKAGES=(
-    xquartz
     ack
     awscli
     bat
@@ -241,6 +240,7 @@ BREWCASKS=(
     transmit
     visual-studio-code
     vlc
+    xquartz
     zoom
 )
 
@@ -833,6 +833,7 @@ exit 0
 # OpenJDK Runtime Environment Homebrew (build 17.0.1+1)
 # OpenJDK 64-Bit Server VM Homebrew (build 17.0.1+1, mixed mode, sharing)
 # https://formulae.brew.sh/cask/temurin
+# https://gist.github.com/bondolo/5ce1a1c0d38e72a80a79ac28f951c9a5
 
 # # Install Homebrew packages
 
