@@ -30,6 +30,8 @@ I have taken inspiration from the following other Mac config/setup scripts for N
 * https://gist.github.com/bradp/bea76b16d3325f5c47d4
 * https://gist.github.com/vraravam/5e28ca1720c9dddacdc0e6db61e093fe
 * https://github.com/ptb/mac-setup/blob/develop/mac-setup.command
+* https://gist.github.com/nickytonline/729fc106a0146345c0b90f3356a41e4d#file-my-mac-setup-sh
+* https://github.com/minamarkham/formation
 
 ## License
 
