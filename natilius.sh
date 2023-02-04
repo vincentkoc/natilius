@@ -171,7 +171,6 @@ BREWPACKAGES=(
     pyenv-virtualenv
     pipenv
     procs
-    rig
     rbenv
     readline
     rustup-init
@@ -234,6 +233,7 @@ BREWCASKS=(
     postman
     profilecreator
     rescuetime
+    rig
     slack
     spotify
     sublime-text
