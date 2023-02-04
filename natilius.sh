@@ -99,18 +99,23 @@ APPSTORE=(
 # ls -> exa
 # diff -> icdiff
 # curl -> httpie
-# man -> tldr
+# man -> tealdeer (tldr)
 # find -> fd
 # top -> htop
 # git -> tig
+# ps -> procs
+# ping -> gping
+# dig -> dog
 #
 # Newer shell/cli tools:
 # croc
 # fzf
 # glow
+# hexyl
 # jc
 # jq
-# z
+# tokei
+# zoxide (z)
 #
 PACKAGES=(
     ack
@@ -121,6 +126,7 @@ PACKAGES=(
     curl
     croc
     docker-compose
+    dog
     exa
     fd
     fzf
@@ -129,9 +135,11 @@ PACKAGES=(
     git-lfs
     glow
     go
+    gping
     gpg
     gradle
     helm
+    hexyl
     htop
     httpie
     icdiff
@@ -156,16 +164,18 @@ PACKAGES=(
     pyenv
     pyenv-virtualenv
     pipenv
+    procs
     rbenv
     readline
     rustup-init
     speedtest-cli
     sqlite3
+    tealdeer
     terraform
     terraformer
     tig
-    tldr
     tmux
+    tokei
     trash
     tree
     vim
@@ -174,7 +184,7 @@ PACKAGES=(
     xz
     yamllint
     zlib
-    z
+    zoxide
 )
 
 # Homebrew casks to install
