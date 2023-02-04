@@ -500,6 +500,16 @@ echo -e "\033[0;36mUpdating preferences (Dock)...\033[0m" | tee -a $LOGFILE
     defaults write com.apple.dock autohide-time-modifier -float "0.5" > /dev/null 2>&1
     defaults write com.apple.dock tilesize -int 36 > /dev/null 2>&1
     defaults write com.apple.dock show-process-indicators -bool true > /dev/null 2>&1
+ 
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Dock: Setting up hot corners\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.dock wvous-tl-corner -int 12
+    defaults write com.apple.dock wvous-tr-corner -int 14
+    defaults write com.apple.dock wvous-bl-corner -int 4
+    defaults write com.apple.dock wvous-br-corner -int 5
+    defaults write com.apple.dock wvous-tl-modifier -int 0
+    defaults write com.apple.dock wvous-tr-modifier -int 0
+    defaults write com.apple.dock wvous-bl-modifier -int 0
+    defaults write com.apple.dock wvous-br-modifier -int 0
 
 # Input Related Preferences
 echo -e | tee -a $LOGFILE
