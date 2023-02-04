@@ -35,13 +35,19 @@ PYVER="3.9.11"
 # Directories to generate
 DIRS=(
     ~/.mackup
-    ~/.nvm
     ~/GIT
     ~/GIT/_Apps
     ~/GIT/_Perso
     ~/GIT/_Hipages
     ~/GIT/_Stj
     ~/GIT/_Airbyte
+)
+DIRSTOEXCLUDEFROMTIMEMACHINE=(
+    ~/.mackup
+    ~/GIT
+    ~/Dropbox
+    /.gnupg
+    /.ssh
 )
 
 # Apps to kill post setup to apply changes
@@ -84,20 +90,50 @@ APPSTORE=(
 )
 
 # Homebrew packages to install
+#
+# Cli replacements:
+# cat -> bat
+# ssh -> mosh
+# vim -> neovim
+# grep -> ack + peco
+# ls -> exa
+# diff -> icdiff
+# curl -> httpie
+# man -> tldr
+# find -> fd
+# top -> htop
+# git -> tig
+#
+# Newer shell/cli tools:
+# fzf
+# glow
+# jc
+# jq
+# z
+#
 PACKAGES=(
+    ack
     awscli
+    bat
     ca-certificates
     coreutils
     curl
     docker-compose
+    exa
+    fd
+    fzf
     git
     github/gh/gh
     git-lfs
+    glow
     go
     gpg
     gradle
     helm
     htop
+    httpie
+    icdiff
+    jc
     jq
     kubectl
     kubernetes-cli
@@ -106,12 +142,14 @@ PACKAGES=(
     make
     mackup
     minikube
+    mosh
     neovim
     nmap
     node
     nodenv
     npm
     openssl
+    peco
     pre-commit
     pyenv
     pyenv-virtualenv
@@ -123,6 +161,7 @@ PACKAGES=(
     sqlite3
     terraform
     terraformer
+    tig
     tldr
     tmux
     trash
@@ -133,6 +172,7 @@ PACKAGES=(
     xz
     yamllint
     zlib
+    z
 )
 
 # Homebrew casks to install
@@ -331,8 +371,14 @@ echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mSystem Preferences pane closed\033[0m"
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mSetting up custom home directories...\033[0m" | tee -a $LOGFILE
 for a in "${DIRS[@]}";
-do mkdir -p $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m" | tee -a $LOGFILE
+do mkdir -p $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mCreated folder if missing [$a]\033[0m" 2>/dev/null | tee -a $LOGFILE || true
 done
+
+echo -e "\033[0;36mAdding custom exclusions to Time Machine...\033[0m" | tee -a $LOGFILE
+for a in "${DIRSTOEXCLUDEFROMTIMEMACHINE[@]}";
+do sudo tmutil $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTime machine exclusions included [$a]\033[0m" 2>/dev/null | tee -a $LOGFILE || true
+done
+
 
 # Finder Related Preferences
 echo -e | tee -a $LOGFILE
@@ -495,7 +541,7 @@ echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari IncludeInternalDebugMenu -bool true > /dev/null 2>&1
     defaults write com.apple.Safari IncludeDevelopMenu -bool true > /dev/null 2>&1
     defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true > /dev/null 2>&1
-    defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true > /dev/null 2>&1
+    defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true > /dev/null 2>&1
     defaults write NSGlobalDomain WebKitDeveloperExtras -bool true > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Safari: Show full URLs\033[0m" | tee -a $LOGFILE
@@ -544,8 +590,15 @@ echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (App specific preferences)...\033[0m" | tee -a $LOGFILE
 
     # https://stackoverflow.com/questions/39972335/how-do-i-press-and-hold-a-key-and-have-it-repeat-in-vscode
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Allow pressing and holding a key to repeat it in VS Code\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: VS Code Allow pressing and holding a key to repeat it\033[0m" | tee -a $LOGFILE
     defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: VS Code enable subpixel anti-aliasing\033[0m" | tee -a $LOGFILE
+    defaults write com.microsoft.VSCode CGFontRenderingFontSmoothingDisabled -bool false > /dev/null 2>&1
+    defaults write com.microsoft.VSCode.helper CGFontRenderingFontSmoothingDisabled -bool false > /dev/null 2>&1
+    defaults write com.microsoft.VSCode.helper.EH CGFontRenderingFontSmoothingDisabled -bool false > /dev/null 2>&1
+    defaults write com.microsoft.VSCode.helper.NP CGFontRenderingFontSmoothingDisabled -bool false > /dev/null 2>&1
+
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Apple Text Editor to use plain text only\033[0m" | tee -a $LOGFILE
     defaults write com.apple.TextEdit RichText -int 0 > /dev/null 2>&1
@@ -651,6 +704,9 @@ echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
     defaults write com.apple.Safari SuppressSearchSuggestions -bool true > /dev/null 2>&1
     defaults write com.apple.Safari.plist WebsiteSpecificSearchEnabled -bool NO > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Privacy: Remove Google Software Updater\033[0m" | tee -a $LOGFILE
+    ~/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/ksinstall --nuke
+
 ############################
 #
 # Kill apps (to apply changes)
@@ -661,7 +717,7 @@ echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mRestarting apps after applying changes...\033[0m" | tee -a $LOGFILE
 for a in "${KILLAPPS[@]}";
-do killall -q $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mClosing app [$a]\033[0m" 2>/dev/null || true
+do killall -q $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mClosing app [$a]\033[0m" 2>/dev/null | tee -a $LOGFILE || true
 done
 
 ############################
