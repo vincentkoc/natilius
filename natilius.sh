@@ -348,17 +348,23 @@ xcode-select -p &> /dev/null
 if [ $? -ne 0 ]; then
     echo -e "\033[0;33m[ ! ]\033[0m \033[0;36mCommand Line Tools for Xcode not found. Installing from softwareupdate…\033[0m" | tee -a $LOGFILE
     # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
-    touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
+    touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
     PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
-    softwareupdate -i "$PROD" --verbose;
+    softwareupdate -i "$PROD" --agree-to-license --verbose | tee -a $LOGFILE
 else
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mCommand Line Tools for Xcode is already installed\033[0m" | tee -a $LOGFILE
 fi
 
 # Mac OS updates
 echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mInstalling rosetta (for M1 macs)...\033[0m" | tee -a $LOGFILE
+sudo softwareupdate --install-rosetta --agree-to-license --verbose | tee -a $LOGFILE || true
+echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUpdate rosetta operation completed\033[0m" | tee -a $LOGFILE
+
+# Mac OS updates
+echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mChecking to see if any Mac OS updates and installing...\033[0m" | tee -a $LOGFILE
-sudo softwareupdate --install --all | tee -a $LOGFILE
+sudo softwareupdate --install --all --agree-to-license --verbose  | tee -a $LOGFILE
 echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUpdate checks completed\033[0m" | tee -a $LOGFILE
 
 # Homebrew
