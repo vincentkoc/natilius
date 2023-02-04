@@ -46,8 +46,8 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
     ~/.mackup
     ~/GIT
     ~/Dropbox
-    /.gnupg
-    /.ssh
+    ~/.gnupg
+    ~/.ssh
 )
 
 # Apps to kill post setup to apply changes
@@ -389,7 +389,9 @@ done
 
 echo -e "\033[0;36mAdding custom exclusions to Time Machine...\033[0m" | tee -a $LOGFILE
 for a in "${DIRSTOEXCLUDEFROMTIMEMACHINE[@]}";
-do sudo tmutil $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTime machine exclusions included [$a]\033[0m" 2>/dev/null | tee -a $LOGFILE || true
+do
+    sudo tmutil $a 2>/dev/null || true
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTime machine exclusions included [$a]\033[0m" | tee -a $LOGFILE 
 done
 
 
@@ -743,7 +745,10 @@ done
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mTapping homebrew casks...\033[0m" | tee -a $LOGFILE
 for a in "${BREWTAPS[@]}";
-do yes | brew tap $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTapping cask [$a]\033[0m" | tee -a $LOGFILE && sleep 1
+do
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTapping cask [$a]\033[0m" | tee -a $LOGFILE
+    yes | brew tap $a | tee -a $LOGFILE
+    sleep 1
 done
 
 ############################
@@ -756,7 +761,10 @@ done
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mInstalling homebrew packages...\033[0m" | tee -a $LOGFILE
 for a in "${BREWPACKAGES[@]}";
-do yes | brew install $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling package [$a]\033[0m" | tee -a $LOGFILE && sleep 2
+do
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling package [$a]\033[0m" | tee -a $LOGFILE
+    yes | brew install $a | tee -a $LOGFILE
+    sleep 2
 done
 
 ############################
@@ -769,7 +777,10 @@ done
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mInstalling homebrew casks...\033[0m" | tee -a $LOGFILE
 for a in "${BREWCASKS[@]}";
-do sudo -u $SUDO_USER brew install --appdir="/Applications" --cask $a | tee -a $LOGFILE && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling cask [$a]\033[0m" | tee -a $LOGFILE
+do
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling cask [$a]\033[0m" | tee -a $LOGFILE
+    sudo -u $SUDO_USER brew install --appdir="/Applications" --cask $a | tee -a $LOGFILE
+    sleep 2
 done
 
 exit 0
