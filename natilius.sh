@@ -822,9 +822,9 @@ echo -e "\033[0;36mInstalling Apple App Store apps...\033[0m" | tee -a $LOGFILE
 for a in "${APPSTORE[@]}";
 do
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling app [$a]\033[0m" | tee -a $LOGFILE
-    sudo -u $SUDO_USER brew install --appdir="/Applications" --cask $a | tee -a $LOGFILE
+    mas install $a | tee -a $LOGFILE
     echo -e 
-    sleep 2
+    sleep 1
 done
 
 # espanso service register
