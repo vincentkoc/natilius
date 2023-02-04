@@ -156,8 +156,9 @@ BREWPACKAGES=(
     kubernetes-cli
     kubernetes-helm
     lynx
-    make
     mackup
+    make
+    mas
     minikube
     mosh
     neovim
@@ -765,7 +766,6 @@ done
 #
 ############################
 
-# Privacy related Security Tweaks
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mTapping homebrew casks...\033[0m" | tee -a $LOGFILE
 for a in "${BREWTAPS[@]}";
@@ -781,7 +781,6 @@ done
 #
 ############################
 
-# Privacy related Security Tweaks
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mInstalling homebrew packages...\033[0m" | tee -a $LOGFILE
 for a in "${BREWPACKAGES[@]}";
@@ -798,7 +797,6 @@ done
 #
 ############################
 
-# Privacy related Security Tweaks
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mInstalling homebrew casks...\033[0m" | tee -a $LOGFILE
 for a in "${BREWCASKS[@]}";
@@ -812,9 +810,26 @@ done
 echo -e "\033[0;36mRunning post install clean-up\033[0m" | tee -a $LOGFILE
 brew cleanup
 
-exit 0
+
+############################
+#
+# Mac App Store (mas)
+#
+############################
+
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mInstalling Apple App Store apps...\033[0m" | tee -a $LOGFILE
+for a in "${APPSTORE[@]}";
+do
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling app [$a]\033[0m" | tee -a $LOGFILE
+    sudo -u $SUDO_USER brew install --appdir="/Applications" --cask $a | tee -a $LOGFILE
+    echo -e 
+    sleep 2
+done
 
 # espanso service register
+
+
 
 ############################
 #
@@ -841,11 +856,6 @@ exit 0
 # OpenJDK 64-Bit Server VM Homebrew (build 17.0.1+1, mixed mode, sharing)
 # https://formulae.brew.sh/cask/temurin
 # https://gist.github.com/bondolo/5ce1a1c0d38e72a80a79ac28f951c9a5
-
-# # Install Homebrew packages
-
-# echo "Installing packages..."
-# brew install ${PACKAGES[@]}
 
 # # Set Default Screensaver
 # echo "Installing packages..."
