@@ -91,6 +91,8 @@ APPSTORE=(
     1484348796
     # Flow https://apps.apple.com/au/app/flow-focus-pomodoro-timer/id1423210932
     1423210932
+    # Irvue https://apps.apple.com/app/id1039633667
+    1039633667
 )
 
 # Homebrew packages to install
@@ -197,10 +199,12 @@ BREWCASKS=(
     aerial
     airbuddy
     alfred
+    alt-tab
     amazon-chime
     brave-browser
     charles
     cheatsheet
+    dash
     datagrip
     discord
     docker
@@ -222,13 +226,15 @@ BREWCASKS=(
     microsoft-office
     miro
     muzzle
-    #mkchromecast
-    #sunflowe??
+    # mkchromecast
+    # soundflower
     mysqlworkbench
     netnewswire
     notion
     obsidian
     onyx
+    pika
+    # pock
     postman
     profilecreator
     rescuetime
