@@ -381,6 +381,10 @@ else
     brew update && brew upgrade | tee -a $LOGFILE
 fi
 
+echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisabling homebrew analytics module\033[0m" | tee -a $LOGFILE
+brew analytics off
+
+
 # Quit preferences pane
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mClosing System Preferences pane if open...\033[0m" | tee -a $LOGFILE
