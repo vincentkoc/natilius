@@ -105,6 +105,7 @@ APPSTORE=(
 # git -> tig
 #
 # Newer shell/cli tools:
+# croc
 # fzf
 # glow
 # jc
@@ -118,6 +119,7 @@ PACKAGES=(
     ca-certificates
     coreutils
     curl
+    croc
     docker-compose
     exa
     fd
