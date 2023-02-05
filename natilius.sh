@@ -727,8 +727,23 @@ echo -e "\033[0;36mSecurity tweaks (Critical)...\033[0m" | tee -a $LOGFILE
     # echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable SSH\033[0m" | tee -a $LOGFILE
     # sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist > /dev/null 2>&1
 
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable Secure Keyboard Entry in terminal.app\033[0m" | tee -a $LOGFILE
+    sudo -u $SUDO_USER defaults write -app Terminal SecureKeyboardEntry -bool true > /dev/null 2>&1
+
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable gatekeeper (code signing verification)\033[0m" | tee -a $LOGFILE
     sudo spctl --master-enable
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable Apple firewall\033[0m" | tee -a $LOGFILE
+    sudo defaults write /Library/Preferences/com.apple.alf globalstate 1 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable Apple firewall logging\033[0m" | tee -a $LOGFILE
+    sudo defaults write /Library/Preferences/com.apple.alf loggingenabled -bool true > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enabling Stealth Firewall Mode\033[0m" | tee -a $LOGFILE
+    sudo defaults write /Library/Preferences/com.apple.alf stealthenabled 1 > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Disable Wake on Lan (womp)\033[0m" | tee -a $LOGFILE
+    sudo pmset womp 0 > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable filevault (disk encryption)\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ! ]\033[0m \033[0;36m...You may be asked for login again, please keep recovery key safe\033[0m" | tee -a $LOGFILE
@@ -752,6 +767,9 @@ echo -e "\033[0;36mSecurity tweaks (Login/User)...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Login: Disable guest user\033[0m" | tee -a $LOGFILE
     sudo sysadminctl -guestAccount off > /dev/null 2>&1
     sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Login: Disable console logon from the logon screen\033[0m" | tee -a $LOGFILE
+    sudo defaults write /Library/Preferences/com.apple.loginwindow DisableConsoleAccess -bool true > /dev/null 2>&1
 
 # Update related Security Tweaks
 echo -e | tee -a $LOGFILE
@@ -844,7 +862,7 @@ for a in "${BREWCASKS[@]}";
 do
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling cask [$a]\033[0m" | tee -a $LOGFILE
     sudo -u $SUDO_USER brew install --appdir="/Applications" --cask $a | tee -a $LOGFILE
-    echo -e 
+    echo -e
     sleep 2
 done
 
