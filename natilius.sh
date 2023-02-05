@@ -728,7 +728,7 @@ echo -e "\033[0;36mSecurity tweaks (Critical)...\033[0m" | tee -a $LOGFILE
     # sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable Secure Keyboard Entry in terminal.app\033[0m" | tee -a $LOGFILE
-    sudo -u $SUDO_USER defaults write -app Terminal SecureKeyboardEntry -bool true > /dev/null 2>&1
+    defaults write -app Terminal SecureKeyboardEntry -bool true > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable gatekeeper (code signing verification)\033[0m" | tee -a $LOGFILE
     sudo spctl --master-enable
