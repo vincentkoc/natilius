@@ -853,9 +853,9 @@ brew cleanup
 #
 ############################
 
-echo -e
+echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mChecking to see if espanso is installed...\033[0m" | tee -a $LOGFILE
-if [[ $(command -v brew) == "" ]]; then
+if [[ $(command -v espanso) == "" ]]; then
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;espanso should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping espanso setup...\033[0m" | tee -a $LOGFILE
 else
@@ -879,14 +879,20 @@ fi
 ############################
 
 echo -e | tee -a $LOGFILE
-echo -e "\033[0;36mInstalling Apple App Store apps...\033[0m" | tee -a $LOGFILE
-for a in "${APPSTORE[@]}";
-do
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling app [$a]\033[0m" | tee -a $LOGFILE
-    mas install $a | tee -a $LOGFILE
-    echo -e
-    sleep 1
-done
+echo -e "\033[0;36mChecking to see if mas (mac app store cli) is installed...\033[0m" | tee -a $LOGFILE
+if [[ $(command -v mas) == "" ]]; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;mas should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of mac apps...\033[0m" | tee -a $LOGFILE
+else
+    echo -e "\033[0;36mInstalling Apple App Store apps...\033[0m" | tee -a $LOGFILE
+    for a in "${APPSTORE[@]}";
+    do
+        echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling app [$a]\033[0m" | tee -a $LOGFILE
+        mas install $a | tee -a $LOGFILE
+        echo -e
+        sleep 1
+    done
+fi
 
 ############################
 #
