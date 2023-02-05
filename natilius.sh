@@ -203,6 +203,7 @@ BREWCASKS=(
     alt-tab
     amazon-chime
     brave-browser
+    clay
     charles
     cheatsheet
     dash
