@@ -285,12 +285,12 @@ cat << "EOF"
   ____   ____| |_  _| |_ _   _  ___ 
  |  _ \ / _  |  _)| | | | | | |/___)
  | | | ( ( | | |__| | | | |_| |___ |
- |_| |_|\_||_|\___)_|_|_|\____(___/ 
-                                   
+ |_| |_|\_||_|\___)_|_|_|\____(___/
+
  Welcome to Natilius
 
  Natilius is an automated script to help speed up
- development on a mac machine by scaffolding 
+ development on a mac machine by scaffolding
  all your key development apps, settings, dotfiles
  configration and have you up and running in no
  time. Developed by Vincent Koc (@koconder)
@@ -390,7 +390,7 @@ if [[ $(command -v brew) == "" ]]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | tee -a $LOGFILE
     export PATH="/usr/local/bin:$PATH"
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
-    #exit 0
+    exit 1
 else
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUpdating homebrew\033[0m" | tee -a $LOGFILE
     brew update && brew upgrade | tee -a $LOGFILE
@@ -499,14 +499,14 @@ echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m" | tee -a $LOGFILE
 # Dock Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Dock)...\033[0m" | tee -a $LOGFILE
- 
+
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Dock: Setting Dock to auto-hide, delay and sizing\033[0m" | tee -a $LOGFILE
     defaults write com.apple.dock autohide -bool true > /dev/null 2>&1
     defaults write com.apple.dock autohide-delay -float 0 > /dev/null 2>&1
     defaults write com.apple.dock autohide-time-modifier -float "0.5" > /dev/null 2>&1
     defaults write com.apple.dock tilesize -int 36 > /dev/null 2>&1
     defaults write com.apple.dock show-process-indicators -bool true > /dev/null 2>&1
- 
+
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Dock: Setting up hot corners\033[0m" | tee -a $LOGFILE
     defaults write com.apple.dock wvous-tl-corner -int 12
     defaults write com.apple.dock wvous-tr-corner -int 14
@@ -520,7 +520,7 @@ echo -e "\033[0;36mUpdating preferences (Dock)...\033[0m" | tee -a $LOGFILE
 # Input Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Input & Keyboard)...\033[0m" | tee -a $LOGFILE
- 
+
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Input: Scroll direction not natural\033[0m" | tee -a $LOGFILE
     defaults write -g com.apple.swipescrolldirection -bool NO > /dev/null 2>&1
 
@@ -546,7 +546,7 @@ echo -e "\033[0;36mUpdating preferences (Input & Keyboard)...\033[0m" | tee -a $
 # Screenshotting Related Preferences
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mUpdating preferences (Screenshotting)...\033[0m" | tee -a $LOGFILE
- 
+
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Screenshots: Setting format to PNG\033[0m" | tee -a $LOGFILE
     defaults write com.apple.screencapture type -string "png" > /dev/null 2>&1
     defaults write com.apple.screencapture name "Screenshot" > /dev/null 2>&1
@@ -847,6 +847,30 @@ done
 echo -e "\033[0;36mRunning post install clean-up\033[0m" | tee -a $LOGFILE
 brew cleanup
 
+############################
+#
+# Espanso
+#
+############################
+
+echo -e
+echo -e "\033[0;36mChecking to see if espanso is installed...\033[0m" | tee -a $LOGFILE
+if [[ $(command -v brew) == "" ]]; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;espanso should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping espanso setup...\033[0m" | tee -a $LOGFILE
+else
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mRegistering espanso service [$(which espanso)]\033[0m" | tee -a $LOGFILE
+    espanso service register | tee -a $LOGFILE
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling espanso extensions\033[0m" | tee -a $LOGFILE
+    espanso install accented-words | tee -a $LOGFILE
+    espanso install misspell-en-uk | tee -a $LOGFILE
+    espanso install misspell-en | tee -a $LOGFILE
+    espanso install numeronyms | tee -a $LOGFILE
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling espanso extensions\033[0m" | tee -a $LOGFILE
+    espanso restart | tee -a $LOGFILE
+fi
 
 ############################
 #
@@ -860,18 +884,9 @@ for a in "${APPSTORE[@]}";
 do
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling app [$a]\033[0m" | tee -a $LOGFILE
     mas install $a | tee -a $LOGFILE
-    echo -e 
+    echo -e
     sleep 1
 done
-
-# espanso service register
-# espanso install accented-words
-# espanso install misspell-en-uk
-# espanso install misspell-en
-# espanso install numeronyms
-# espanso restart
-
-
 
 ############################
 #
@@ -882,7 +897,6 @@ done
 # Install Mac OS App Store Apps
 # echo "Installing Mac App Store Apps..."
 # brew install mas
-#
 
 
 # # Install OpenJDK Java
@@ -892,7 +906,7 @@ done
 # brew install --cask adoptopenjdk16
 # jenv add /usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home 
 # > jenv local 17.0
-# > java -version                                                                                                                                     
+# > java -version
 # openjdk version "17.0.1" 2021-10-19
 # OpenJDK Runtime Environment Homebrew (build 17.0.1+1)
 # OpenJDK 64-Bit Server VM Homebrew (build 17.0.1+1, mixed mode, sharing)
