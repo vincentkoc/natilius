@@ -153,6 +153,7 @@ BREWPACKAGES=(
     jenv
     jc
     jq
+    keychain
     kubectl
     kubernetes-cli
     kubernetes-helm
@@ -169,6 +170,7 @@ BREWPACKAGES=(
     npm
     openssl
     peco
+    pinentry-mac
     pre-commit
     pyenv
     pyenv-virtualenv
