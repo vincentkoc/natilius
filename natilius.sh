@@ -846,7 +846,7 @@ for a in "${BREWPACKAGES[@]}";
 do
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling package [$a]\033[0m" | tee -a $LOGFILE
     brew install $a | tee -a $LOGFILE
-    echo -e 
+    echo -e
     sleep 2
 done
 
@@ -868,6 +868,23 @@ done
 
 echo -e "\033[0;36mRunning post install clean-up\033[0m" | tee -a $LOGFILE
 brew cleanup
+
+############################
+#
+# Screensaver
+#
+############################
+
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if Aerial screensaver is installed...\033[0m" | tee -a $LOGFILE
+if [ -L ~/.mackup.cfg ] ; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Aerial screensaver should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping Aerial setup...\033[0m" | tee -a $LOGFILE
+else
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSetting default screensaver to Aerial with 2minute timeout\033[0m" | tee -a $LOGFILE
+    defaults -currentHost write com.apple.screensaver idleTime 120
+    defaults -currentHost write com.apple.screensaver moduleDict -dict path -string "/Users/$SUDO_USER/Library/Screen Savers/Aerial.saver" moduleName -string "Aerial" type -int 0
+fi
 
 ############################
 #
@@ -943,9 +960,7 @@ fi
 
 # # Set Default Screensaver
 # echo "Installing packages..."
-# defaults -currentHost write com.apple.screensaver idleTime 120
-# defaults -currentHost write com.apple.screensaver 
-# defaults -currentHost write com.apple.screensaver moduleDict -dict path -string "/Users/$SUDO_USER/Library/Screen Savers/Aerial.saver" moduleName -string "Aerial" type -int 0 
+
 
 # # Install Homebrew casks
 
