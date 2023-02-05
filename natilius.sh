@@ -863,13 +863,13 @@ else
     espanso service register | tee -a $LOGFILE
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling espanso extensions\033[0m" | tee -a $LOGFILE
-    espanso install accented-words | tee -a $LOGFILE
-    espanso install misspell-en-uk | tee -a $LOGFILE
-    espanso install misspell-en | tee -a $LOGFILE
-    espanso install numeronyms | tee -a $LOGFILE
+    espanso install accented-words 2> /dev/null || true
+    espanso install misspell-en-uk 2> /dev/null || true
+    espanso install misspell-en 2> /dev/null || true
+    espanso install numeronyms 2> /dev/null || true
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling espanso extensions\033[0m" | tee -a $LOGFILE
     espanso restart | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mRestarted espanso service\033[0m" | tee -a $LOGFILE
 fi
 
 ############################
@@ -884,7 +884,7 @@ if [[ $(command -v mas) == "" ]]; then
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;mas should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of mac apps...\033[0m" | tee -a $LOGFILE
 else
-    echo -e "\033[0;36mInstalling Apple App Store apps...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling Apple App Store apps with mas [$(which mas)]\033[0m" | tee -a $LOGFILE
     for a in "${APPSTORE[@]}";
     do
         echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling app [$a]\033[0m" | tee -a $LOGFILE
