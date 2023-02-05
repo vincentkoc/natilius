@@ -211,6 +211,7 @@ BREWCASKS=(
     amazon-chime
     balenaetcher
     brave-browser
+    chatgpt
     clay
     charles
     cheatsheet
@@ -935,14 +936,9 @@ fi
 
 ############################
 #
-# Homebrew Java
+# Developer Enviroment: Java
 #
 ############################
-
-# Install Mac OS App Store Apps
-# echo "Installing Mac App Store Apps..."
-# brew install mas
-
 
 # # Install OpenJDK Java
 # echo "Installing Java (OpenJDK)..."
@@ -958,23 +954,27 @@ fi
 # https://formulae.brew.sh/cask/temurin
 # https://gist.github.com/bondolo/5ce1a1c0d38e72a80a79ac28f951c9a5
 
-# # Set Default Screensaver
-# echo "Installing packages..."
+############################
+#
+# Developer Enviroment: Rust
+#
+############################
 
-
-# # Install Homebrew casks
-
-# echo "Installing cask apps..."
-# sudo -u $SUDO_USER brew install --appdir="/Applications" --cask ${CASKS[@]}
-
-# # Install Other Misc Apps with Homebrew...
-# echo "Installing Chat GPT client..."
-# brew tap
-# sudo -u $SUDO_USER brew install --appdir="/Applications" --cask chatgpt --no-quarantine
+# # Rust
+# rustup-init --profile default -y
+# source "$HOME/.cargo/env"
+# rustup update
+# rustc --version
 
 # # Brew Cleanup
 # echo "Cleaning homebrew..."
 # brew cleanup
+
+############################
+#
+# Developer Enviroment: Python
+#
+############################
 
 # # Setup Python
 # # initi after install
@@ -988,6 +988,12 @@ fi
 # pyenv global $PYVER
 # pyenv versions
 # which python
+
+############################
+#
+# Dot files and preferences
+#
+############################
 
 # # Mackup
 # if [ -L ~/.mackup.cfg ] ; then
@@ -1034,8 +1040,3 @@ fi
 # https://packagecontrol.io/packages/ColorHelper
 # https://packagecontrol.io/packages/rainbow_csv
 
-# # Rust
-# rustup-init --profile default -y
-# source "$HOME/.cargo/env"
-# rustup update
-# rustc --version
