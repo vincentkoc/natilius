@@ -103,7 +103,7 @@ APPSTORE=(
 # vim -> neovim
 # grep -> ack + peco
 # ls -> exa
-# diff -> icdiff
+# diff -> icdiff & diff-so-fancy
 # curl -> httpie
 # man -> tealdeer (tldr)
 # find -> fd
@@ -131,6 +131,7 @@ BREWPACKAGES=(
     coreutils
     curl
     croc
+    diff-so-fancy
     docker-compose
     dog
     exa
@@ -179,6 +180,7 @@ BREWPACKAGES=(
     speedtest-cli
     sqlite3
     tealdeer
+    telnet
     terraform
     terraformer
     tig
@@ -203,6 +205,7 @@ BREWCASKS=(
     alfred
     alt-tab
     amazon-chime
+    balenaetcher
     brave-browser
     clay
     charles
@@ -960,10 +963,11 @@ done
 # https://packagecontrol.io/packages/DotENV
 # https://packagecontrol.io/packages/Log%20Highlight
 # https://packagecontrol.io/packages/Terraform
-# 
+#
 # - Lang Support
 # https://packagecontrol.io/packages/Rust%20Enhanced
-# 
+# https://packagecontrol.io/packages/BinaryPlist
+#
 # - UI
 # https://packagecontrol.io/packages/BracketHighlighter
 # https://packagecontrol.io/packages/AutoFileName
