@@ -35,6 +35,7 @@ PYVER="3.9.11"
 # Directories to generate
 DIRS=(
     ~/.mackup
+    ~/.config
     ~/GIT
     ~/GIT/_Apps
     ~/GIT/_Perso
@@ -48,6 +49,7 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
     ~/Dropbox
     ~/.gnupg
     ~/.ssh
+    ~/.config
 )
 
 # Apps to kill post setup to apply changes
