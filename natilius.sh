@@ -159,6 +159,7 @@ BREWPACKAGES=(
     kubectl
     kubernetes-cli
     kubernetes-helm
+    libfido2
     lynx
     mackup
     make
@@ -171,6 +172,7 @@ BREWPACKAGES=(
     nodenv
     npm
     openssl
+    openssh
     peco
     pinentry-mac
     pre-commit
@@ -197,6 +199,7 @@ BREWPACKAGES=(
     wget
     xz
     yamllint
+    ykman
     yt-dlp
     zlib
     zoxide
@@ -942,7 +945,7 @@ fi
 
 # # Install OpenJDK Java
 # echo "Installing Java (OpenJDK)..."
-# brew tap AdoptOpenJDK/openjdk
+
 # brew install --cask adoptopenjdk
 # brew install --cask adoptopenjdk16
 # jenv add /usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home 
