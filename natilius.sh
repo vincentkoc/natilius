@@ -207,6 +207,8 @@ BREWPACKAGES=(
 
 # Homebrew casks to install
 BREWCASKS=(
+    1password
+    1password-cli
     aerial
     airbuddy
     alfred
@@ -234,7 +236,6 @@ BREWCASKS=(
     keybase
     keycastr
     keyboard-maestro
-    lastpass
     logseq
     loom
     mamp
