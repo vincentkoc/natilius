@@ -203,6 +203,8 @@ BREWPACKAGES=(
     yt-dlp
     zlib
     zoxide
+    # fonts at the end, via fonts-cask
+    font-source-sans-pro
 )
 
 # Homebrew casks to install
