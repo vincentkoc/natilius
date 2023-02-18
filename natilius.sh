@@ -183,6 +183,8 @@ BREWPACKAGES=(
     pipenv
     procs
     rbenv
+    rbenv-bundler
+    rbenv-default-gems
     readline
     rustup-init
     speedtest-cli
@@ -999,11 +1001,16 @@ if rbenv versions | grep -q "$RUBYVER"; then
 		echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Ruby...\033[0m" | tee -a $LOGFILE
 else
 		echo "Installing Ruby..."
+		eval "$(rbenv init - zsh)"
 		rbenv install $RUBYVER | tee -a $LOGFILE
 		rbenv local $RUBYVER | tee -a $LOGFILE
 		rbenv global $RUBYVER | tee -a $LOGFILE
-		ruby -version | tee -a $LOGFILE
+		ruby --version | tee -a $LOGFILE
+		gem env home | tee -a $LOGFILE
 fi
+
+# rbenv doctor
+# curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash
 
 ############################
 #
