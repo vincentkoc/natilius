@@ -32,6 +32,7 @@ LOGFILE="./natilius-setup-$TIMESTAMP.log"
 COUNTRYCODE="au"
 JDKVER="19.0"
 PYVER="3.9.11"
+RUBYVER="3.2.1"
 
 # Directories to generate
 DIRS=(
@@ -965,9 +966,9 @@ fi
 # https://formulae.brew.sh/cask/temurin
 # https://gist.github.com/bondolo/5ce1a1c0d38e72a80a79ac28f951c9a5
 echo -e | tee -a $LOGFILE
-echo -e "\033[0;36mChecking to see if Java JDFK is installed...\033[0m" | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if Java JDK (OpenJDK) using jenv is installed...\033[0m" | tee -a $LOGFILE
 if jenv versions | grep -q "$JDKVER"; then
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;OpenJDK should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;OpenJDK [$JDKVER] should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
     jenv versions | tee -a $LOGFILE
 		java --version | tee -a $LOGFILE
 		echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of OpenJDK...\033[0m" | tee -a $LOGFILE
@@ -981,6 +982,27 @@ else
 		jenv local $JDKVER | tee -a $LOGFILE
 		jenv global $JDKVER | tee -a $LOGFILE
 		java -version | tee -a $LOGFILE
+fi
+
+############################
+#
+# Developer Enviroment: Ruby
+#
+############################
+
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if Ruby using rbenv is installed...\033[0m" | tee -a $LOGFILE
+if rbenv versions | grep -q "$RUBYVER"; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Ruby [$RUBYVER] should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
+    rbenv versions | tee -a $LOGFILE
+		ruby --version | tee -a $LOGFILE
+		echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Ruby...\033[0m" | tee -a $LOGFILE
+else
+		echo "Installing Ruby..."
+		rbenv install $RUBYVER | tee -a $LOGFILE
+		rbenv local $RUBYVER | tee -a $LOGFILE
+		rbenv global $RUBYVER | tee -a $LOGFILE
+		ruby -version | tee -a $LOGFILE
 fi
 
 ############################
