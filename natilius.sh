@@ -30,6 +30,7 @@ SUDO_USER=$(whoami)
 TIMESTAMP=$(date +%s)
 LOGFILE="./natilius-setup-$TIMESTAMP.log"
 COUNTRYCODE="au"
+JDKVER="19.0"
 PYVER="3.9.11"
 
 # Directories to generate
@@ -963,15 +964,24 @@ fi
 # # Install OpenJDK Java
 # https://formulae.brew.sh/cask/temurin
 # https://gist.github.com/bondolo/5ce1a1c0d38e72a80a79ac28f951c9a5
-echo "Installing Java (OpenJDK)..."
-brew install --cask temurin
-jenv add /Library/Java/JavaVirtualMachines/temurin-19.jdk/Contents/Home/
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
-jenv local 19.0
-jenv global 19.0
-java -version
-
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if Java JDFK is installed...\033[0m" | tee -a $LOGFILE
+if jenv versions | grep -q "$JDKVER"; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;OpenJDK should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
+    jenv versions | tee -a $LOGFILE
+		java --version | tee -a $LOGFILE
+		echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of OpenJDK...\033[0m" | tee -a $LOGFILE
+else
+		echo "Installing Java (OpenJDK)..."
+		brew install --cask temurin
+		export LATESTJDK=`ls /Library/Java/JavaVirtualMachines/ | sort -n | tail -1`
+		jenv add /Library/Java/JavaVirtualMachines/${LATESTJDK}/Contents/Home/ | tee -a $LOGFILE
+		export PATH="$HOME/.jenv/bin:$PATH"
+		eval "$(jenv init -)"
+		jenv local $JDKVER | tee -a $LOGFILE
+		jenv global $JDKVER | tee -a $LOGFILE
+		java -version | tee -a $LOGFILE
+fi
 
 ############################
 #
@@ -987,11 +997,101 @@ if [[ $(command -v rustc) == "" ]]; then
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of rust...\033[0m" | tee -a $LOGFILE
 else
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling rust\033[0m" | tee -a $LOGFILE
-    rustup-init --profile default -y
+    rustup-init --profile default -y | tee -a $LOGFILE
 		source "$HOME/.cargo/env"
-		rustup update
-		rustc --version
+		rustup update | tee -a $LOGFILE
+		rustc --version | tee -a $LOGFILE
 fi
+
+# Install Node.js with =nodenv=
+
+# _npm='eslint
+# eslint-config-cleanjs
+# eslint-plugin-better
+# eslint-plugin-fp
+# eslint-plugin-import
+# eslint-plugin-json
+# eslint-plugin-promise
+# eslint-plugin-standard
+# gatsby
+# json
+# sort-json'
+
+# install_node_sw () {
+#   if which nodenv > /dev/null; then
+#     NODENV_ROOT="/usr/local/node" && export NODENV_ROOT
+
+#     sudo mkdir -p "$NODENV_ROOT"
+#     sudo chown -R "$(whoami):admin" "$NODENV_ROOT"
+
+#     p "Installing Node.js with nodenv"
+#     git clone https://github.com/nodenv/node-build-update-defs.git \
+#       "$(nodenv root)"/plugins/node-build-update-defs
+#     nodenv update-version-defs > /dev/null
+
+#     nodenv install --skip-existing 8.7.0
+#     nodenv global 8.7.0
+
+#     grep -q "${NODENV_ROOT}" "/etc/paths" || \
+#     sudo sed -i "" -e "1i\\
+# ${NODENV_ROOT}/shims
+# " "/etc/paths"
+
+#     init_paths
+#     rehash
+#   fi
+
+#   T=$(printf '\t')
+
+#   printf "%s\n" "$_npm" | \
+#   while IFS="$T" read pkg; do
+#     npm install --global "$pkg"
+#   done
+
+#   rehash
+# }
+
+
+# beginInstallation "Installing global node packages" | tee -a $logFile
+# npm i -g "${globalNodePackages[@]}" | tee -a $logFile
+
+
+
+# # Install Ruby with =rbenv=
+
+# install_ruby_sw () {
+#   if which rbenv > /dev/null; then
+#     RBENV_ROOT="/usr/local/ruby" && export RBENV_ROOT
+
+#     sudo mkdir -p "$RBENV_ROOT"
+#     sudo chown -R "$(whoami):admin" "$RBENV_ROOT"
+
+#     p "Installing Ruby with rbenv"
+#     rbenv install --skip-existing 2.4.2
+#     rbenv global 2.4.2
+
+#     grep -q "${RBENV_ROOT}" "/etc/paths" || \
+#     sudo sed -i "" -e "1i\\
+# ${RBENV_ROOT}/shims
+# " "/etc/paths"
+
+#     init_paths
+#     rehash
+
+#     printf "%s\n" \
+#       "gem: --no-document" | \
+#     tee "${HOME}/.gemrc" > /dev/null
+
+#     gem update --system > /dev/null
+
+#     trash "$(which rdoc)"
+#     trash "$(which ri)"
+#     gem update
+
+#     gem install bundler
+#   fi
+# }
+
 
 ############################
 #
