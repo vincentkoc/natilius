@@ -205,6 +205,8 @@ BREWPACKAGES=(
     zoxide
     # fonts at the end, via fonts-cask
     font-source-sans-pro
+    font-ubuntu
+    font-roboto
 )
 
 # Homebrew casks to install
@@ -217,6 +219,7 @@ BREWCASKS=(
     alt-tab
     amazon-chime
     balenaetcher
+    bartender
     brave-browser
     #chatgpt
     clay
@@ -263,6 +266,7 @@ BREWCASKS=(
     sublime-text
     the-unarchiver
     transmit
+    tripmode
     visual-studio-code
     vlc
     xquartz
@@ -710,6 +714,9 @@ echo -e "\033[0;36mUpdating preferences (App specific preferences)...\033[0m" | 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Docker enable auto-update\033[0m" | tee -a $LOGFILE
     defaults write com.docker.docker SUAutomaticallyUpdate -bool true > /dev/null 2>&1
     defaults write com.docker.docker SUEnableAutomaticChecks -bool true > /dev/null 2>&1
+
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: GPG Use Keychain to Store Secrets\033[0m" | tee -a $LOGFILE
+    defaults write org.gpgtools.pinentry-mac DisableKeychain -bool false > /dev/null 2>&1
 
 ############################
 #
