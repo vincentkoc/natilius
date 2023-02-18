@@ -69,7 +69,7 @@ BREWTAPS=(
     homebrew/cask
     homebrew/cask-versions
     homebrew/cask-fonts
-    lencx/chatgpt
+    #lencx/chatgpt
     adoptopenjdk/openjdk
     github/gh
     r-lib/rig
@@ -158,7 +158,7 @@ BREWPACKAGES=(
     keychain
     kubectl
     kubernetes-cli
-    kubernetes-helm
+    #kubernetes-helm
     libfido2
     lynx
     mackup
@@ -218,7 +218,7 @@ BREWCASKS=(
     amazon-chime
     balenaetcher
     brave-browser
-    chatgpt
+    #chatgpt
     clay
     charles
     cheatsheet
@@ -241,7 +241,7 @@ BREWCASKS=(
     logseq
     loom
     mamp
-    microsoft-office
+    #microsoft-office
     miro
     muzzle
     # mkchromecast
@@ -384,8 +384,14 @@ fi
 # Mac OS updates
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mInstalling rosetta (for M1 macs)...\033[0m" | tee -a $LOGFILE
-sudo softwareupdate --install-rosetta --agree-to-license --verbose | tee -a $LOGFILE || true
-echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUpdate rosetta operation completed\033[0m" | tee -a $LOGFILE
+if [ $(/usr/bin/pgrep oahd) ]; then
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mRosetta For M1 is already installed\033[0m" | tee -a $LOGFILE
+else
+    sudo softwareupdate --install-rosetta --agree-to-license --verbose | tee -a $LOGFILE || true
+    open /System/Library/CoreServices/Rosetta\ 2\ Updater.app | tee -a $LOGFILE || true
+    read -r -s -p $'Press enter to continue once install is completed...'
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUpdate rosetta operation completed\033[0m" | tee -a $LOGFILE
+fi
 
 # Mac OS updates
 echo -e | tee -a $LOGFILE
@@ -400,6 +406,7 @@ if [[ $(command -v brew) == "" ]]; then
     echo -e "\033[0;33m[ ! ]\033[0m \033[0;36mInstalling homebrew...\033[0m" | tee -a $LOGFILE
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | tee -a $LOGFILE
     export PATH="/usr/local/bin:$PATH"
+    echo 'eval $(/opt/homebrew/bin/brew shellenv)' >> /Users/$USER/.zprofile
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
     exit 1
 else
@@ -657,9 +664,9 @@ echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Disable the sound effects on boot\033[0m" | tee -a $LOGFILE
     sudo nvram SystemAudioVolume=" " > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: iOS charing chime when plugged into magsafe\033[0m" | tee -a $LOGFILE
-    defaults write com.apple.PowerChime ChimeOnAllHardware -bool true > /dev/null 2>&1
-    open /System/Library/CoreServices/PowerChime.app > /dev/null 2>&1
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: iOS charging chime when plugged into magsafe\033[0m" | tee -a $LOGFILE
+    defaults write com.apple.PowerChime ChimeOnAllHardware -bool true || true > /dev/null 2>&1
+    open /System/Library/CoreServices/PowerChime.app || true > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Preventing Time Machine from prompting to use new backup volumes\033[0m" | tee -a $LOGFILE
     defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true > /dev/null 2>&1
@@ -724,7 +731,7 @@ echo -e "\033[0;36mSecurity tweaks (Critical)...\033[0m" | tee -a $LOGFILE
     while read -r line; do
         if [[ ${line} != *"Thunderbolt"* ]];then
             echo "Disabling ipv6 for: $line" | tee -a $LOGFILE
-            sudo networksetup -setv6off $line
+            sudo networksetup -setv6off $line || true
         fi
     done <<< "$NETWORKADAPTERS"
 
@@ -948,11 +955,17 @@ fi
 
 # # Install OpenJDK Java
 # echo "Installing Java (OpenJDK)..."
+# brew install --cask temurin
+# jenv add /Library/Java/JavaVirtualMachines/temurin-19.jdk/Contents/Home/
+# export PATH="$HOME/.jenv/bin:$PATH"
+# eval "$(jenv init -)"
+# jenv local 19.0
 
-# brew install --cask adoptopenjdk
-# brew install --cask adoptopenjdk16
+
+# #brew install --cask adoptopenjdk
+# #brew install --cask adoptopenjdk16
 # jenv add /usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home 
-# > jenv local 17.0
+# > jenv local 19.0
 # > java -version
 # openjdk version "17.0.1" 2021-10-19
 # OpenJDK Runtime Environment Homebrew (build 17.0.1+1)
@@ -1002,19 +1015,19 @@ fi
 ############################
 
 # # Mackup
-# if [ -L ~/.mackup.cfg ] ; then
-#     echo "mackup detected"
-#     mackup backup
-# else
-#     rm -rf ~/.mackup.cfg
-#     touch ~/.mackup.cfg
-#     cat <<EOT >> ~/.mackup.cfg
-# [storage]
-# engine = icloud
-# directory = dotfiles
-# EOT
-#     #mackup restore
-# fi
+if [ -L ~/.mackup.cfg ] ; then
+    echo "mackup detected"
+    mackup backup
+else
+    rm -rf ~/.mackup.cfg
+    touch ~/.mackup.cfg
+    cat <<EOT >> ~/.mackup.cfg
+[storage]
+engine = icloud
+directory = dotfiles
+EOT
+    mackup restore -f
+fi
 
 # # Brew Doctor
 # echo "Checking homebrew..."
