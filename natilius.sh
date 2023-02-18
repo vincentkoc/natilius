@@ -281,23 +281,23 @@ BREWCASKS=(
 
 echo -e "\033[0;33m"
 cat << "EOF"
- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ 
- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ 
- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣾⣿⣿⣿⠀⢸⣿⣿⣿⣿⣶⣶⣤⣀⠀⠀⠀⠀⠀ 
- ⠀⠀⠀⠀⠀⢀⣴⡇⢀⣾⣿⣿⣿⣿⣿⠀⣾⣿⣿⣿⣿⣿⣿⣿⠿⠓⠀⠀⠀⠀ 
- ⠀⠀⠀⠀⣰⣿⣿⡀⢸⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠟⠁⣠⣄⠀⠀⠀⠀ 
- ⠀⠀⠀⢠⣿⣿⣿⣇⠀⢿⣿⣿⣿⣿⣿⠀⢻⣿⣿⣿⡿⢃⣠⣾⣿⣿⣧⡀⠀⠀ 
- ⠀⠀⠀⢸⣿⣿⣿⣿⣆⠘⢿⣿⡿⠛⢉⠀⠀⠉⠙⠛⣠⣿⣿⣿⣿⣿⣿⣷⠀⠀ 
- ⠀⠀⠠⣾⣿⣿⣿⣿⣿⣧⠈⠋⢀⣴⣧⠀⣿⡏⢠⡀⢸⣿⣿⣿⣿⣿⣿⣿⡇⠀ 
- ⠀⠀⣀⠙⢿⣿⣿⣿⣿⣿⠇⢠⣿⣿⣿⡄⠹⠃⠼⠃⠈⠉⠛⠛⠛⠛⠛⠻⠇⠀ 
- ⠀⢸⡟⢠⣤⠉⠛⠿⢿⣿⠀⢸⣿⡿⠋⣠⣤⣄⠀⣾⣿⣿⣶⣶⣶⣦⡄⠀⠀⠀ 
- ⠀⠸⠀⣾⠏⣸⣷⠂⣠⣤⠀⠘⢁⣴⣾⣿⣿⣿⡆⠘⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀ 
- ⠀⠀⠀⠛⠀⣿⡟⠀⢻⣿⡄⠸⣿⣿⣿⣿⣿⣿⣿⡀⠘⣿⣿⣿⣿⠟⠀⠀⠀⠀ 
- ⠀⠀⠀⠀⠀⣿⠇⠀⠀⢻⡿⠀⠈⠻⣿⣿⣿⣿⣿⡇⠀⢹⣿⠿⠋⠀⠀⠀⠀⠀ 
- ⠀⠀⠀⠀⠀⠋⠀⠀⠀⡘⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀  
-                   _ _ _            
-              _   (_) (_)           
-  ____   ____| |_  _| |_ _   _  ___ 
+ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣾⣿⣿⣿⠀⢸⣿⣿⣿⣿⣶⣶⣤⣀⠀⠀⠀⠀⠀
+ ⠀⠀⠀⠀⠀⢀⣴⡇⢀⣾⣿⣿⣿⣿⣿⠀⣾⣿⣿⣿⣿⣿⣿⣿⠿⠓⠀⠀⠀⠀
+ ⠀⠀⠀⠀⣰⣿⣿⡀⢸⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠟⠁⣠⣄⠀⠀⠀⠀
+ ⠀⠀⠀⢠⣿⣿⣿⣇⠀⢿⣿⣿⣿⣿⣿⠀⢻⣿⣿⣿⡿⢃⣠⣾⣿⣿⣧⡀⠀⠀
+ ⠀⠀⠀⢸⣿⣿⣿⣿⣆⠘⢿⣿⡿⠛⢉⠀⠀⠉⠙⠛⣠⣿⣿⣿⣿⣿⣿⣷⠀⠀
+ ⠀⠀⠠⣾⣿⣿⣿⣿⣿⣧⠈⠋⢀⣴⣧⠀⣿⡏⢠⡀⢸⣿⣿⣿⣿⣿⣿⣿⡇⠀
+ ⠀⠀⣀⠙⢿⣿⣿⣿⣿⣿⠇⢠⣿⣿⣿⡄⠹⠃⠼⠃⠈⠉⠛⠛⠛⠛⠛⠻⠇⠀
+ ⠀⢸⡟⢠⣤⠉⠛⠿⢿⣿⠀⢸⣿⡿⠋⣠⣤⣄⠀⣾⣿⣿⣶⣶⣶⣦⡄⠀⠀⠀
+ ⠀⠸⠀⣾⠏⣸⣷⠂⣠⣤⠀⠘⢁⣴⣾⣿⣿⣿⡆⠘⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀
+ ⠀⠀⠀⠛⠀⣿⡟⠀⢻⣿⡄⠸⣿⣿⣿⣿⣿⣿⣿⡀⠘⣿⣿⣿⣿⠟⠀⠀⠀⠀
+ ⠀⠀⠀⠀⠀⣿⠇⠀⠀⢻⡿⠀⠈⠻⣿⣿⣿⣿⣿⡇⠀⢹⣿⠿⠋⠀⠀⠀⠀⠀
+ ⠀⠀⠀⠀⠀⠋⠀⠀⠀⡘⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀
+                   _ _ _
+              _   (_) (_)
+  ____   ____| |_  _| |_ _   _  ___
  |  _ \ / _  |  _)| | | | | | |/___)
  | | | ( ( | | |__| | | | |_| |___ |
  |_| |_|\_||_|\___)_|_|_|\____(___/
@@ -444,7 +444,7 @@ echo -e "\033[0;36mAdding custom exclusions to Time Machine...\033[0m" | tee -a 
 for a in "${DIRSTOEXCLUDEFROMTIMEMACHINE[@]}";
 do
     sudo tmutil $a 2>/dev/null || true
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTime machine exclusions included [$a]\033[0m" | tee -a $LOGFILE 
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTime machine exclusions included [$a]\033[0m" | tee -a $LOGFILE
 done
 
 
@@ -961,24 +961,17 @@ fi
 ############################
 
 # # Install OpenJDK Java
-# echo "Installing Java (OpenJDK)..."
-# brew install --cask temurin
-# jenv add /Library/Java/JavaVirtualMachines/temurin-19.jdk/Contents/Home/
-# export PATH="$HOME/.jenv/bin:$PATH"
-# eval "$(jenv init -)"
-# jenv local 19.0
-
-
-# #brew install --cask adoptopenjdk
-# #brew install --cask adoptopenjdk16
-# jenv add /usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home 
-# > jenv local 19.0
-# > java -version
-# openjdk version "17.0.1" 2021-10-19
-# OpenJDK Runtime Environment Homebrew (build 17.0.1+1)
-# OpenJDK 64-Bit Server VM Homebrew (build 17.0.1+1, mixed mode, sharing)
 # https://formulae.brew.sh/cask/temurin
 # https://gist.github.com/bondolo/5ce1a1c0d38e72a80a79ac28f951c9a5
+echo "Installing Java (OpenJDK)..."
+brew install --cask temurin
+jenv add /Library/Java/JavaVirtualMachines/temurin-19.jdk/Contents/Home/
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+jenv local 19.0
+jenv global 19.0
+java -version
+
 
 ############################
 #
@@ -986,15 +979,19 @@ fi
 #
 ############################
 
-# # Rust
-# rustup-init --profile default -y
-# source "$HOME/.cargo/env"
-# rustup update
-# rustc --version
-
-# # Brew Cleanup
-# echo "Cleaning homebrew..."
-# brew cleanup
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if rust is installed...\033[0m" | tee -a $LOGFILE
+if [[ $(command -v rustc) == "" ]]; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;rustc should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
+		rustc --version | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of rust...\033[0m" | tee -a $LOGFILE
+else
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling rust\033[0m" | tee -a $LOGFILE
+    rustup-init --profile default -y
+		source "$HOME/.cargo/env"
+		rustup update
+		rustc --version
+fi
 
 ############################
 #
