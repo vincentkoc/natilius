@@ -977,6 +977,7 @@ if jenv versions | grep -q "$JDKVER"; then
 else
 		echo "Installing Java (OpenJDK)..."
 		brew install --cask temurin
+		brew install maven
 		export LATESTJDK=`ls /Library/Java/JavaVirtualMachines/ | sort -n | tail -1`
 		jenv add /Library/Java/JavaVirtualMachines/${LATESTJDK}/Contents/Home/ | tee -a $LOGFILE
 		export PATH="$HOME/.jenv/bin:$PATH"
@@ -984,7 +985,14 @@ else
 		jenv local $JDKVER | tee -a $LOGFILE
 		jenv global $JDKVER | tee -a $LOGFILE
 		java -version | tee -a $LOGFILE
+		jenv enable-plugin maven | tee -a $LOGFILE
+		jenv enable-plugin gradle | tee -a $LOGFILE
+		jenv exec mvn -version | tee -a $LOGFILE
+		jenv exec gradle -version | tee -a $LOGFILE
 fi
+
+# # jenv doctor
+# jenv doctor | tee -a $LOGFILE
 
 ############################
 #
@@ -1009,8 +1017,8 @@ else
 		gem env home | tee -a $LOGFILE
 fi
 
-# rbenv doctor
-# curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash
+# # rbenv doctor
+# curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash | tee -a $LOGFILE
 
 ############################
 #
