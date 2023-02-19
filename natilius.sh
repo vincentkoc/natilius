@@ -195,7 +195,7 @@ BREWPACKAGES=(
     terraformer
     tig
     tmux
-		reattach-to-user-namespace
+	reattach-to-user-namespace
     tokei
     trash
     tree
@@ -1040,6 +1040,13 @@ else
 		rustup update | tee -a $LOGFILE
 		rustc --version | tee -a $LOGFILE
 fi
+
+
+# mkdir -p ~/.1password && ln -s \
+#     ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock \
+#     ~/.1password/agent.sock
+
+
 
 # Install Node.js with =nodenv=
 
