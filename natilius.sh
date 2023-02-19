@@ -195,6 +195,7 @@ BREWPACKAGES=(
     terraformer
     tig
     tmux
+		reattach-to-user-namespace
     tokei
     trash
     tree
