@@ -176,6 +176,7 @@ BREWPACKAGES=(
     openssl
     openssh
     peco
+    pinentry
     pinentry-mac
     phantomjs
     pre-commit
@@ -996,6 +997,7 @@ else
     brew install --cask temurin8
     brew install maven
     brew install scala
+    brew install apache-spark
 
     # Add all found JDKs to jenv
     for jdk in /Library/Java/JavaVirtualMachines/*; do
