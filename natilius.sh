@@ -1072,6 +1072,29 @@ else
 fi
 
 
+############################
+#
+# Developer Enviroment: Node
+#
+############################
+
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if Node.js using nodenv is installed...\033[0m" | tee -a $LOGFILE
+
+# Check if nodenv is installed, if not install it
+if ! command -v nodenv &> /dev/null; then
+    echo "nodenv not found. Installing nodenv..."
+    brew install nodenv
+    echo 'export PATH="$HOME/.nodenv/bin:$PATH"' >> ~/.bash_profile
+    echo 'if which nodenv > /dev/null; then eval "$(nodenv init -)"; fi' >> ~/.bash_profile
+    source ~/.bash_profile
+fi
+
+
+
+# yarn
+    # virtualenv
+
 # mkdir -p ~/.1password && ln -s \
 #     ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock \
 #     ~/.1password/agent.sock
