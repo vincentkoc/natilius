@@ -177,6 +177,7 @@ BREWPACKAGES=(
     openssh
     peco
     pinentry-mac
+    phantomjs
     pre-commit
     pyenv
     pyenv-virtualenv
@@ -188,11 +189,15 @@ BREWPACKAGES=(
     readline
     rustup-init
     speedtest-cli
+    sqlite
     sqlite3
     tealdeer
     telnet
     terraform
     terraformer
+    tflint
+    tfsec
+    tfswitch
     tig
     tmux
 	reattach-to-user-namespace
@@ -208,6 +213,7 @@ BREWPACKAGES=(
     yt-dlp
     zlib
     zoxide
+    zsh-completions
     # fonts at the end, via fonts-cask
     font-source-sans-pro
     font-ubuntu
