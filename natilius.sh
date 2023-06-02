@@ -1073,6 +1073,27 @@ else
 
     ruby --version | tee -a $LOGFILE
     gem env home | tee -a $LOGFILE
+
+    # Create or update .gemrc file in the user's home directory to skip installing
+    # documentation for gems (this can significantly speed up gem installation)
+    printf "%s\n" "gem: --no-document" | tee "${HOME}/.gemrc" > /dev/null
+
+    # Update the RubyGems system software to the latest version
+    gem update --system > /dev/null
+
+    # Remove the executables for 'rdoc' and 'ri' gems if they exist
+    # Note: 'trash' is a safer alternative to 'rm' that moves files to the trash
+    # instead of permanently deleting them. If 'trash' is not available on your
+    # system, consider replacing these lines with 'rm' or another file removal command
+    trash "$(which rdoc)"
+    trash "$(which ri)"
+
+    # Update all installed gems to their latest versions
+    gem update
+
+    # Install the 'bundler' gem, which provides a consistent environment for Ruby
+    # projects by tracking and installing the exact gems and versions required
+    gem install bundler
 fi
 
 # # rbenv doctor
@@ -1180,54 +1201,6 @@ fi
 #     ~/.1password/agent.sock
 
 
-
-# Install Node.js with =nodenv=
-
-# _npm='eslint
-# eslint-config-cleanjs
-# eslint-plugin-better
-# eslint-plugin-fp
-# eslint-plugin-import
-# eslint-plugin-json
-# eslint-plugin-promise
-# eslint-plugin-standard
-# gatsby
-# json
-# sort-json'
-
-# install_node_sw () {
-#   if which nodenv > /dev/null; then
-#     NODENV_ROOT="/usr/local/node" && export NODENV_ROOT
-
-#     sudo mkdir -p "$NODENV_ROOT"
-#     sudo chown -R "$(whoami):admin" "$NODENV_ROOT"
-
-#     p "Installing Node.js with nodenv"
-#     git clone https://github.com/nodenv/node-build-update-defs.git \
-#       "$(nodenv root)"/plugins/node-build-update-defs
-#     nodenv update-version-defs > /dev/null
-
-#     nodenv install --skip-existing 8.7.0
-#     nodenv global 8.7.0
-
-#     grep -q "${NODENV_ROOT}" "/etc/paths" || \
-#     sudo sed -i "" -e "1i\\
-# ${NODENV_ROOT}/shims
-# " "/etc/paths"
-
-#     init_paths
-#     rehash
-#   fi
-
-#   T=$(printf '\t')
-
-#   printf "%s\n" "$_npm" | \
-#   while IFS="$T" read pkg; do
-#     npm install --global "$pkg"
-#   done
-
-#   rehash
-# }
 
 
 # beginInstallation "Installing global node packages" | tee -a $logFile
