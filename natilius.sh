@@ -1212,9 +1212,15 @@ echo -e "\033[0;36mChecking to see if Python using pyenv is installed...\033[0m"
 
 # Check if pyenv is installed, if not install it
 if ! command -v pyenv &> /dev/null; then
+    # Install pyenv
     echo "pyenv not found. Installing pyenv..."
     brew install pyenv
     echo 'if command -v pyenv 1>/dev/null 2>&1; then eval "$(pyenv init -)"; fi' >> ~/.bash_profile
+    source ~/.bash_profile
+
+    # Install pyenv-virtualenv
+    brew install pyenv-virtualenv
+    echo 'if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi' >> ~/.bash_profile
     source ~/.bash_profile
 fi
 
@@ -1239,6 +1245,10 @@ else
     # Setup packages
     echo "Installing global Python packages..."
     declare -a globalPythonPackages=(
+        'pip'
+        'virtualenv'
+        'setuptools'
+        'wheel'
         'numpy'
         'pandas'
         'scipy'
