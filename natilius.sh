@@ -1088,9 +1088,9 @@ if [[ $(command -v rustc) == "" ]]; then
 else
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling rust\033[0m" | tee -a $LOGFILE
     rustup-init --profile default -y | tee -a $LOGFILE
-		source "$HOME/.cargo/env"
-		rustup update | tee -a $LOGFILE
-		rustc --version | tee -a $LOGFILE
+	source "$HOME/.cargo/env"
+	rustup update | tee -a $LOGFILE
+	rustc --version | tee -a $LOGFILE
 fi
 
 
