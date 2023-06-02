@@ -1112,10 +1112,63 @@ if ! command -v nodenv &> /dev/null; then
     source ~/.bash_profile
 fi
 
+CURRENTVER=$(get_current_version nodenv)
+if [ "$CURRENTVER" == "$NODEVER" ]; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Node.js [$NODEVER] is already installed...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Node.js...\033[0m" | tee -a $LOGFILE
+else
+    # Install the desired Node.js version if it's not installed
+    if ! nodenv versions --bare | grep -q "$NODEVER"; then
+        echo "Node.js version $NODEVER not found. Installing..."
+        nodenv install $NODEVER
+    fi
 
+    # Set NODEVER as the local and global Node.js version
+    nodenv global $NODEVER
+    nodenv local $NODEVER
 
-# yarn
-    # virtualenv
+    # If there are other versions installed, set the highest one as the global version
+    HIGHESTVER=$(get_highest_version nodenv)
+    if [ "$HIGHESTVER" != "$NODEVER" ]
+    then
+        nodenv global $HIGHESTVER
+    fi
+
+    # Show the active Node.js version
+    node --version | tee -a $LOGFILE
+
+    # Setup packages
+    echo "Installing global Node.js packages..."
+    declare -a globalNodePackages=(
+        'eslint'
+        'gatsby'
+        'json'
+        'sort-json'
+        'nodemon'
+        'express-generator'
+        'create-react-app'
+        'vue-cli'
+        'angular-cli'
+        'prettier'
+        'mocha'
+        'jest'
+        'typescript'
+        'grunt-cli'
+        'gulp-cli'
+        'webpack-cli'
+        'yarn'
+        'pm2'
+        'serverless'
+        'npm-check-updates'
+        'istanbul'
+        'nyc'
+    )
+    npm i -g "${globalNodePackages[@]}" | tee -a $LOGFILE
+    echo "Setting up npm and yarn with nodenv..." | tee -a $LOGFILE
+    nodenv rehash
+    nodenv which npm
+    nodenv which yarn
+fi
 
 # mkdir -p ~/.1password && ln -s \
 #     ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock \
