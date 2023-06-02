@@ -30,7 +30,7 @@ SUDO_USER=$(whoami)
 TIMESTAMP=$(date +%s)
 LOGFILE="./natilius-setup-$TIMESTAMP.log"
 COUNTRYCODE="au"
-JDKVER="19.0"
+JDKVER="20"
 PYVER="3.9.11"
 RUBYVER="3.2.1"
 
