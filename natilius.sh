@@ -1031,10 +1031,8 @@ else
         jenv global $HIGHESTVER
     fi
 
-    # Set JDK version
-    jenv local $JDKVER | tee -a $LOGFILE
-    jenv global $JDKVER | tee -a $LOGFILE
-    java -version | tee -a $LOGFILE
+    # Show the active JDK version
+    java --version | tee -a $LOGFILE
 
     # Enable extras
     jenv enable-plugin maven | tee -a $LOGFILE
@@ -1043,7 +1041,6 @@ else
     jenv exec mvn -version | tee -a $LOGFILE
     jenv exec scala -version | tee -a $LOGFILE
     jenv exec gradle -version | tee -a $LOGFILE
-
 fi
 
 # jenv doctor
