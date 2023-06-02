@@ -973,8 +973,8 @@ echo -e "\033[0;36mChecking to see if Java JDK (OpenJDK) using jenv is installed
 if jenv versions | grep -q "$JDKVER"; then
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;OpenJDK [$JDKVER] should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
     jenv versions | tee -a $LOGFILE
-		java --version | tee -a $LOGFILE
-		echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of OpenJDK...\033[0m" | tee -a $LOGFILE
+    java --version | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of OpenJDK...\033[0m" | tee -a $LOGFILE
 else
     # Install JDK(s)
     echo "Installing Java (OpenJDK)..."
