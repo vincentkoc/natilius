@@ -1063,8 +1063,14 @@ else
     echo "Installing Ruby..."
     eval "$(rbenv init - zsh)"
     rbenv install $RUBYVER | tee -a $LOGFILE
-    rbenv local $RUBYVER | tee -a $LOGFILE
-    rbenv global $RUBYVER | tee -a $LOGFILE
+
+    # If there are other versions installed, set the highest one as the global version
+    HIGHESTVER=$(get_highest_version rbenv)
+    if [ "$HIGHESTVER" != "$RUBYVER" ]
+    then
+        rbenv global $HIGHESTVER
+    fi
+
     ruby --version | tee -a $LOGFILE
     gem env home | tee -a $LOGFILE
 fi
