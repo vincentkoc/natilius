@@ -965,11 +965,19 @@ fi
 #
 ############################
 
-# # Install OpenJDK Java
-# https://formulae.brew.sh/cask/temurin
-# https://gist.github.com/bondolo/5ce1a1c0d38e72a80a79ac28f951c9a5
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mChecking to see if Java JDK (OpenJDK) using jenv is installed...\033[0m" | tee -a $LOGFILE
+
+# Check if jenv is installed, if not install it
+if ! command -v jenv &> /dev/null; then
+    echo "jenv not found. Installing jenv..."
+    brew install jenv
+    export PATH="$HOME/.jenv/bin:$PATH"
+    eval "$(jenv init -)"
+    source ~/.bash_profile
+fi
+
+# Check we have the target JDK version
 if jenv versions | grep -q "$JDKVER"; then
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;OpenJDK [$JDKVER] should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
     jenv versions | tee -a $LOGFILE
