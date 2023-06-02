@@ -1019,6 +1019,7 @@ else
     jenv exec mvn -version | tee -a $LOGFILE
     jenv exec scala -version | tee -a $LOGFILE
     jenv exec gradle -version | tee -a $LOGFILE
+
 fi
 
 # jenv doctor
