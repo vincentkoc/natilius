@@ -1005,8 +1005,8 @@ else
     jenv exec gradle -version | tee -a $LOGFILE
 fi
 
-# # jenv doctor
-# jenv doctor | tee -a $LOGFILE
+# jenv doctor
+jenv doctor | tee -a $LOGFILE
 
 ############################
 #
