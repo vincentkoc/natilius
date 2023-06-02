@@ -1003,7 +1003,6 @@ if ! command -v jenv &> /dev/null; then
     brew install jenv
     export PATH="$HOME/.jenv/bin:$PATH"
     eval "$(jenv init -)"
-    source ~/.bash_profile
 fi
 
 CURRENTVER=$(get_current_version jenv)
@@ -1055,45 +1054,52 @@ jenv doctor | tee -a $LOGFILE
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mChecking to see if Ruby using rbenv is installed...\033[0m" | tee -a $LOGFILE
 
+# Check if rbenv is installed, if not install it
+if ! command -v rbenv &> /dev/null; then
+    echo "rbenv not found. Installing rbenv..."
+    brew install rbenv
+    eval "$(rbenv init -)"
+
+    # Install ruby-build as an rbenv plugin
+    git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+
+    # Install rbenv-default-gems as an rbenv plugin
+    git clone https://github.com/rbenv/rbenv-default-gems.git "$(rbenv root)"/plugins/rbenv-default-gems
+
+    # Create a default-gems file
+    echo "bundler" > "$(rbenv root)"/default-gems
+fi
+
 CURRENTVER=$(get_current_version rbenv)
 if [ "$CURRENTVER" == "$RUBYVER" ]; then
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;Ruby [$RUBYVER] is already installed...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Ruby...\033[0m" | tee -a $LOGFILE
 else
-    echo "Installing Ruby..."
-    eval "$(rbenv init - zsh)"
-    rbenv install $RUBYVER | tee -a $LOGFILE
+    # Install the desired Ruby version if it's not installed
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Ruby version [$RUBYVER] is not found. Installing...\033[0m" | tee -a $LOGFILE
+    rbenv install $RUBYVER
+
+    # Set RUBYVER as the local and global Ruby version
+    rbenv global $RUBYVER
+    rbenv local $RUBYVER
 
     # If there are other versions installed, set the highest one as the global version
     HIGHESTVER=$(get_highest_version rbenv)
-    if [ "$HIGHESTVER" != "$RUBYVER" ]
-    then
+    if [ "$HIGHESTVER" != "$RUBYVER" ]; then
         rbenv global $HIGHESTVER
     fi
 
+    # Show the active Ruby version
     ruby --version | tee -a $LOGFILE
-    gem env home | tee -a $LOGFILE
-
-    # Create or update .gemrc file in the user's home directory to skip installing
-    # documentation for gems (this can significantly speed up gem installation)
-    printf "%s\n" "gem: --no-document" | tee "${HOME}/.gemrc" > /dev/null
 
     # Update the RubyGems system software to the latest version
-    gem update --system > /dev/null
-
-    # Remove the executables for 'rdoc' and 'ri' gems if they exist
-    # Note: 'trash' is a safer alternative to 'rm' that moves files to the trash
-    # instead of permanently deleting them. If 'trash' is not available on your
-    # system, consider replacing these lines with 'rm' or another file removal command
-    trash "$(which rdoc)"
-    trash "$(which ri)"
+    gem update --system
 
     # Update all installed gems to their latest versions
     gem update
 
-    # Install the 'bundler' gem, which provides a consistent environment for Ruby
-    # projects by tracking and installing the exact gems and versions required
-    gem install bundler
+    # Use rbenv-doctor to check the setup
+    curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash | tee -a $LOGFILE
 fi
 
 # # rbenv doctor
@@ -1133,9 +1139,8 @@ echo -e "\033[0;36mChecking to see if Node.js using nodenv is installed...\033[0
 if ! command -v nodenv &> /dev/null; then
     echo "nodenv not found. Installing nodenv..."
     brew install nodenv
-    echo 'export PATH="$HOME/.nodenv/bin:$PATH"' >> ~/.bash_profile
-    echo 'if command -v nodenv > /dev/null; then eval "$(nodenv init -)"; fi' >> ~/.bash_profile
-    source ~/.bash_profile
+    export PATH="$HOME/.nodenv/bin:$PATH"
+    eval "$(nodenv init -)"
 fi
 
 CURRENTVER=$(get_current_version nodenv)
@@ -1215,13 +1220,11 @@ if ! command -v pyenv &> /dev/null; then
     # Install pyenv
     echo "pyenv not found. Installing pyenv..."
     brew install pyenv
-    echo 'if command -v pyenv 1>/dev/null 2>&1; then eval "$(pyenv init -)"; fi' >> ~/.bash_profile
-    source ~/.bash_profile
+    eval "$(pyenv init -)"
 
     # Install pyenv-virtualenv
     brew install pyenv-virtualenv
-    echo 'if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi' >> ~/.bash_profile
-    source ~/.bash_profile
+    eval "$(pyenv virtualenv-init -)"
 fi
 
 CURRENTVER=$(get_current_version)
