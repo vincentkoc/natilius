@@ -1108,7 +1108,7 @@ if ! command -v nodenv &> /dev/null; then
     echo "nodenv not found. Installing nodenv..."
     brew install nodenv
     echo 'export PATH="$HOME/.nodenv/bin:$PATH"' >> ~/.bash_profile
-    echo 'if which nodenv > /dev/null; then eval "$(nodenv init -)"; fi' >> ~/.bash_profile
+    echo 'if command -v nodenv > /dev/null; then eval "$(nodenv init -)"; fi' >> ~/.bash_profile
     source ~/.bash_profile
 fi
 
