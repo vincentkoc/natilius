@@ -976,20 +976,33 @@ if jenv versions | grep -q "$JDKVER"; then
 		java --version | tee -a $LOGFILE
 		echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of OpenJDK...\033[0m" | tee -a $LOGFILE
 else
-		echo "Installing Java (OpenJDK)..."
-		brew install --cask temurin
-		brew install maven
-		export LATESTJDK=`ls /Library/Java/JavaVirtualMachines/ | sort -n | tail -1`
-		jenv add /Library/Java/JavaVirtualMachines/${LATESTJDK}/Contents/Home/ | tee -a $LOGFILE
-		export PATH="$HOME/.jenv/bin:$PATH"
-		eval "$(jenv init -)"
-		jenv local $JDKVER | tee -a $LOGFILE
-		jenv global $JDKVER | tee -a $LOGFILE
-		java -version | tee -a $LOGFILE
-		jenv enable-plugin maven | tee -a $LOGFILE
-		jenv enable-plugin gradle | tee -a $LOGFILE
-		jenv exec mvn -version | tee -a $LOGFILE
-		jenv exec gradle -version | tee -a $LOGFILE
+    # Install JDK(s)
+    echo "Installing Java (OpenJDK)..."
+    brew install --cask temurin
+    brew install --cask temurin8
+    brew install maven
+    brew install scala
+
+    # Add all found JDKs to jenv
+    for jdk in /Library/Java/JavaVirtualMachines/*; do
+        jenv add "${jdk}/Contents/Home/" | tee -a $LOGFILE
+    done
+
+    # Get highest JDK version installed and load jenv
+    JDKVER=$(jenv versions --bare | python -c "import sys; print(sorted(sys.stdin, key=lambda s: list(map(int, s.split('.'))), reverse=True)[0])")
+
+    # Set JDK version
+    jenv local $JDKVER | tee -a $LOGFILE
+    jenv global $JDKVER | tee -a $LOGFILE
+    java -version | tee -a $LOGFILE
+
+    # Enable extras
+    jenv enable-plugin maven | tee -a $LOGFILE
+    jenv enable-plugin scala | tee -a $LOGFILE
+    jenv enable-plugin gradle | tee -a $LOGFILE
+    jenv exec mvn -version | tee -a $LOGFILE
+    jenv exec scala -version | tee -a $LOGFILE
+    jenv exec gradle -version | tee -a $LOGFILE
 fi
 
 # # jenv doctor
