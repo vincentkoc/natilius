@@ -422,13 +422,11 @@ fi
 # Mac OS updates
 echo -e | tee -a $LOGFILE
 echo -e "\033[0;36mInstalling rosetta (for M1 macs)...\033[0m" | tee -a $LOGFILE
-if [ $(/usr/bin/pgrep oahd) ]; then
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mRosetta For M1 is already installed\033[0m" | tee -a $LOGFILE
-else
+if [ $(uname -m) == 'arm64' ] && [ ! -f "/Library/Apple/usr/libexec/oah/translate" ]; then
     sudo softwareupdate --install-rosetta --agree-to-license --verbose | tee -a $LOGFILE || true
-    open /System/Library/CoreServices/Rosetta\ 2\ Updater.app | tee -a $LOGFILE || true
-    read -r -s -p $'Press enter to continue once install is completed...'
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUpdate rosetta operation completed\033[0m" | tee -a $LOGFILE
+else
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mRosetta 2 is not required or already installed\033[0m" | tee -a $LOGFILE
 fi
 
 # Mac OS updates
@@ -443,18 +441,21 @@ echo -e "\033[0;36mChecking to see if homebrew is installed...\033[0m" | tee -a 
 if [[ $(command -v brew) == "" ]]; then
     echo -e "\033[0;33m[ ! ]\033[0m \033[0;36mInstalling homebrew...\033[0m" | tee -a $LOGFILE
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | tee -a $LOGFILE
-    export PATH="/usr/local/bin:$PATH"
-    echo 'eval $(/opt/homebrew/bin/brew shellenv)' >> /Users/$USER/.zprofile
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mhomebrew should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
-    exit 1
+    if [[ $(command -v zsh) != "" ]]; then
+        echo 'eval $(/opt/homebrew/bin/brew shellenv)' >> /Users/$SUDO_USER/.zprofile
+        eval $(/opt/homebrew/bin/brew shellenv)
+    fi
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mHomebrew installed\033[0m" | tee -a $LOGFILE
 else
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mUpdating homebrew\033[0m" | tee -a $LOGFILE
-    brew update && brew upgrade | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mHomebrew already installed\033[0m" | tee -a $LOGFILE
 fi
+
+echo -e "\033[0;36mUpdating homebrew...\033[0m" | tee -a $LOGFILE
+brew update
+echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mHomebrew updated\033[0m" | tee -a $LOGFILE
 
 echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mDisabling homebrew analytics module\033[0m" | tee -a $LOGFILE
 brew analytics off
-
 
 # Quit preferences pane
 echo -e | tee -a $LOGFILE
