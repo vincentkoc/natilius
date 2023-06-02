@@ -1058,16 +1058,16 @@ echo -e "\033[0;36mChecking to see if Ruby using rbenv is installed...\033[0m" |
 if rbenv versions | grep -q "$RUBYVER"; then
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;Ruby [$RUBYVER] should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
     rbenv versions | tee -a $LOGFILE
-		ruby --version | tee -a $LOGFILE
-		echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Ruby...\033[0m" | tee -a $LOGFILE
+	ruby --version | tee -a $LOGFILE
+	echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Ruby...\033[0m" | tee -a $LOGFILE
 else
-		echo "Installing Ruby..."
-		eval "$(rbenv init - zsh)"
-		rbenv install $RUBYVER | tee -a $LOGFILE
-		rbenv local $RUBYVER | tee -a $LOGFILE
-		rbenv global $RUBYVER | tee -a $LOGFILE
-		ruby --version | tee -a $LOGFILE
-		gem env home | tee -a $LOGFILE
+	echo "Installing Ruby..."
+	eval "$(rbenv init - zsh)"
+	rbenv install $RUBYVER | tee -a $LOGFILE
+	rbenv local $RUBYVER | tee -a $LOGFILE
+	rbenv global $RUBYVER | tee -a $LOGFILE
+	ruby --version | tee -a $LOGFILE
+	gem env home | tee -a $LOGFILE
 fi
 
 # # rbenv doctor
