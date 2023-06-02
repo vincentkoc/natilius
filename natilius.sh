@@ -31,7 +31,7 @@ TIMESTAMP=$(date +%s)
 LOGFILE="./natilius-setup-$TIMESTAMP.log"
 COUNTRYCODE="au"
 JDKVER="20"
-PYVER="3.9.11"
+PYTHONVER="3.9.11"
 RUBYVER="3.2.1"
 NODEVER="18.14.0"
 
@@ -1201,67 +1201,69 @@ fi
 #     ~/.1password/agent.sock
 
 
-
-
-# beginInstallation "Installing global node packages" | tee -a $logFile
-# npm i -g "${globalNodePackages[@]}" | tee -a $logFile
-
-
-
-# # Install Ruby with =rbenv=
-
-# install_ruby_sw () {
-#   if which rbenv > /dev/null; then
-#     RBENV_ROOT="/usr/local/ruby" && export RBENV_ROOT
-
-#     sudo mkdir -p "$RBENV_ROOT"
-#     sudo chown -R "$(whoami):admin" "$RBENV_ROOT"
-
-#     p "Installing Ruby with rbenv"
-#     rbenv install --skip-existing 2.4.2
-#     rbenv global 2.4.2
-
-#     grep -q "${RBENV_ROOT}" "/etc/paths" || \
-#     sudo sed -i "" -e "1i\\
-# ${RBENV_ROOT}/shims
-# " "/etc/paths"
-
-#     init_paths
-#     rehash
-
-#     printf "%s\n" \
-#       "gem: --no-document" | \
-#     tee "${HOME}/.gemrc" > /dev/null
-
-#     gem update --system > /dev/null
-
-#     trash "$(which rdoc)"
-#     trash "$(which ri)"
-#     gem update
-
-#     gem install bundler
-#   fi
-# }
-
-
 ############################
 #
 # Developer Enviroment: Python
 #
 ############################
 
-# # Setup Python
-# # initi after install
-# export PYENV_ROOT="$(pyenv root)"
-# export PATH="$PYENV_ROOT/shims:$PATH"
-# eval "$(pyenv init -)"
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if Python using pyenv is installed...\033[0m" | tee -a $LOGFILE
 
-# which python
-# pyenv versions
-# pyenv install $PYVER
-# pyenv global $PYVER
-# pyenv versions
-# which python
+# Check if pyenv is installed, if not install it
+if ! command -v pyenv &> /dev/null; then
+    echo "pyenv not found. Installing pyenv..."
+    brew install pyenv
+    echo 'if command -v pyenv 1>/dev/null 2>&1; then eval "$(pyenv init -)"; fi' >> ~/.bash_profile
+    source ~/.bash_profile
+fi
+
+CURRENTVER=$(get_current_version)
+if [ "$CURRENTVER" == "$PYTHONVER" ]; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Python [$PYTHONVER] is already installed...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Python...\033[0m" | tee -a $LOGFILE
+else
+    # Install the desired Python version if it's not installed
+    if ! pyenv versions --bare | grep -q "$PYTHONVER"; then
+        echo "Python version $PYTHONVER not found. Installing..."
+        pyenv install $PYTHONVER
+    fi
+
+    # Set PYTHONVER as the local and global Python version
+    pyenv global $PYTHONVER
+    pyenv local $PYTHONVER
+
+    # Show the active Python version
+    python --version | tee -a $LOGFILE
+
+    # Setup packages
+    echo "Installing global Python packages..."
+    declare -a globalPythonPackages=(
+        'numpy'
+        'pandas'
+        'scipy'
+        'matplotlib'
+        'seaborn'
+        'scikit-learn'
+        'requests'
+        'beautifulsoup4'
+        'flask'
+        'pre-commit'
+        'flake8'
+        'isort'
+        'coverage'
+        'regex'
+        'cython'
+        'Jinja2'
+        'six'
+        'tabula'
+        'dbt-core'
+        'PyYAML'
+        'sqlfluff'
+        # 'django'
+    )
+    pip install "${globalPythonPackages[@]}" | tee -a $LOGFILE
+fi
 
 ############################
 #
