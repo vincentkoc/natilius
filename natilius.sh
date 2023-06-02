@@ -35,27 +35,6 @@ PYTHONVER="3.9.11"
 RUBYVER="3.2.1"
 NODEVER="18.14.0"
 
-get_highest_version() {
-    # Check if there are any versions installed
-    if "$1" versions --bare | grep . > /dev/null
-    then
-        HIGHESTVER=$("$1" versions --bare | python -c "import sys; print(sorted(sys.stdin, key=lambda s: list(map(int, s.split('.'))), reverse=True)[0])")
-    else
-        HIGHESTVER=""
-    fi
-    echo $HIGHESTVER
-}
-get_current_version() {
-    if [ "$1" == "jenv" ] || [ "$1" == "pyenv" ] || [ "$1" == "nodenv" ]; then
-        CURRENTVER=$("$1" version-name)
-        CURRENTVER=${CURRENTVER//[^0-9.]/} # remove non-digit characters
-    else
-        echo "Unknown version manager: $1"
-        return 1
-    fi
-    echo $CURRENTVER
-}
-
 # Directories to generate
 DIRS=(
     ~/.mackup
@@ -355,6 +334,27 @@ EOF
 # Helper Functions
 #
 ############################
+
+get_highest_version() {
+    # Check if there are any versions installed
+    if "$1" versions --bare | grep . > /dev/null
+    then
+        HIGHESTVER=$("$1" versions --bare | python -c "import sys; print(sorted(sys.stdin, key=lambda s: list(map(int, s.split('.'))), reverse=True)[0])")
+    else
+        HIGHESTVER=""
+    fi
+    echo $HIGHESTVER
+}
+get_current_version() {
+    if [ "$1" == "jenv" ] || [ "$1" == "pyenv" ] || [ "$1" == "nodenv" ]; then
+        CURRENTVER=$("$1" version-name)
+        CURRENTVER=${CURRENTVER//[^0-9.]/} # remove non-digit characters
+    else
+        echo "Unknown version manager: $1"
+        return 1
+    fi
+    echo $CURRENTVER
+}
 
 # Set UUID for plists
 if [[ `ioreg -rd1 -c IOPlatformExpertDevice | grep -i "UUID" | cut -c27-50` != "00000000-0000-1000-8000-" ]]; then
