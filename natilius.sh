@@ -1006,11 +1006,9 @@ if ! command -v jenv &> /dev/null; then
     source ~/.bash_profile
 fi
 
-# Check we have the target JDK version
-if jenv versions | grep -q "$JDKVER"; then
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;OpenJDK [$JDKVER] should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
-    jenv versions | tee -a $LOGFILE
-    java --version | tee -a $LOGFILE
+CURRENTVER=$(get_current_version jenv)
+if [ "$CURRENTVER" == "$JDKVER" ]; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;OpenJDK [$JDKVER] is already installed...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of OpenJDK...\033[0m" | tee -a $LOGFILE
 else
     # Install JDK(s)
