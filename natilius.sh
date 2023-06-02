@@ -1024,8 +1024,12 @@ else
         jenv add "${jdk}/Contents/Home/" | tee -a $LOGFILE
     done
 
-    # Get highest JDK version installed and load jenv
-    JDKVER=$(jenv versions --bare | python -c "import sys; print(sorted(sys.stdin, key=lambda s: list(map(int, s.split('.'))), reverse=True)[0])")
+    # If there are other versions installed, set the highest one as the global version
+    HIGHESTVER=$(get_highest_version jenv)
+    if [ "$HIGHESTVER" != "$JDKVER" ]
+    then
+        jenv global $HIGHESTVER
+    fi
 
     # Set JDK version
     jenv local $JDKVER | tee -a $LOGFILE
