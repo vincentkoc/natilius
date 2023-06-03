@@ -7,7 +7,7 @@
 
 <div align="center">
   <p>
-    <strong>Natilius</strong> is a fully automated one-click Mac developer and engineering environment bootstrapper ⚡.
+    <strong>Natilius</strong> is a fully automated one-click Mac developer<br/> and engineering environment bootstrapper ⚡
   </p>
 </div>
 
