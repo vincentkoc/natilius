@@ -1071,10 +1071,11 @@ else
     jenv exec mvn -version | tee -a $LOGFILE
     jenv exec scala -version | tee -a $LOGFILE
     jenv exec gradle -version | tee -a $LOGFILE
+
+    # Use jenv-doctor to check the setup
+    jenv doctor | tee -a $LOGFILE
 fi
 
-# jenv doctor
-jenv doctor | tee -a $LOGFILE
 
 ############################
 #
