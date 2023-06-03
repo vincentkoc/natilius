@@ -1034,7 +1034,6 @@ if [ "$INSTALLED" = true ]; then
 
 else
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mOpenJDK [$JDKVER] is not installed... Found [$CURRENTVER]...\033[0m" | tee -a $LOGFILE
-    echo -e "Installing Java (OpenJDK)..."
 
     # Load jenv
     export PATH="$HOME/.jenv/bin:$PATH"
