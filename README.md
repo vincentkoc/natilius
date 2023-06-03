@@ -1,37 +1,68 @@
-# 🐚 Natilius
+<div align="center">
+  <h1>🐚 Natilius</h1>
+  <p>
+    <img src="assets/natilius_image.png" width="500">
+  </p>
+</div>
 
-<img src='assets/natilius_image.png' width='500'>
+<div align="center">
+  <p>
+    <strong>Natilius</strong> is a fully automated one-click Mac developer and engineering environment bootstrapper ⚡.
+  </p>
+</div>
 
-**Natilius** is a fully automated one-click mac developer and engineering environment bootstrapper ⚡.
+<div align="center">
+  <p>
+    <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License">
+    <img src="https://img.shields.io/badge/OS-macOS-blue.svg" alt="macOS">
+    <img src="https://img.shields.io/badge/Version-1.0.0-green.svg" alt="Version">
+  </p>
+</div>
 
-It can take vanilla Mac OS X install and have it developer ready in one go, setting up:
+## What is Natilius?
+It provides a streamlined process to set up a developer-ready environment on a vanilla Mac OS X install. Natilius takes care of various tasks, including:
 
-* Create any default/project folders
-* Configure various Mac OS preferences
-* Install homebrew and xcode toolkit
-* Install various packages and apps required
-* Stand-up development enviroments (Python, Java, Go, NodeJS)
-* Sync and install dotfiles/preferences with [mackup](https://github.com/lra/mackup)
-* Secure your mac _(based on my earlier work on [ostemper](https://github.com/koconder/ostemper))_
+- Creating default and project folders
+- Configuring Mac OS preferences
+- Installing Homebrew and Xcode toolkit
+- Installing required packages and apps
+- Setting up development environments for Python, Java (OpenJDK), Rust, Go, and NodeJS
+- Syncing and installing dotfiles/preferences with [mackup](https://github.com/lra/mackup)
+- Applying security enhancements based on previous work on [ostemper](https://github.com/koconder/ostemper)
 
 ## How to Run Natilius
 
-Run the following command in your terminal:
+To run Natilius, simply execute the following command in your terminal:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/koconder/natilius/HEAD/natilius.sh)"
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/koconder/natilius/HEAD/natilius.sh)"
-```
+
+## Features
+
+- Automatic Xcode and Homebrew setup
+- Hardening and privacy-enhancing features
+- Installing Brew packages, casks, and Mac apps automatically
+- Setup and configure Python (pyenv), Ruby (rbenv), Java along with OpenJDK and extras like Maven, Gradle, Spark. Rust, Node.js (nodenv)
+- Common developer Brew defaults like Helm, Kubernetes, Terraform, Go, R
+- Mackup to manage/backup dotfiles and configuration on your Mac
 
 ## Story of Natilius
 
-This project was born after switching between many mac OS devices as an engineer and data specalist, the last switch was after water damage. This project aims to assist in the use of quickly having all the small enviromental ascepts taken-care of. This project is used in conjunction with [my mackup compatible dotfiles](https://github.com/koconder/dotfiles).
+The idea for this project arose from the need to switch between multiple Mac OS devices as an engineer and data specialist. The final trigger was a switch after water damage. Natilius aims to simplify and expedite the process of setting up the development environment by taking care of all the small environmental aspects. It can be used in conjunction with [my mackup compatible dotfiles](https://github.com/koconder/dotfiles).
 
-I have taken inspiration from the following other Mac config/setup scripts for Natilius:
-* https://gist.github.com/bradp/bea76b16d3325f5c47d4
-* https://gist.github.com/vraravam/5e28ca1720c9dddacdc0e6db61e093fe
-* https://github.com/ptb/mac-setup/blob/develop/mac-setup.command
-* https://gist.github.com/nickytonline/729fc106a0146345c0b90f3356a41e4d#file-my-mac-setup-sh
-* https://github.com/minamarkham/formation
+Natilius drew inspiration from the following Mac config/setup scripts:
+
+- [bradp's gist](https://gist.github.com/bradp/bea76b16d3325f5c47d4)
+- [vraravam's gist](https://gist.github.com/vraravam/5e28ca1720c9dddacdc0e6db61e093fe)
+- [ptb's mac-setup](https://github.com/ptb/mac-setup/blob/develop/mac-setup.command)
+- [nickytonline's gist](https://gist.github.com/nickytonline/729fc106a0146345c0b90f3356a41e4d#file-my-mac-setup-sh)
+- [minamarkham's formation](https://github.com/minamarkham/formation)
+
+## Contributions
+
+Contributions are welcome! If you would like to contribute to natilius you can report bugs, suggest new features, or submit pull requests.
 
 ## License
 
