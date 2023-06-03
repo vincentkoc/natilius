@@ -345,9 +345,13 @@ get_highest_version() {
     echo $HIGHESTVER
 }
 get_current_version() {
-    if [ "$1" == "jenv" ] || [ "$1" == "pyenv" ] || [ "$1" == "nodenv" ]; then
+    if [ "$1" == "jenv" ] || [ "$1" == "pyenv" ]; then
         CURRENTVER=$("$1" version-name)
         CURRENTVER=$(echo "$CURRENTVER" | awk -F'-' '{print $2}') # extract version after the hyphen
+        CURRENTVER=$(echo "$CURRENTVER" | awk '{gsub(/[^0-9.]/,""); print}') # extract digits and dots
+    elif [ "$1" == "nodenv" ]; then
+        CURRENTVER=$("$1" versions --bare)
+        CURRENTVER=$(echo "$CURRENTVER" | awk '{print $NF}') # extract the last field
         CURRENTVER=$(echo "$CURRENTVER" | awk '{gsub(/[^0-9.]/,""); print}') # extract digits and dots
     elif [ "$1" == "rbenv" ]; then
         CURRENTVER=$("$1" version --bare)
@@ -356,7 +360,7 @@ get_current_version() {
         echo "Unknown version manager: $1"
         return 1
     fi
-    echo $CURRENTVER
+    echo "$CURRENTVER"
 }
 
 # Set UUID for plists
