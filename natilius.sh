@@ -1316,9 +1316,17 @@ fi
 ############################
 
 # # Mackup
-if [ -L ~/.mackup.cfg ] ; then
-    echo "mackup detected"
-    mackup backup
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking for mackup setup (Mac configuration backup and dotfiles)...\033[0m" | tee -a $LOGFILE
+if [ -e ~/.mackup.cfg ]; then
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mmackup config is detected... starting backup...\033[0m" | tee -a $LOGFILE
+    read -p "Do you want to perform a backup with Mackup? (y/N): " backup_choice
+    if [[ $backup_choice == [Yy]* ]]; then
+        echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mPerforming Mackup backup...\033[0m" | tee -a $LOGFILE
+        mackup backup
+    else
+        echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mSkipping Mackup backup...\033[0m" | tee -a $LOGFILE
+    fi
 else
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mmackup config is not detected... setting default config...\033[0m" | tee -a $LOGFILE
     echo "[storage]
