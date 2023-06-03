@@ -337,9 +337,8 @@ EOF
 
 get_highest_version() {
     # Check if there are any versions installed
-    if "$1" versions --bare | grep . > /dev/null
-    then
-        HIGHESTVER=$("$1" versions --bare | python -c "import sys; print(sorted(sys.stdin, key=lambda s: list(map(int, s.split('.'))), reverse=True)[0])")
+    if "$1" versions --bare | grep . > /dev/null; then
+        HIGHESTVER=$("$1" versions --bare | sort -rV | awk -F'[- ]' '{print $NF; exit}')
     else
         HIGHESTVER=""
     fi
@@ -348,7 +347,10 @@ get_highest_version() {
 get_current_version() {
     if [ "$1" == "jenv" ] || [ "$1" == "pyenv" ] || [ "$1" == "nodenv" ]; then
         CURRENTVER=$("$1" version-name)
-        CURRENTVER=${CURRENTVER//[^0-9.]/} # remove non-digit characters
+        CURRENTVER=${CURRENTVER//[[:alpha:][:punct:]]/} # remove non-digit and non-dot characters
+    elif [ "$1" == "rbenv" ]; then
+        CURRENTVER=$("$1" version --bare)
+        CURRENTVER=${CURRENTVER//[[:alpha:][:punct:]]/} # remove non-digit and non-dot characters
     else
         echo "Unknown version manager: $1"
         return 1
