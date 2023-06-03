@@ -1248,13 +1248,14 @@ echo -e "\033[0;36mChecking to see if Python using pyenv is installed...\033[0m"
 
 # Check if pyenv is installed, if not install it
 if ! command -v pyenv &> /dev/null; then
-    # Install pyenv
-    echo "pyenv not found. Installing pyenv..."
-    brew install pyenv
+    echo "pyenv not found. Installing jenv..." | tee -a $LOGFILE
+    brew install pyenv | tee -a $LOGFILE
+    export PATH="$HOME/.pyenv/bin:$PATH"
     eval "$(pyenv init -)"
 
     # Install pyenv-virtualenv
-    brew install pyenv-virtualenv
+    echo "pyenv-virtualenv not found. Installing jenv..." | tee -a $LOGFILE
+    brew install pyenv-virtualenv | tee -a $LOGFILE
     eval "$(pyenv virtualenv-init -)"
 fi
 
