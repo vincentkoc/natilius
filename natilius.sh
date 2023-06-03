@@ -1168,22 +1168,34 @@ echo -e "\033[0;36mChecking to see if Node.js using nodenv is installed...\033[0
 
 # Check if nodenv is installed, if not install it
 if ! command -v nodenv &> /dev/null; then
-    echo "nodenv not found. Installing nodenv..."
-    brew install nodenv
+    echo "nodenv not found. Installing jenv..." | tee -a $LOGFILE
+    brew install nodenv | tee -a $LOGFILE
     export PATH="$HOME/.nodenv/bin:$PATH"
     eval "$(nodenv init -)"
 fi
 
+
 CURRENTVER=$(get_current_version nodenv)
-if [ "$CURRENTVER" == "$NODEVER" ]; then
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Node.js [$NODEVER] is already installed...\033[0m" | tee -a $LOGFILE
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Node.js...\033[0m" | tee -a $LOGFILE
-else
-    # Install the desired Node.js version if it's not installed
-    if ! nodenv versions --bare | grep -q "$NODEVER"; then
-        echo "Node.js version $NODEVER not found. Installing..."
-        nodenv install $NODEVER
+INSTALLED=false
+
+# Loop through versions and check for an exact match
+while read -r version; do
+    if [[ "$version" == "$NODEVER" ]]; then
+        INSTALLED=true
+        break
     fi
+done <<< "$(nodenv versions --bare)"
+
+if [ "$INSTALLED" = true ]; then
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mNodeJS [$NODEVER] is already installed...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mSkipping installation of NodeJS...\033[0m" | tee -a $LOGFILE
+    node --version | tee -a $LOGFILE
+    which node | tee -a $LOGFILE
+
+else
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mNodeJS [$NODEVER] is not installed... Found [$CURRENTVER]...\033[0m" | tee -a $LOGFILE
+    echo -e "Installing NodeJS..." | tee -a $LOGFILE
+    nodenv install $NODEVER | tee -a $LOGFILE
 
     # Set NODEVER as the local and global Node.js version
     nodenv global $NODEVER
