@@ -1101,10 +1101,24 @@ if ! command -v rbenv &> /dev/null; then
     echo "bundler" > "$(rbenv root)"/default-gems
 fi
 
+
 CURRENTVER=$(get_current_version rbenv)
-if [ "$CURRENTVER" == "$RUBYVER" ]; then
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Ruby [$RUBYVER] is already installed...\033[0m" | tee -a $LOGFILE
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Ruby...\033[0m" | tee -a $LOGFILE
+INSTALLED=false
+
+# Loop through versions and check for an exact match
+while read -r version; do
+    if [[ "$version" == "$RUBYVER" ]]; then
+        INSTALLED=true
+        break
+    fi
+done <<< "$(rbenv versions --bare)"
+
+if [ "$INSTALLED" = true ]; then
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mRuby [$RUBYVER] is already installed...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mSkipping installation of Ruby...\033[0m" | tee -a $LOGFILE
+    ruby --version | tee -a $LOGFILE
+    which ruby | tee -a $LOGFILE
+
 else
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mRuby [$RUBYVER] is not installed... Found [$CURRENTVER]...\033[0m" | tee -a $LOGFILE
     echo -e "Installing Ruby..." | tee -a $LOGFILE
