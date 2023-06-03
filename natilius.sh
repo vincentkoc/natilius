@@ -1258,16 +1258,28 @@ if ! command -v pyenv &> /dev/null; then
     eval "$(pyenv virtualenv-init -)"
 fi
 
-CURRENTVER=$(get_current_version)
-if [ "$CURRENTVER" == "$PYTHONVER" ]; then
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Python [$PYTHONVER] is already installed...\033[0m" | tee -a $LOGFILE
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Python...\033[0m" | tee -a $LOGFILE
-else
-    # Install the desired Python version if it's not installed
-    if ! pyenv versions --bare | grep -q "$PYTHONVER"; then
-        echo "Python version $PYTHONVER not found. Installing..."
-        pyenv install $PYTHONVER
+
+CURRENTVER=$(get_current_version pyenv)
+INSTALLED=false
+
+# Loop through versions and check for an exact match
+while read -r version; do
+    if [[ "$version" == "$PYTHONVER" ]]; then
+        INSTALLED=true
+        break
     fi
+done <<< "$(pyenv versions --bare)"
+
+if [ "$INSTALLED" = true ]; then
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPython [$PYTHONVER] is already installed...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mSkipping installation of Python...\033[0m" | tee -a $LOGFILE
+    python --version | tee -a $LOGFILE
+    which python | tee -a $LOGFILE
+
+else
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mPython [$PYTHONVER] is not installed... Found [$CURRENTVER]...\033[0m" | tee -a $LOGFILE
+    echo -e "Installing Python..." | tee -a $LOGFILE
+    pyenv install $PYTHONVER | tee -a $LOGFILE
 
     # Set PYTHONVER as the local and global Python version
     pyenv global $PYTHONVER
