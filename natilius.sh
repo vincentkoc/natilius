@@ -1029,6 +1029,9 @@ done <<< "$(jenv versions --bare)"
 if [ "$INSTALLED" = true ]; then
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mOpenJDK [$JDKVER] is already installed...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mSkipping installation of OpenJDK...\033[0m" | tee -a $LOGFILE
+    java --version | tee -a $LOGFILE
+    which java | tee -a $LOGFILE
+
 else
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mOpenJDK [$JDKVER] is not installed... Found [$CURRENTVER]...\033[0m" | tee -a $LOGFILE
     echo -e "Installing Java (OpenJDK)..."
@@ -1039,7 +1042,7 @@ else
     eval "$(jenv init -)"
 
     # Install JDK(s)
-    echo "Installing Java (OpenJDK)..."
+    echo "Installing Java (OpenJDK)..." | tee -a $LOGFILE
     brew install --cask temurin
     brew install --cask temurin8
     brew install maven
