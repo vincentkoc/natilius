@@ -1320,13 +1320,11 @@ if [ -L ~/.mackup.cfg ] ; then
     echo "mackup detected"
     mackup backup
 else
-    rm -rf ~/.mackup.cfg
-    touch ~/.mackup.cfg
-    cat <<EOT >> ~/.mackup.cfg
-[storage]
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mmackup config is not detected... setting default config...\033[0m" | tee -a $LOGFILE
+    echo "[storage]
 engine = icloud
-directory = dotfiles
-EOT
+directory = dotfiles" > ~/.mackup.cfg
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mStarting mackup restore to load config from icloud and run symlinks...\033[0m" | tee -a $LOGFILE
     mackup restore -f
 fi
 
