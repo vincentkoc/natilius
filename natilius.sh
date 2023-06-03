@@ -1330,6 +1330,28 @@ EOT
     mackup restore -f
 fi
 
+#
+# The End
+#
+echo -e | tee -a $LOGFILE
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;32m[ 🐚 ]\033[0m \033[0;36mnatilius install script is finalised!\033[0m" | tee -a $LOGFILE
+echo -e "\033[0;33m"
+cat << EOF
+ Thanks for using natilius :)
+ Your logfile is saved at $LOGFILE
+
+ You are welcomed to leave feedback, comments, and issues
+ directly on GitHub at (https://github.com/koconder/natilius).
+
+ I also welcome PR's and suggestions to speed up the
+ setup of your development environment.
+
+ Thanks
+ Vince
+
+EOF
+
 # # Brew Doctor
 # echo "Checking homebrew..."
 # brew doctor
