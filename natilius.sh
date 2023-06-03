@@ -347,10 +347,11 @@ get_highest_version() {
 get_current_version() {
     if [ "$1" == "jenv" ] || [ "$1" == "pyenv" ] || [ "$1" == "nodenv" ]; then
         CURRENTVER=$("$1" version-name)
-        CURRENTVER=${CURRENTVER//[[:alpha:][:punct:]]/} # remove non-digit and non-dot characters
+        CURRENTVER=$(echo "$CURRENTVER" | awk -F'-' '{print $2}') # extract version after the hyphen
+        CURRENTVER=$(echo "$CURRENTVER" | awk '{gsub(/[^0-9.]/,""); print}') # extract digits and dots
     elif [ "$1" == "rbenv" ]; then
         CURRENTVER=$("$1" version --bare)
-        CURRENTVER=${CURRENTVER//[[:alpha:][:punct:]]/} # remove non-digit and non-dot characters
+        CURRENTVER=$(echo "$CURRENTVER" | awk '{gsub(/[^0-9.]/,""); print}') # extract digits and dots
     else
         echo "Unknown version manager: $1"
         return 1
@@ -1005,14 +1006,34 @@ if ! command -v jenv &> /dev/null; then
     echo "jenv not found. Installing jenv..."
     brew install jenv
     export PATH="$HOME/.jenv/bin:$PATH"
+    PROMPT_COMMAND=${PROMPT_COMMAND:-true}
     eval "$(jenv init -)"
 fi
 
+
 CURRENTVER=$(get_current_version jenv)
-if [ "$CURRENTVER" == "$JDKVER" ]; then
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;OpenJDK [$JDKVER] is already installed...\033[0m" | tee -a $LOGFILE
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of OpenJDK...\033[0m" | tee -a $LOGFILE
+INSTALLED=false
+
+# Loop through versions and check for an exact match
+while read -r version; do
+    if [[ "$version" == "$JDKVER" ]]; then
+        INSTALLED=true
+        break
+    fi
+done <<< "$(jenv versions --bare)"
+
+if [ "$INSTALLED" = true ]; then
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mOpenJDK [$JDKVER] is already installed...\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mSkipping installation of OpenJDK...\033[0m" | tee -a $LOGFILE
 else
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mOpenJDK [$JDKVER] is not installed... Found [$CURRENTVER]...\033[0m" | tee -a $LOGFILE
+    echo -e "Installing Java (OpenJDK)..."
+
+    # Load jenv
+    export PATH="$HOME/.jenv/bin:$PATH"
+    PROMPT_COMMAND=${PROMPT_COMMAND:-true}
+    eval "$(jenv init -)"
+
     # Install JDK(s)
     echo "Installing Java (OpenJDK)..."
     brew install --cask temurin
