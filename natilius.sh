@@ -1311,6 +1311,27 @@ fi
 
 ############################
 #
+# Developer Enviroment: Rust
+#
+############################
+
+echo -e | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if Rust is installed...\033[0m" | tee -a $LOGFILE
+if ! command -v rustup &> /dev/null; then
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mRust is not installed... Installing Rust\033[0m" | tee -a $LOGFILE
+    #rustup-init --profile default -y | tee -a $LOGFILE
+    brew install rust | tee -a $LOGFILE
+    source "$HOME/.cargo/env"
+    rustup update | tee -a $LOGFILE
+else
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mRust is already installed\033[0m" | tee -a $LOGFILE
+    rustc --version | tee -a $LOGFILE
+    which rustc
+    which rustup
+fi
+
+############################
+#
 # Dot files and preferences
 #
 ############################
