@@ -1087,8 +1087,8 @@ echo -e "\033[0;36mChecking to see if Ruby using rbenv is installed...\033[0m" |
 
 # Check if rbenv is installed, if not install it
 if ! command -v rbenv &> /dev/null; then
-    echo "rbenv not found. Installing rbenv..."
-    brew install rbenv
+    echo "rbenv not found. Installing rbenv..." | tee -a $LOGFILE
+    brew install rbenv | tee -a $LOGFILE
     eval "$(rbenv init -)"
 
     # Install ruby-build as an rbenv plugin
