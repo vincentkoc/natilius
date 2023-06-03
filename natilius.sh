@@ -1164,7 +1164,7 @@ fi
 ############################
 
 echo -e | tee -a $LOGFILE
-echo -e "\033[0;36mChecking to see if Node.js using nodenv is installed...\033[0m" | tee -a $LOGFILE
+echo -e "\033[0;36mChecking to see if NodeJS using nodenv is installed...\033[0m" | tee -a $LOGFILE
 
 # Check if nodenv is installed, if not install it
 if ! command -v nodenv &> /dev/null; then
