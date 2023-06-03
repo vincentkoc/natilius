@@ -1106,9 +1106,9 @@ if [ "$CURRENTVER" == "$RUBYVER" ]; then
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;Ruby [$RUBYVER] is already installed...\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of Ruby...\033[0m" | tee -a $LOGFILE
 else
-    # Install the desired Ruby version if it's not installed
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Ruby version [$RUBYVER] is not found. Installing...\033[0m" | tee -a $LOGFILE
-    rbenv install $RUBYVER
+    echo -e "\033[0;33m[ ? ]\033[0m \033[0;36mRuby [$RUBYVER] is not installed... Found [$CURRENTVER]...\033[0m" | tee -a $LOGFILE
+    echo -e "Installing Ruby..." | tee -a $LOGFILE
+    rbenv install $RUBYVER | tee -a $LOGFILE
 
     # Set RUBYVER as the local and global Ruby version
     rbenv global $RUBYVER
