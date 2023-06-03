@@ -1133,30 +1133,6 @@ else
     curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash | tee -a $LOGFILE
 fi
 
-# # rbenv doctor
-# curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash | tee -a $LOGFILE
-
-############################
-#
-# Developer Enviroment: Rust
-#
-############################
-
-echo -e | tee -a $LOGFILE
-echo -e "\033[0;36mChecking to see if rust is installed...\033[0m" | tee -a $LOGFILE
-if [[ $(command -v rustc) == "" ]]; then
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;rustc should be installed, please restart this script if you have issues...\033[0m" | tee -a $LOGFILE
-		rustc --version | tee -a $LOGFILE
-    echo -e "\033[0;33m[ ? ]\033[0m \033[0;Skipping installation of rust...\033[0m" | tee -a $LOGFILE
-else
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling rust\033[0m" | tee -a $LOGFILE
-    rustup-init --profile default -y | tee -a $LOGFILE
-	source "$HOME/.cargo/env"
-	rustup update | tee -a $LOGFILE
-	rustc --version | tee -a $LOGFILE
-fi
-
-
 ############################
 #
 # Developer Enviroment: Node
