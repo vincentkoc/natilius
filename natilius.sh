@@ -117,6 +117,7 @@ APPSTORE=(
 # ps -> procs
 # ping -> gping
 # dig -> dog
+# kubeclt -> kubectx
 #
 # Newer shell/cli tools:
 # croc
@@ -162,6 +163,7 @@ BREWPACKAGES=(
     kubectl
     kubernetes-cli
     #kubernetes-helm
+    kubectx
     libfido2
     lynx
     mackup
