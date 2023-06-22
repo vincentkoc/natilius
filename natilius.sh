@@ -179,6 +179,7 @@ BREWPACKAGES=(
     openssl
     openssh
     peco
+    derailed/popeye/popeye
     pinentry
     pinentry-mac
     phantomjs
