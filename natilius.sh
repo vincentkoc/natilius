@@ -1237,11 +1237,6 @@ else
     nodenv which yarn
 fi
 
-# mkdir -p ~/.1password && ln -s \
-#     ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock \
-#     ~/.1password/agent.sock
-
-
 ############################
 #
 # Developer Enviroment: Python
@@ -1426,4 +1421,6 @@ EOF
 # https://packagecontrol.io/packages/TrailingSpaces
 # https://packagecontrol.io/packages/ColorHelper
 # https://packagecontrol.io/packages/rainbow_csv
-
+# mkdir -p ~/.1password && ln -s \
+#     ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock \
+#     ~/.1password/agent.sock
