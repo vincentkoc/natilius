@@ -136,6 +136,7 @@ BREWPACKAGES=(
     ca-certificates
     coreutils
     curl
+    ctop
     croc
     diff-so-fancy
     docker-compose
