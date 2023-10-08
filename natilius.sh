@@ -203,10 +203,10 @@ BREWPACKAGES=(
     terraformer
     tflint
     tfsec
-    tfswitch
+    warrensbox/tap/tfswitch
     tig
     tmux
-	reattach-to-user-namespace
+    reattach-to-user-namespace
     tokei
     trash
     tree
@@ -234,16 +234,16 @@ BREWCASKS=(
     airbuddy
     alfred
     alt-tab
-    amazon-chime
-    balenaetcher
+    # amazon-chime
+    # balenaetcher
     bartender
     brave-browser
-    #chatgpt
+    # chatgpt
     clay
     charles
     cheatsheet
-    dash
-    datagrip
+    # dash
+    # datagrip
     discord
     docker
     dropbox
@@ -262,7 +262,7 @@ BREWCASKS=(
     loom
     mamp
     #microsoft-office
-    miro
+    #miro
     muzzle
     # mkchromecast
     # soundflower
@@ -271,9 +271,9 @@ BREWCASKS=(
     notion
     obsidian
     onyx
-    pika
+    # pika
     # pock
-    postman
+    # postman
     profilecreator
     rescuetime
     rig
