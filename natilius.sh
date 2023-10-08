@@ -814,7 +814,9 @@ echo -e "\033[0;36mSecurity tweaks (Critical)...\033[0m" | tee -a $LOGFILE
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mSecurity > Critical: Enable filevault (disk encryption)\033[0m" | tee -a $LOGFILE
     echo -e "\033[0;33m[ ! ]\033[0m \033[0;36m...You may be asked for login again, please keep recovery key safe\033[0m" | tee -a $LOGFILE
-    if [[ $(sudo fdesetup status) != "FileVault is On." ]];then
+
+    FILEVAULT_STATUS=$(sudo fdesetup status)
+    if [[ $FILEVAULT_STATUS != "FileVault is On." && ! $FILEVAULT_STATUS =~ "Encryption in progress" ]];then
         sudo fdesetup enable
     else
         echo -e "\033[0;33m[ ✓ ]\033[0m \033[0;36mAlready enabled... skipping...\033[0m" | tee -a $LOGFILE
