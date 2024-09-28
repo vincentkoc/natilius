@@ -141,7 +141,7 @@ BREWPACKAGES=(
     diff-so-fancy
     docker-compose
     dog
-    exa
+    eza
     fd
     fzf
     git
