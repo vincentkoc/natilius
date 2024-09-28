@@ -76,6 +76,10 @@ BREWTAPS=(
     adoptopenjdk/openjdk
     github/gh
     r-lib/rig
+    rfidresearchgroup/proxmark3
+    mongodb/brew
+    warrensbox/tap
+    derailed/popeye
 )
 
 # App Store
@@ -224,6 +228,10 @@ BREWPACKAGES=(
     font-source-sans-pro
     font-ubuntu
     font-roboto
+    font-fira-code
+    font-fira-code-nerd-font
+    font-fira-mono-nerd-font
+    font-meslo-lg-nerd-font
 )
 
 # Homebrew casks to install
@@ -276,6 +284,7 @@ BREWCASKS=(
     # postman
     profilecreator
     rescuetime
+		rfidresearchgroup/proxmark3/proxmark3
     rig
     slack
     spotify
