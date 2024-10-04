@@ -70,9 +70,9 @@ KILLAPPS=(
 # Homebrew Casks to "tap"
 BREWTAPS=(
     homebrew/cask
-    homebrew/cask-versions
-    homebrew/cask-fonts
-    #lencx/chatgpt
+    # homebrew/cask-versions
+    # homebrew/cask-fonts
+    # lencx/chatgpt
     adoptopenjdk/openjdk
     github/gh
     r-lib/rig
@@ -120,7 +120,6 @@ APPSTORE=(
 # git -> tig
 # ps -> procs
 # ping -> gping
-# dig -> dog
 # kubeclt -> kubectx
 #
 # Newer shell/cli tools:
@@ -144,7 +143,7 @@ BREWPACKAGES=(
     croc
     diff-so-fancy
     docker-compose
-    dog
+    # dog
     eza
     fd
     fzf
@@ -187,7 +186,7 @@ BREWPACKAGES=(
     derailed/popeye/popeye
     pinentry
     pinentry-mac
-    phantomjs
+    # phantomjs
     pre-commit
     pyenv
     pyenv-virtualenv
@@ -269,8 +268,8 @@ BREWCASKS=(
     logseq
     loom
     mamp
-    #microsoft-office
-    #miro
+    # microsoft-office
+    # miro
     muzzle
     # mkchromecast
     # soundflower
@@ -282,9 +281,9 @@ BREWCASKS=(
     # pika
     # pock
     # postman
-    profilecreator
+    # profilecreator
     rescuetime
-		rfidresearchgroup/proxmark3/proxmark3
+    rfidresearchgroup/proxmark3/proxmark3
     rig
     slack
     spotify
