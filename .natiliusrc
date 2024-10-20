@@ -1,1 +1,9 @@
- 
+# Enabled modules
+ENABLED_MODULES=(
+    "system_update"
+    "system_preferences"
+    "security"
+    "homebrew"
+    "apps"
+    # ... other modules ...
+)
