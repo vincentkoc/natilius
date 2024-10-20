@@ -63,31 +63,13 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-# Load user configuration and export variables
+# Load user configuration
 if [ -f "$CONFIG_FILE" ]; then
     source "$CONFIG_FILE"
-    # Export non-array variables
-    while IFS='=' read -r name value; do
-        if [[ ! "$name" =~ ^[[:space:]]*# && "$name" != "" ]]; then
-            # Remove leading/trailing whitespace and quotes from the value
-            value=$(echo "$value" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/^"//' -e 's/"$//')
-            if [[ "$name" != "ENABLED_MODULES" && "$name" != *"PACKAGES" && "$value" != *"("* ]]; then
-                export "$name=$value"
-            fi
-        fi
-    done < "$CONFIG_FILE"
 else
     cp "$NATILIUS_DIR/.natiliusrc.example" "$CONFIG_FILE"
     log_info "Created default configuration file at $CONFIG_FILE"
     source "$CONFIG_FILE"
-fi
-
-# Parse ENABLED_MODULES array
-if [[ -n "$ENABLED_MODULES" ]]; then
-    IFS=',' read -ra ENABLED_MODULES_ARRAY <<< "${ENABLED_MODULES[*]}"
-    ENABLED_MODULES_ARRAY=(${ENABLED_MODULES_ARRAY[@]//[[:space:]]/})
-else
-    ENABLED_MODULES_ARRAY=()
 fi
 
 # Start logging
@@ -181,7 +163,7 @@ if [ "$INTERACTIVE_MODE" = true ]; then
     fi
 else
     # Use modules from configuration
-    SELECTED_MODULES=("${ENABLED_MODULES_ARRAY[@]}")
+    SELECTED_MODULES=("${ENABLED_MODULES[@]}")
 fi
 
 # Run selected modules
