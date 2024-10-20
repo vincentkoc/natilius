@@ -1,0 +1,138 @@
+# Enabled modules
+# "system/system_update"
+# "system/directories"
+# "preferences/mac_preferences"
+# "preferences/system_preferences"
+# "system/security"
+# "applications/homebrew"
+# "applications/espanso"
+# "applications/apps"
+# "dev_environments/java"
+# "dev_environments/ruby"
+# "dev_environments/python"
+# "dev_environments/node"
+# "dev_environments/rust"
+# "dev_environments/go"
+# "dev_environments/php"
+# "dev_environments/flutter"
+# "dotfiles"
+ENABLED_MODULES=(
+    "system/cleanup"
+)
+
+# Directories to create
+DIRS=(
+    "~/.mackup"
+    "~/.config"
+    "~/GIT"
+    "~/GIT/_Apps"
+    "~/GIT/_Perso"
+    "~/GIT/_Hipages"
+    "~/GIT/_Stj"
+    "~/GIT/_Airbyte"
+)
+
+# Time Machine exclusions
+DIRSTOEXCLUDEFROMTIMEMACHINE=(
+    "~/.mackup"
+    "~/GIT"
+    "~/Dropbox"
+    "~/.gnupg"
+    "~/.ssh"
+    "~/.config"
+)
+
+# Homebrew Taps
+BREWTAPS=(
+    "homebrew/cask"
+    "adoptopenjdk/openjdk"
+    "github/gh"
+    "r-lib/rig"
+    "rfidresearchgroup/proxmark3"
+    "mongodb/brew"
+    "warrensbox/tap"
+    "derailed/popeye"
+)
+
+# Homebrew Packages
+BREWPACKAGES=(
+    "ack"
+    "awscli"
+    "bat"
+    "coreutils"
+    "espanso"
+    # ... Add other packages as needed
+)
+
+# Homebrew Casks
+BREWCASKS=(
+    "1password"
+    "1password-cli"
+    "aerial"
+    # ... Add other casks as needed
+)
+
+# Mac App Store Apps (App IDs)
+APPSTORE=(
+    "441258766"   # Magnet
+    "937984704"   # Amphetamine
+    # ... Add other app IDs as needed
+)
+
+# Custom variables
+COUNTRYCODE="au"
+JDKVER="20"
+PYTHONVER="3.9.11"
+RUBYVER="3.2.1"
+NODEVER="18.14.0"
+GOVER="1.20.0"
+FLUTTER_CHANNEL="stable"
+
+# Global Node.js Packages
+GLOBAL_NODE_PACKAGES=(
+    "eslint"
+    "gatsby"
+    # ... other Node.js packages ...
+)
+
+# Global Python Packages
+GLOBAL_PYTHON_PACKAGES=(
+    "pip"
+    "virtualenv"
+    # ... other Python packages ...
+)
+
+GLOBAL_PHP_PACKAGES=(
+    "phpunit/phpunit"
+    "laravel/installer"
+    # Add other global packages as needed
+)
+
+# Custom variables
+PHPVER="8.1.0"
+
+# Global PHP Composer Packages
+GLOBAL_PHP_PACKAGES=(
+    "phpunit/phpunit"
+    "laravel/installer"
+    # Add other global Composer packages as needed
+)
+
+# Default PEAR Packages
+PEAR_PACKAGES=(
+    "pear/PackageName1"
+    "pear/PackageName2"
+    # Add other PEAR packages as needed
+)
+
+# Applications to kill after setup
+KILLAPPS=(
+    "Address Book"
+    "Dock"
+    "Finder"
+    "Mail"
+    "iCal"
+    "iTunes"
+    "Safari"
+    "SystemUIServer"
+)
