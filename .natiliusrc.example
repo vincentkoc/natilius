@@ -1,0 +1,92 @@
+# Natilius Configuration
+
+# Enabled modules
+ENABLED_MODULES=(
+    "system_preferences"
+    "security"
+    "homebrew"
+    "apps"
+    "dev_environments/java"
+    "dev_environments/ruby"
+    "dev_environments/python"
+    "dev_environments/node"
+    "dev_environments/rust"
+    "dotfiles"
+)
+
+# Custom variables
+COUNTRYCODE="au"
+JDKVER="20"
+PYTHONVER="3.9.11"
+RUBYVER="3.2.1"
+NODEVER="18.14.0"
+
+# Directories to create
+DIRS=(
+    "~/.mackup"
+    "~/.config"
+    "~/GIT"
+    "~/GIT/_Apps"
+    "~/GIT/_Perso"
+    "~/GIT/_Hipages"
+    "~/GIT/_Stj"
+    "~/GIT/_Airbyte"
+)
+
+# Time Machine exclusions
+DIRSTOEXCLUDEFROMTIMEMACHINE=(
+    "~/.mackup"
+    "~/GIT"
+    "~/Dropbox"
+    "~/.gnupg"
+    "~/.ssh"
+    "~/.config"
+)
+
+# Applications to kill after setup
+KILLAPPS=(
+    "Address Book"
+    "Dock"
+    "Finder"
+    "Mail"
+    "iCal"
+    "iTunes"
+    "Safari"
+    "SystemUIServer"
+)
+
+# Homebrew Taps
+BREWTAPS=(
+    "homebrew/cask"
+    "adoptopenjdk/openjdk"
+    "github/gh"
+    "r-lib/rig"
+    "rfidresearchgroup/proxmark3"
+    "mongodb/brew"
+    "warrensbox/tap"
+    "derailed/popeye"
+)
+
+# Homebrew Packages
+BREWPACKAGES=(
+    "ack"
+    "awscli"
+    "bat"
+    "coreutils"
+    # ... Add other packages as needed
+)
+
+# Homebrew Casks
+BREWCASKS=(
+    "1password"
+    "1password-cli"
+    "aerial"
+    # ... Add other casks as needed
+)
+
+# Mac App Store Apps (App IDs)
+APPSTORE=(
+    "441258766"   # Magnet
+    "937984704"   # Amphetamine
+    # ... Add other app IDs as needed
+)
