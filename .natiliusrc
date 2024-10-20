@@ -62,3 +62,10 @@ BREWCASKS=(
     "aerial"
     # ... Add other casks as needed
 )
+
+# Custom variables
+COUNTRYCODE="au"
+JDKVER="20"
+PYTHONVER="3.9.11"
+RUBYVER="3.2.1"
+NODEVER="18.14.0"
