@@ -60,6 +60,19 @@ log_success "Enabled subpixel font rendering"
 set_default NSGlobalDomain AppleInterfaceStyle -string "Dark"
 log_success "Enabled dark mode"
 
+# Disable the "reopen windows when logging back in" option
+set_default com.apple.loginwindow TALLogoutSavesState -bool false
+set_default com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
+log_success "Disabled 'reopen windows when logging back in'"
+
+# Switch to respective space when switching applications
+set_default NSGlobalDomain AppleSpacesSwitchOnActivate -bool true
+log_success "Configured spaces to switch when activating apps"
+
+# Smaller sidebar icons
+set_default NSGlobalDomain NSTableViewDefaultSizeMode -int 1
+log_success "Set smaller sidebar icons"
+
 ############################
 # Finder Preferences
 ############################
@@ -90,6 +103,31 @@ log_success "Prevented creation of .DS_Store files on network or USB volumes"
 /usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
 log_success "Enabled snap-to-grid for icons"
+
+# Allow text selection in Quick Look
+set_default com.apple.finder QLEnableTextSelection -bool true
+log_success "Enabled text selection in Quick Look"
+
+# Show hidden ~/Library folder
+chflags nohidden ~/Library
+log_success "Made ~/Library folder visible"
+
+# Show icons for hard drives, servers, and removable media on the desktop
+set_default com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+log_success "Enabled showing external drives on desktop"
+
+# Folders always on top
+set_default com.apple.finder _FXSortFoldersFirst -bool true
+set_default com.apple.finder _FXSortFoldersFirstOnDesktop -bool true
+log_success "Set folders to always appear first in Finder"
+
+# Search scope set to current folder
+set_default com.apple.finder FXDefaultSearchScope -string "SCcf"
+log_success "Set Finder search scope to current folder"
+
+# Disable warning when changing a file extension
+set_default com.apple.finder FXEnableExtensionChangeWarning -bool false
+log_success "Disabled warning when changing file extensions"
 
 ############################
 # Dock Preferences
@@ -142,6 +180,15 @@ set_default com.apple.BezelServices kDim -bool true
 sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor "Automatic Keyboard Enabled" -bool true
 log_success "Enabled keyboard brightness adjustment in low light"
 
+# Enable silent clicking
+set_default com.apple.AppleMultitouchTrackpad ActuationStrength -int 0
+log_success "Enabled silent clicking"
+
+# Dim keyboard after idle time (1 minute)
+set_default com.apple.BezelServices kDimTime -int 60
+sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor "Keyboard Dim Time" -int 60
+log_success "Set keyboard to dim after 1 minute of inactivity"
+
 ############################
 # Screenshot Preferences
 ############################
@@ -169,6 +216,11 @@ set_default com.apple.Terminal "Default Window Settings" -string "Pro"
 set_default com.apple.Terminal "Startup Window Settings" -string "Pro"
 log_success "Set Terminal theme to Pro"
 
+# X11 focus follows mouse
+set_default com.apple.terminal FocusFollowsMouse -string YES
+set_default org.x.X11 wm_ffm -bool true
+log_success "Enabled focus follows mouse in Terminal"
+
 ############################
 # Mail Preferences
 ############################
@@ -186,12 +238,33 @@ set_default com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string 
 log_success "Configured Mail view settings"
 
 ############################
+# Print Preferences
+############################
+
+log_info "Updating Print preferences..."
+
+# Auto-quit printer app once print jobs are done
+set_default com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+log_success "Configured printer app to auto-quit"
+
+############################
+# Menu Bar Preferences
+############################
+
+log_info "Updating Menu Bar preferences..."
+
+# Hide Spotlight and WiFi from menu bar
+defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+set_default com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false
+log_success "Hid Spotlight and WiFi from menu bar"
+
+############################
 # Restart Affected Applications
 ############################
 
 log_info "Restarting affected applications to apply changes..."
 
-for app in "Finder" "Dock" "Mail"; do
+for app in "Finder" "Dock" "Mail" "Terminal" "SystemUIServer"; do
     if ! killall "$app" 2>/dev/null; then
         log_warning "Failed to restart $app"
     else
