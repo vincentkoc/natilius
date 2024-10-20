@@ -269,69 +269,6 @@ echo -e "\033[0;36mSecurity tweaks (Privacy)...\033[0m" | tee -a $LOGFILE
 
 ############################
 #
-# Kill apps (to apply changes)
-#
-############################
-
-# Kill affected applications
-echo -e | tee -a $LOGFILE
-echo -e "\033[0;36mRestarting apps after applying changes...\033[0m" | tee -a $LOGFILE
-for a in "${KILLAPPS[@]}";
-do killall -q $a && echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mClosing app [$a]\033[0m" 2>/dev/null | tee -a $LOGFILE || true
-done
-
-############################
-#
-# Homebrew Taps
-#
-############################
-
-echo -e | tee -a $LOGFILE
-echo -e "\033[0;36mTapping homebrew casks...\033[0m" | tee -a $LOGFILE
-for a in "${BREWTAPS[@]}";
-do
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mTapping cask [$a]\033[0m" | tee -a $LOGFILE
-    brew tap $a | tee -a $LOGFILE
-    sleep 1
-done
-
-############################
-#
-# Homebrew Packages
-#
-############################
-
-echo -e | tee -a $LOGFILE
-echo -e "\033[0;36mInstalling homebrew packages...\033[0m" | tee -a $LOGFILE
-for a in "${BREWPACKAGES[@]}";
-do
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling package [$a]\033[0m" | tee -a $LOGFILE
-    brew install $a | tee -a $LOGFILE
-    echo -e
-    sleep 2
-done
-
-############################
-#
-# Homebrew Casks
-#
-############################
-
-echo -e | tee -a $LOGFILE
-echo -e "\033[0;36mInstalling homebrew casks...\033[0m" | tee -a $LOGFILE
-for a in "${BREWCASKS[@]}";
-do
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mInstalling cask [$a]\033[0m" | tee -a $LOGFILE
-    sudo -u $SUDO_USER brew install --appdir="/Applications" --cask $a | tee -a $LOGFILE
-    echo -e
-    sleep 2
-done
-
-echo -e "\033[0;36mRunning post install clean-up\033[0m" | tee -a $LOGFILE
-brew cleanup
-
-############################
-#
 # Screensaver
 #
 ############################
