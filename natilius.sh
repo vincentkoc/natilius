@@ -72,6 +72,9 @@ else
     source "$CONFIG_FILE"
 fi
 
+# Set default value for SKIP_UPDATE_CHECK
+SKIP_UPDATE_CHECK=${SKIP_UPDATE_CHECK:-false}
+
 # Start logging
 log_info "Logging enabled..."
 log_info "Log file is located at [$LOGFILE]"

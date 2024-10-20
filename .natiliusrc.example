@@ -91,3 +91,6 @@ APPSTORE=(
     "937984704"   # Amphetamine
     # ... Add other app IDs as needed
 )
+
+# Set to true to skip update checks
+SKIP_UPDATE_CHECK=false
