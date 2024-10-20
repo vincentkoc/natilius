@@ -18,6 +18,12 @@
 #
 
 set -e
+trap 'handle_error $LINENO' ERR
+
+handle_error() {
+    log_error "Error occurred at line $1."
+    exit 1
+}
 
 NATILIUS_DIR="$HOME/.natilius"
 CONFIG_FILE="$HOME/.natiliusrc"
@@ -25,6 +31,26 @@ CONFIG_FILE="$HOME/.natiliusrc"
 # Source utility functions and logging
 source "$NATILIUS_DIR/lib/utils.sh"
 source "$NATILIUS_DIR/lib/logging.sh"
+
+INTERACTIVE_MODE=false
+
+# Parse command-line arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --interactive|-i)
+            INTERACTIVE_MODE=true
+            ;;
+        --profile|-p)
+            shift
+            PROFILE="$1"
+            CONFIG_FILE="$HOME/.natiliusrc.$PROFILE"
+            ;;
+        *)
+            log_warning "Unknown parameter passed: $1"
+            ;;
+    esac
+    shift
+done
 
 # Load user configuration and export variables
 if [ -f "$CONFIG_FILE" ]; then
@@ -99,8 +125,46 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 log_success "Sudo password validated"
 
-# Run modules based on configuration
-for module in "${ENABLED_MODULES[@]}"; do
+# Interactive Mode
+if [ "$INTERACTIVE_MODE" = true ]; then
+    log_info "Interactive mode enabled. Please select which modules to run."
+    # List available modules
+    AVAILABLE_MODULES=()
+    MODULE_PATHS=()
+    INDEX=1
+    echo "Available modules:"
+    for module_file in $(find "$NATILIUS_DIR/modules" -name "*.sh" | sort); do
+        module_name=$(echo "$module_file" | sed "s#$NATILIUS_DIR/modules/##;s#\.sh\$##")
+        echo "[$INDEX] $module_name"
+        AVAILABLE_MODULES+=("$module_name")
+        MODULE_PATHS+=("$module_file")
+        INDEX=$((INDEX + 1))
+    done
+
+    echo "Enter the numbers of the modules you want to run, separated by spaces (e.g., 1 3 5):"
+    read -r SELECTED_MODULE_INDICES
+
+    # Build the module list based on user selection
+    SELECTED_MODULES=()
+    for index in $SELECTED_MODULE_INDICES; do
+        if [[ "$index" =~ ^[0-9]+$ ]] && [ "$index" -ge 1 ] && [ "$index" -le "${#AVAILABLE_MODULES[@]}" ]; then
+            SELECTED_MODULES+=("${AVAILABLE_MODULES[$((index - 1))]}")
+        else
+            log_warning "Invalid selection: $index"
+        fi
+    done
+
+    if [ "${#SELECTED_MODULES[@]}" -eq 0 ]; then
+        log_warning "No valid modules selected. Exiting."
+        exit 1
+    fi
+else
+    # Use modules from configuration
+    SELECTED_MODULES=("${ENABLED_MODULES[@]}")
+fi
+
+# Run selected modules
+for module in "${SELECTED_MODULES[@]}"; do
     MODULE_PATH="$NATILIUS_DIR/modules/$module.sh"
     if [ -f "$MODULE_PATH" ]; then
         log_info "Running module: $module"
