@@ -20,17 +20,28 @@
 set -e
 trap 'handle_error $LINENO' ERR
 
-handle_error() {
-    log_error "Error occurred at line $1."
-    exit 1
-}
+# Get the directory of the script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-NATILIUS_DIR="$HOME/.natilius"
+# Set NATILIUS_DIR relative to the script location
+NATILIUS_DIR="$SCRIPT_DIR"
 CONFIG_FILE="$HOME/.natiliusrc"
+
+# Set LOGFILE
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+LOGFILE="$NATILIUS_DIR/logs/natilius-setup-$TIMESTAMP.log"
+
+# Create logs directory if it doesn't exist
+mkdir -p "$NATILIUS_DIR/logs"
 
 # Source utility functions and logging
 source "$NATILIUS_DIR/lib/utils.sh"
 source "$NATILIUS_DIR/lib/logging.sh"
+
+handle_error() {
+    log_error "Error occurred at line $1."
+    exit 1
+}
 
 INTERACTIVE_MODE=false
 
@@ -55,19 +66,29 @@ done
 # Load user configuration and export variables
 if [ -f "$CONFIG_FILE" ]; then
     source "$CONFIG_FILE"
-    export $(grep -Ev '^#' "$CONFIG_FILE" | cut -d= -f1 | xargs)
+    # Export non-array variables
+    while IFS='=' read -r name value; do
+        if [[ ! "$name" =~ ^[[:space:]]*# && "$name" != "" ]]; then
+            # Remove leading/trailing whitespace and quotes from the value
+            value=$(echo "$value" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/^"//' -e 's/"$//')
+            if [[ "$name" != "ENABLED_MODULES" && "$name" != *"PACKAGES" && "$value" != *"("* ]]; then
+                export "$name=$value"
+            fi
+        fi
+    done < "$CONFIG_FILE"
 else
     cp "$NATILIUS_DIR/.natiliusrc.example" "$CONFIG_FILE"
     log_info "Created default configuration file at $CONFIG_FILE"
     source "$CONFIG_FILE"
-    export $(grep -Ev '^#' "$CONFIG_FILE" | cut -d= -f1 | xargs)
 fi
 
-# Set LOGFILE
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-LOGFILE="$NATILIUS_DIR/logs/natilius-setup-$TIMESTAMP.log"
-
-mkdir -p "$NATILIUS_DIR/logs"
+# Parse ENABLED_MODULES array
+if [[ -n "$ENABLED_MODULES" ]]; then
+    IFS=',' read -ra ENABLED_MODULES_ARRAY <<< "${ENABLED_MODULES[*]}"
+    ENABLED_MODULES_ARRAY=(${ENABLED_MODULES_ARRAY[@]//[[:space:]]/})
+else
+    ENABLED_MODULES_ARRAY=()
+fi
 
 # Start logging
 log_info "Logging enabled..."
@@ -84,11 +105,11 @@ cat << "EOF"
  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣾⣿⣿⣿⠀⢸⣿⣿⣿⣿⣶⣶⣤⣀⠀⠀⠀⠀⠀
  ⠀⠀⠀⠀⠀⢀⣴⡇⢀⣾⣿⣿⣿⣿⣿⠀⣾⣿⣿⣿⣿⣿⣿⣿⠿⠓⠀⠀⠀⠀
  ⠀⠀⠀⠀⣰⣿⣿⡀⢸⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠟⠁⣠⣄⠀⠀⠀⠀
- ⠀⠀⠀⢠⣿⣿⣿⣇⠀⢿⣿⣿⣿⣿⣿⠀⢻⣿⣿⣿⡿⢃⣠⣾⣿⣿⣧⡀⠀⠀
+ ⠀⠀⠀⢠⣿⣿⣿⣇⠀⢻⣿⣿⣿⣿⣿⠀⢻⣿⣿⣿⡿⢃⣠⣾⣿⣿⣧⡀⠀⠀
  ⠀⠀⠀⢸⣿⣿⣿⣿⣆⠘⢿⣿⡿⠛⢉⠀⠀⠉⠙⠛⣠⣿⣿⣿⣿⣿⣿⣷⠀⠀
  ⠀⠀⠠⣾⣿⣿⣿⣿⣿⣧⠈⠋⢀⣴⣧⠀⣿⡏⢠⡀⢸⣿⣿⣿⣿⣿⣿⣿⡇⠀
  ⠀⠀⣀⠙⢿⣿⣿⣿⣿⣿⠇⢠⣿⣿⣿⡄⠹⠃⠼⠃⠈⠉⠛⠛⠛⠛⠛⠻⠇⠀
- ⠀⢸⡟⢠⣤⠉⠛⠿⢿⣿⠀⢸⣿⡿⠋⣠⣤⣄⠀⣾⣿⣿⣶⣶⣶⣦⡄⠀⠀⠀
+ ⠀⢸⡟⢠⣤⠉⠛⠿⢿⣿⠀⢸⣿⡿⠋⣠⣤⣄⠀⣾⣿⣣⣶⣶⣶⣦⡄⠀⠀⠀
  ⠀⠸⠀⣾⠏⣸⣷⠂⣠⣤⠀⠘⢁⣴⣾⣿⣿⣿⡆⠘⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀
  ⠀⠀⠀⠛⠀⣿⡟⠀⢻⣿⡄⠸⣿⣿⣿⣿⣿⣿⣿⡀⠘⣿⣿⣿⣿⠟⠀⠀⠀⠀
  ⠀⠀⠀⠀⠀⣿⠇⠀⠀⢻⡿⠀⠈⠻⣿⣿⣿⣿⣿⡇⠀⢹⣿⠿⠋⠀⠀⠀⠀⠀
@@ -160,7 +181,7 @@ if [ "$INTERACTIVE_MODE" = true ]; then
     fi
 else
     # Use modules from configuration
-    SELECTED_MODULES=("${ENABLED_MODULES[@]}")
+    SELECTED_MODULES=("${ENABLED_MODULES_ARRAY[@]}")
 fi
 
 # Run selected modules
