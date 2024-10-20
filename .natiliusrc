@@ -1,10 +1,11 @@
 # Enabled modules
 ENABLED_MODULES=(
     "system_update"
+    "directories"
+    "mac_preferences"
     "system_preferences"
     "security"
     "homebrew"
-    "directories"
     "apps"
     # ... other modules ...
 )
