@@ -12,14 +12,38 @@ CONFIG_FILE="$HOME/.natiliusrc"
 source "$NATILIUS_DIR/lib/utils.sh"
 source "$NATILIUS_DIR/lib/logging.sh"
 
-# Load user configuration
+# Load user configuration and export variables
 if [ -f "$CONFIG_FILE" ]; then
     source "$CONFIG_FILE"
+    export $(grep -Ev '^#' "$CONFIG_FILE" | cut -d= -f1 | xargs)
 else
     cp "$NATILIUS_DIR/.natiliusrc.example" "$CONFIG_FILE"
     log_info "Created default configuration file at $CONFIG_FILE"
     source "$CONFIG_FILE"
+    export $(grep -Ev '^#' "$CONFIG_FILE" | cut -d= -f1 | xargs)
 fi
+
+# Set LOGFILE
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+LOGFILE="$NATILIUS_DIR/logs/natilius-setup-$TIMESTAMP.log"
+
+mkdir -p "$NATILIUS_DIR/logs"
+
+# Start logging
+log_info "Logging enabled..."
+log_info "Log file is located at [$LOGFILE]"
+
+# Export LOGFILE so that it's available in sourced scripts
+export LOGFILE
+
+# Prompt for sudo password at the start
+log_info "Please provide your password to proceed with sudo privileges (may auto-skip)..."
+sudo -v
+
+# Keep-alive: update existing `sudo` time stamp until the script has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+log_success "Sudo password validated"
 
 # Run modules based on configuration
 for module in "${ENABLED_MODULES[@]}"; do
