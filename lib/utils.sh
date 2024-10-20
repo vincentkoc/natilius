@@ -49,3 +49,21 @@ restart_system_preferences() {
     osascript -e 'tell application "System Preferences" to quit' &> /dev/null
     log_success "System Preferences closed"
 }
+
+check_for_updates() {
+    log_info "Checking for Natilius updates..."
+    git -C "$NATILIUS_DIR" fetch origin
+    local behind=$(git -C "$NATILIUS_DIR" rev-list HEAD..origin/main --count)
+    if [ "$behind" -gt 0 ]; then
+        log_warning "Natilius is $behind commit(s) behind. Update available."
+        read -p "Do you want to update Natilius? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            git -C "$NATILIUS_DIR" pull origin main
+            log_success "Natilius updated. Please restart the script."
+            exit 0
+        fi
+    else
+        log_success "Natilius is up to date."
+    fi
+}

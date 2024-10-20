@@ -77,6 +77,9 @@ log_info "Logging enabled..."
 log_info "Log file is located at [$LOGFILE]"
 export LOGFILE
 
+# Check for updates
+check_for_updates
+
 # Display the ASCII intro
 echo -e "\033[0;33m"
 cat << "EOF"
