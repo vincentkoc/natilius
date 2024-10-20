@@ -22,35 +22,58 @@
 log_info "Performing system cleanup and optimization..."
 
 # Homebrew cleanup
-log_info "Running Homebrew cleanup..."
-brew cleanup -s | tee -a "$LOGFILE"
-brew autoremove | tee -a "$LOGFILE"
+if command -v brew &> /dev/null; then
+    log_info "Running Homebrew cleanup..."
+    brew cleanup -s | tee -a "$LOGFILE"
+    brew autoremove | tee -a "$LOGFILE"
+else
+    log_info "Homebrew not found. Skipping Homebrew cleanup."
+fi
 
 # NPM cache clean
 if command -v npm &> /dev/null; then
     log_info "Cleaning NPM cache..."
     npm cache clean --force | tee -a "$LOGFILE"
+else
+    log_info "NPM not found. Skipping NPM cache cleanup."
 fi
 
 # Yarn cache clean
 if command -v yarn &> /dev/null; then
     log_info "Cleaning Yarn cache..."
     yarn cache clean | tee -a "$LOGFILE"
+else
+    log_info "Yarn not found. Skipping Yarn cache cleanup."
 fi
 
 # PIP cache purge
 if command -v pip &> /dev/null; then
     log_info "Purging Pip cache..."
     pip cache purge | tee -a "$LOGFILE"
+else
+    log_info "Pip not found. Skipping Pip cache purge."
 fi
 
 # Remove temporary files
 log_info "Removing temporary files and caches..."
-rm -rf "$HOME/Library/Caches/"*
-sudo rm -rf /Library/Caches/*
-sudo rm -rf /System/Library/Caches/*
-sudo rm -rf /private/var/folders/*
-sudo rm -rf /private/var/tmp/*
-sudo rm -rf /var/log/asl/*.asl || true
+rm -rf "$HOME/Library/Caches/"* 2>/dev/null || log_info "Failed to remove user caches"
+sudo rm -rf /Library/Caches/* 2>/dev/null || log_info "Failed to remove system caches"
+sudo rm -rf /System/Library/Caches/* 2>/dev/null || log_info "Failed to remove system library caches"
+sudo rm -rf /private/var/folders/* 2>/dev/null || log_info "Failed to remove private folders"
+sudo rm -rf /private/var/tmp/* 2>/dev/null || log_info "Failed to remove private tmp files"
+sudo rm -rf /var/log/asl/*.asl 2>/dev/null || log_info "Failed to remove ASL logs"
+
+# Clear system and application logs
+log_info "Clearing system and application logs..."
+sudo rm -rf /var/log/*log /var/log/*.out 2>/dev/null || log_info "Failed to remove system logs"
+sudo rm -rf /Library/Logs/* 2>/dev/null || log_info "Failed to remove library logs"
+rm -rf "$HOME/Library/Logs/"* 2>/dev/null || log_info "Failed to remove user logs"
+
+# Clear XCode derived data and archives (if XCode is installed)
+if [ -d "$HOME/Library/Developer/Xcode" ]; then
+    log_info "Clearing XCode derived data and archives..."
+    rm -rf "$HOME/Library/Developer/Xcode/DerivedData"/* 2>/dev/null || log_info "Failed to remove XCode derived data"
+    rm -rf "$HOME/Library/Developer/Xcode/Archives"/* 2>/dev/null || log_info "Failed to remove XCode archives"
+fi
 
 log_success "System cleanup and optimization complete"
