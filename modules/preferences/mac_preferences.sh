@@ -73,6 +73,10 @@ log_success "Configured spaces to switch when activating apps"
 set_default NSGlobalDomain NSTableViewDefaultSizeMode -int 1
 log_success "Set smaller sidebar icons"
 
+# Disable automatic termination of inactive apps
+set_default NSGlobalDomain NSDisableAutomaticTermination -bool true
+log_success "Disabled automatic termination of inactive apps"
+
 ############################
 # Finder Preferences
 ############################
@@ -128,6 +132,20 @@ log_success "Set Finder search scope to current folder"
 # Disable warning when changing a file extension
 set_default com.apple.finder FXEnableExtensionChangeWarning -bool false
 log_success "Disabled warning when changing file extensions"
+
+# Show battery percentage in menu bar
+set_default com.apple.menuextra.battery ShowPercent -string "YES"
+log_success "Enabled battery percentage in menu bar"
+
+# Show clock in menu bar
+set_default com.apple.menuextra.clock Show24Hour -bool true
+set_default com.apple.menuextra.clock ShowDate -bool true
+log_success "Enabled clock in menu bar"
+
+# Enable spring loading for directories
+set_default NSGlobalDomain com.apple.springing.enabled -bool true
+set_default NSGlobalDomain com.apple.springing.delay -float 0
+log_success "Enabled spring loading for directories"
 
 ############################
 # Dock Preferences
