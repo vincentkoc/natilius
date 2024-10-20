@@ -2,7 +2,7 @@
 
 # natilius - 🐚 Automated One-Click Mac Developer Environment
 #
-# Copyright (C) 2023 Vincent Koc (@koconder)
+# Copyright (C) 2023 Vincent Koc (@vincent_koc)
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software

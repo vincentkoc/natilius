@@ -80,7 +80,7 @@ cat << "EOF"
  development on a Mac machine by scaffolding
  all your key development apps, settings, dotfiles
  configuration, and have you up and running in no
- time. Developed by Vincent Koc (@koconder)
+ time. Developed by Vincent Koc (@vincent_koc)
 
  This script assumes iCloud as the primary
  location for dotfiles and configuration.
@@ -120,7 +120,7 @@ cat << EOF
  Your logfile is saved at $LOGFILE
 
  You are welcome to leave feedback, comments, and issues
- directly on GitHub at (https://github.com/koconder/natilius).
+ directly on GitHub at (https://github.com/vincent_koc/natilius).
 
  I also welcome PRs and suggestions to speed up the
  setup of your development environment.

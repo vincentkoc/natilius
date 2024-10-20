@@ -35,7 +35,7 @@ if ! command -v git &> /dev/null; then
 fi
 
 # Clone the full Natilius repository
-git clone https://github.com/koconder/natilius.git ~/.natilius
+git clone https://github.com/vincent_koc/natilius.git ~/.natilius
 
 # Run the main Natilius script
 bash ~/.natilius/natilius.sh
