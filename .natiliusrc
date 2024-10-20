@@ -13,7 +13,11 @@ ENABLED_MODULES=(
     "dev_environments/python"
     "dev_environments/node"
     "dev_environments/rust"
+	"dev_environments/go"
+    "dev_environments/php"
+    "dev_environments/flutter"
     "dotfiles"
+	"system/cleanup"
     # ... other modules ...
 )
 
@@ -75,6 +79,8 @@ JDKVER="20"
 PYTHONVER="3.9.11"
 RUBYVER="3.2.1"
 NODEVER="18.14.0"
+GOVER="1.20.0"
+FLUTTER_CHANNEL="stable"
 
 # Global Node.js Packages
 GLOBAL_NODE_PACKAGES=(
@@ -88,4 +94,10 @@ GLOBAL_PYTHON_PACKAGES=(
     "pip"
     "virtualenv"
     # ... other Python packages ...
+)
+
+GLOBAL_PHP_PACKAGES=(
+    "phpunit/phpunit"
+    "laravel/installer"
+    # Add other global packages as needed
 )
