@@ -26,3 +26,9 @@ get_current_version() {
     fi
     echo "$CURRENTVER"
 }
+
+restart_system_preferences() {
+    log_info "Closing System Preferences if open..."
+    osascript -e 'tell application "System Preferences" to quit' &> /dev/null
+    log_success "System Preferences closed"
+}
