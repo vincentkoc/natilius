@@ -255,6 +255,14 @@ set_default com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -
 set_default com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
 log_success "Configured Mail view settings"
 
+# Disable inline attachment viewing
+set_default com.apple.mail DisableInlineAttachmentViewing -bool true
+log_success "Disabled inline attachment viewing"
+
+# Show To/Cc label in message list
+set_default com.apple.mail ConversationViewAddressesWithName -bool true
+log_success "Enabled To/Cc label in message list"
+
 ############################
 # Print Preferences
 ############################
