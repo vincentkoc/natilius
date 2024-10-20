@@ -1,13 +1,19 @@
 # Enabled modules
 ENABLED_MODULES=(
-    "system_update"
-    "directories"
-    "mac_preferences"
-    "system_preferences"
-    "security"
-    "homebrew"
-    "espanso"
-    "apps"
+    "system/system_update"
+    "system/directories"
+    "preferences/mac_preferences"
+    "preferences/system_preferences"
+    "system/security"
+    "applications/homebrew"
+    "applications/espanso"
+    "applications/apps"
+    "dev_environments/java"
+    "dev_environments/ruby"
+    "dev_environments/python"
+    "dev_environments/node"
+    "dev_environments/rust"
+    "dotfiles"
     # ... other modules ...
 )
 
