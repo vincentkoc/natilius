@@ -31,18 +31,31 @@ else
     flutter --version | tee -a "$LOGFILE"
 fi
 
+# Install Android SDK if not installed
+if ! command -v sdkmanager &> /dev/null; then
+    log_info "Android SDK not found. Installing Android SDK..."
+    brew install --cask android-sdk
+    log_success "Android SDK installed"
+else
+    log_success "Android SDK is already installed."
+fi
+
+# Add Android SDK to PATH
+export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
+export PATH="$ANDROID_SDK_ROOT/tools/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH"
+
+# Accept Android SDK licenses
+if command -v sdkmanager &> /dev/null; then
+    log_info "Accepting Android SDK licenses..."
+    yes | sdkmanager --licenses
+    log_success "Android SDK licenses accepted"
+fi
+
 # Enable beta channel if specified
 if [ "$FLUTTER_CHANNEL" = "beta" ]; then
     log_info "Switching to Flutter beta channel..."
     flutter channel beta
     flutter upgrade
-fi
-
-# Accept Android licenses
-if command -v sdkmanager &> /dev/null; then
-    log_info "Accepting Android SDK licenses..."
-    yes | sdkmanager --licenses
-    log_success "Android SDK licenses accepted"
 fi
 
 # Run flutter doctor
