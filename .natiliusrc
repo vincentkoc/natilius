@@ -1,24 +1,23 @@
 # Enabled modules
 ENABLED_MODULES=(
-    "system/system_update"
-    "system/directories"
-    "preferences/mac_preferences"
-    "preferences/system_preferences"
-    "system/security"
-    "applications/homebrew"
-    "applications/espanso"
-    "applications/apps"
-    "dev_environments/java"
-    "dev_environments/ruby"
-    "dev_environments/python"
-    "dev_environments/node"
-    "dev_environments/rust"
-	"dev_environments/go"
-    "dev_environments/php"
-    "dev_environments/flutter"
-    "dotfiles"
-	"system/cleanup"
-    # ... other modules ...
+    # "system/system_update"
+    # "system/directories"
+    # "preferences/mac_preferences"
+    # "preferences/system_preferences"
+    # "system/security"
+    # "applications/homebrew"
+    # "applications/espanso"
+    # "applications/apps"
+    # "dev_environments/java"
+    # "dev_environments/ruby"
+    # "dev_environments/python"
+    # "dev_environments/node"
+    # "dev_environments/rust"
+    # "dev_environments/go"
+    # "dev_environments/php"
+    # "dev_environments/flutter"
+    # "dotfiles"
+    "system/cleanup"
 )
 
 # Directories to create
@@ -73,6 +72,13 @@ BREWCASKS=(
     # ... Add other casks as needed
 )
 
+# Mac App Store Apps (App IDs)
+APPSTORE=(
+    "441258766"   # Magnet
+    "937984704"   # Amphetamine
+    # ... Add other app IDs as needed
+)
+
 # Custom variables
 COUNTRYCODE="au"
 JDKVER="20"
@@ -100,4 +106,33 @@ GLOBAL_PHP_PACKAGES=(
     "phpunit/phpunit"
     "laravel/installer"
     # Add other global packages as needed
+)
+
+# Custom variables
+PHPVER="8.1.0"
+
+# Global PHP Composer Packages
+GLOBAL_PHP_PACKAGES=(
+    "phpunit/phpunit"
+    "laravel/installer"
+    # Add other global Composer packages as needed
+)
+
+# Default PEAR Packages
+PEAR_PACKAGES=(
+    "pear/PackageName1"
+    "pear/PackageName2"
+    # Add other PEAR packages as needed
+)
+
+# Applications to kill after setup
+KILLAPPS=(
+    "Address Book"
+    "Dock"
+    "Finder"
+    "Mail"
+    "iCal"
+    "iTunes"
+    "Safari"
+    "SystemUIServer"
 )
