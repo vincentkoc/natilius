@@ -119,6 +119,17 @@ EOF
 
 echo -e "\033[0m"
 
+# After the ASCII art and before the sudo password prompt, add:
+
+echo -e "\033[1;33m⚠️  WARNING: This script will make changes to your system. Use at your own risk.\033[0m" | tee -a "$LOGFILE"
+echo -e "\033[1;33m⚠️  Ensure you have a complete backup before proceeding.\033[0m" | tee -a "$LOGFILE"
+echo -e "\033[1;33m⚠️  Review the script and configuration before running.\033[0m" | tee -a "$LOGFILE"
+echo
+read -p "Press Enter to continue or Ctrl+C to abort..." | tee -a "$LOGFILE"
+echo
+
+# Then continue with the existing code for sudo password prompt
+
 # Prompt for sudo password at the start
 log_info "Please provide your password to proceed with sudo privileges (may auto-skip)..."
 sudo -v
