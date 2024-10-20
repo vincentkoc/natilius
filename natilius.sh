@@ -1,345 +1,38 @@
 #!/bin/bash
 
-#
-# natilius - 🐚 Automated One-Click Mac Developer Environment
-#
-# Copyright (C) 2023 Vincent Koc (@koconder)
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-# PURPOSE. See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with this
-# program. If not, see http://www.gnu.org/licenses/.
-#
+# Natilius - Modular Mac Developer Environment Setup
+# https://github.com/koconder/natilius
 
-############################
-#
-# Config
-#
-############################
+set -e
 
-trap 'ret=$?; test $ret -ne 0 && printf "\n   \e[31m⚠️   Natilius failed   ⚠️\033[0m\n" >&2; exit $ret' EXIT
-set -euo pipefail
+NATILIUS_DIR="$HOME/.natilius"
+CONFIG_FILE="$HOME/.natiliusrc"
 
-SUDO_USER=$(whoami)
-TIMESTAMP=$(date +%s)
-LOGFILE="./natilius-setup-$TIMESTAMP.log"
-COUNTRYCODE="au"
-JDKVER="20"
-PYTHONVER="3.9.11"
-RUBYVER="3.2.1"
-NODEVER="18.14.0"
+# Source utility functions and logging
+source "$NATILIUS_DIR/lib/utils.sh"
+source "$NATILIUS_DIR/lib/logging.sh"
 
-# Directories to generate
-DIRS=(
-    ~/.mackup
-    ~/.config
-    ~/GIT
-    ~/GIT/_Apps
-    ~/GIT/_Perso
-    ~/GIT/_Hipages
-    ~/GIT/_Stj
-    ~/GIT/_Airbyte
-)
-DIRSTOEXCLUDEFROMTIMEMACHINE=(
-    ~/.mackup
-    ~/GIT
-    ~/Dropbox
-    ~/.gnupg
-    ~/.ssh
-    ~/.config
-)
+# Load user configuration
+if [ -f "$CONFIG_FILE" ]; then
+    source "$CONFIG_FILE"
+else
+    cp "$NATILIUS_DIR/.natiliusrc.example" "$CONFIG_FILE"
+    log_info "Created default configuration file at $CONFIG_FILE"
+    source "$CONFIG_FILE"
+fi
 
-# Apps to kill post setup to apply changes
-KILLAPPS=(
-    Address\ Book
-    Dock
-    Finder
-    Mail
-    iCal
-    iTunes
-    Safari
-    SystemUIServer
-)
+# Run modules based on configuration
+for module in "${ENABLED_MODULES[@]}"; do
+    MODULE_PATH="$NATILIUS_DIR/modules/$module.sh"
+    if [ -f "$MODULE_PATH" ]; then
+        log_info "Running module: $module"
+        source "$MODULE_PATH"
+    else
+        log_warning "Module not found: $module"
+    fi
+done
 
-# Homebrew Casks to "tap"
-BREWTAPS=(
-    homebrew/cask
-    # homebrew/cask-versions
-    # homebrew/cask-fonts
-    # lencx/chatgpt
-    adoptopenjdk/openjdk
-    github/gh
-    r-lib/rig
-    rfidresearchgroup/proxmark3
-    mongodb/brew
-    warrensbox/tap
-    derailed/popeye
-)
-
-# App Store
-APPSTORE=(
-    # Magnet https://apps.apple.com/au/app/magnet/id441258766?mt=12
-    441258766
-    # Amphetamine https://apps.apple.com/us/app/amphetamine/id937984704?mt=12
-    937984704
-    # ShellHistory https://apps.apple.com/us/app/shellhistory/id1564015476
-    1564015476
-    # Fantastical https://apps.apple.com/us/app/fantastical-2/id975937182?mt=12&xcust=1675244233370vlst&xs=1
-    975937182
-    # Parcel https://apps.apple.com/us/app/parcel-delivery-tracking/id639968404?mt=12
-    639968404
-    # Kerberos Ticket Autorenewal https://apps.apple.com/app/id1246781916
-    1246781916
-    # Endel https://apps.apple.com/us/app/endel-focus-relax-sleep/id1484348796?mt=12
-    1484348796
-    # Flow https://apps.apple.com/au/app/flow-focus-pomodoro-timer/id1423210932
-    1423210932
-    # Irvue https://apps.apple.com/app/id1039633667
-    1039633667
-)
-
-# Homebrew packages to install
-#
-# Cli replacements:
-# cat -> bat
-# ssh -> mosh
-# vim -> neovim
-# grep -> ack + peco
-# ls -> exa
-# diff -> icdiff & diff-so-fancy
-# curl -> httpie
-# man -> tealdeer (tldr)
-# find -> fd
-# top -> htop
-# git -> tig
-# ps -> procs
-# ping -> gping
-# kubeclt -> kubectx
-#
-# Newer shell/cli tools:
-# croc
-# fzf
-# glow
-# hexyl
-# jc
-# jq
-# tokei
-# zoxide (z)
-#
-BREWPACKAGES=(
-    ack
-    awscli
-    bat
-    ca-certificates
-    coreutils
-    curl
-    ctop
-    croc
-    diff-so-fancy
-    docker-compose
-    # dog
-    eza
-    fd
-    fzf
-    git
-    gh
-    git-lfs
-    glow
-    go
-    gping
-    gpg
-    gradle
-    helm
-    hexyl
-    htop
-    httpie
-    icdiff
-    jenv
-    jc
-    jq
-    keychain
-    kubectl
-    kubernetes-cli
-    #kubernetes-helm
-    kubectx
-    libfido2
-    lynx
-    mackup
-    make
-    mas
-    minikube
-    mosh
-    neovim
-    nmap
-    node
-    nodenv
-    npm
-    openssl
-    openssh
-    peco
-    derailed/popeye/popeye
-    pinentry
-    pinentry-mac
-    # phantomjs
-    pre-commit
-    pyenv
-    pyenv-virtualenv
-    pipenv
-    procs
-    rbenv
-    rbenv-bundler
-    rbenv-default-gems
-    readline
-    rustup-init
-    speedtest-cli
-    sqlite
-    sqlite3
-    tealdeer
-    telnet
-    terraform
-    terraformer
-    tflint
-    tfsec
-    warrensbox/tap/tfswitch
-    tig
-    tmux
-    reattach-to-user-namespace
-    tokei
-    trash
-    tree
-    vim
-    watch
-    wget
-    xz
-    yamllint
-    ykman
-    yt-dlp
-    zlib
-    zoxide
-    zsh-completions
-    # fonts at the end, via fonts-cask
-    font-source-sans-pro
-    font-ubuntu
-    font-roboto
-    font-fira-code
-    font-fira-code-nerd-font
-    font-fira-mono-nerd-font
-    font-meslo-lg-nerd-font
-)
-
-# Homebrew casks to install
-BREWCASKS=(
-    1password
-    1password-cli
-    aerial
-    airbuddy
-    alfred
-    alt-tab
-    # amazon-chime
-    # balenaetcher
-    bartender
-    brave-browser
-    # chatgpt
-    clay
-    charles
-    cheatsheet
-    # dash
-    # datagrip
-    discord
-    docker
-    dropbox
-    espanso
-    firefox
-    font-fira-code
-    github
-    gpg-suite
-    imageoptim
-    iterm2
-    kap
-    keybase
-    keycastr
-    keyboard-maestro
-    logseq
-    loom
-    mamp
-    # microsoft-office
-    # miro
-    muzzle
-    # mkchromecast
-    # soundflower
-    mysqlworkbench
-    netnewswire
-    notion
-    obsidian
-    onyx
-    # pika
-    # pock
-    # postman
-    # profilecreator
-    rescuetime
-    rfidresearchgroup/proxmark3/proxmark3
-    rig
-    slack
-    spotify
-    sublime-merge
-    sublime-text
-    the-unarchiver
-    transmit
-    tripmode
-    visual-studio-code
-    vlc
-    xquartz
-    zoom
-)
-
-############################
-#
-# Start Setup
-#
-############################
-
-echo -e "\033[0;33m"
-cat << "EOF"
- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣾⣿⣿⣿⠀⢸⣿⣿⣿⣿⣶⣶⣤⣀⠀⠀⠀⠀⠀
- ⠀⠀⠀⠀⠀⢀⣴⡇⢀⣾⣿⣿⣿⣿⣿⠀⣾⣿⣿⣿⣿⣿⣿⣿⠿⠓⠀⠀⠀⠀
- ⠀⠀⠀⠀⣰⣿⣿⡀⢸⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠟⠁⣠⣄⠀⠀⠀⠀
- ⠀⠀⠀⢠⣿⣿⣿⣇⠀⢿⣿⣿⣿⣿⣿⠀⢻⣿⣿⣿⡿⢃⣠⣾⣿⣿⣧⡀⠀⠀
- ⠀⠀⠀⢸⣿⣿⣿⣿⣆⠘⢿⣿⡿⠛⢉⠀⠀⠉⠙⠛⣠⣿⣿⣿⣿⣿⣿⣷⠀⠀
- ⠀⠀⠠⣾⣿⣿⣿⣿⣿⣧⠈⠋⢀⣴⣧⠀⣿⡏⢠⡀⢸⣿⣿⣿⣿⣿⣿⣿⡇⠀
- ⠀⠀⣀⠙⢿⣿⣿⣿⣿⣿⠇⢠⣿⣿⣿⡄⠹⠃⠼⠃⠈⠉⠛⠛⠛⠛⠛⠻⠇⠀
- ⠀⢸⡟⢠⣤⠉⠛⠿⢿⣿⠀⢸⣿⡿⠋⣠⣤⣄⠀⣾⣿⣿⣶⣶⣶⣦⡄⠀⠀⠀
- ⠀⠸⠀⣾⠏⣸⣷⠂⣠⣤⠀⠘⢁⣴⣾⣿⣿⣿⡆⠘⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀
- ⠀⠀⠀⠛⠀⣿⡟⠀⢻⣿⡄⠸⣿⣿⣿⣿⣿⣿⣿⡀⠘⣿⣿⣿⣿⠟⠀⠀⠀⠀
- ⠀⠀⠀⠀⠀⣿⠇⠀⠀⢻⡿⠀⠈⠻⣿⣿⣿⣿⣿⡇⠀⢹⣿⠿⠋⠀⠀⠀⠀⠀
- ⠀⠀⠀⠀⠀⠋⠀⠀⠀⡘⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀
-                   _ _ _
-              _   (_) (_)
-  ____   ____| |_  _| |_ _   _  ___
- |  _ \ / _  |  _)| | | | | | |/___)
- | | | ( ( | | |__| | | | |_| |___ |
- |_| |_|\_||_|\___)_|_|_|\____(___/
-
- Welcome to Natilius
-
- Natilius is an automated script to help speed up
- development on a mac machine by scaffolding
- all your key development apps, settings, dotfiles
- configration and have you up and running in no
- time. Developed by Vincent Koc (@koconder)
-
- This script assumes the iCloud as the primary
- location for dotfiles and configration.
-
- Starting Natilius...
-EOF
+log_success "Natilius setup complete!"
 
 ############################
 #
@@ -512,7 +205,7 @@ echo -e "\033[0;36mUpdating preferences (Finder)...\033[0m" | tee -a $LOGFILE
     defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true > /dev/null 2>&1
     defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true > /dev/null 2>&1
 
-    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Disable the “reopen windows when logging back in” option\033[0m" | tee -a $LOGFILE
+    echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Finder: Disable the "reopen windows when logging back in" option\033[0m" | tee -a $LOGFILE
     defaults write com.apple.loginwindow TALLogoutSavesState -bool false > /dev/null 2>&1
     defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false > /dev/null 2>&1
 
