@@ -45,14 +45,12 @@ if command -v pip &> /dev/null; then
 fi
 
 # Remove temporary files
-log_info "Removing temporary files..."
-rm -rf "$HOME/Library/Caches/*"
+log_info "Removing temporary files and caches..."
+rm -rf "$HOME/Library/Caches/"*
 sudo rm -rf /Library/Caches/*
 sudo rm -rf /System/Library/Caches/*
 sudo rm -rf /private/var/folders/*
-
-# System maintenance scripts (run daily, weekly, monthly)
-log_info "Running system maintenance scripts..."
-sudo periodic daily weekly monthly
+sudo rm -rf /private/var/tmp/*
+sudo rm -rf /var/log/asl/*.asl
 
 log_success "System cleanup and optimization complete"
