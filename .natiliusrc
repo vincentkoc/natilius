@@ -69,3 +69,17 @@ JDKVER="20"
 PYTHONVER="3.9.11"
 RUBYVER="3.2.1"
 NODEVER="18.14.0"
+
+# Global Node.js Packages
+GLOBAL_NODE_PACKAGES=(
+    "eslint"
+    "gatsby"
+    # ... other Node.js packages ...
+)
+
+# Global Python Packages
+GLOBAL_PYTHON_PACKAGES=(
+    "pip"
+    "virtualenv"
+    # ... other Python packages ...
+)
