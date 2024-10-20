@@ -20,6 +20,7 @@ JDKVER="20"
 PYTHONVER="3.9.11"
 RUBYVER="3.2.1"
 NODEVER="18.14.0"
+GOVER="1.20.0"
 
 # Directories to create
 DIRS=(
