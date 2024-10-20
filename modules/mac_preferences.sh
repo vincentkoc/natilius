@@ -231,3 +231,101 @@ for app in "Finder" "Dock" "Mail"; do
     killall "$app" &> /dev/null || true
     log_success "Restarted $app"
 done
+
+
+# # Safari Related Preferences
+# echo -e | tee -a $LOGFILE
+# echo -e "\033[0;36mUpdating preferences (Safari)...\033[0m" | tee -a $LOGFILE
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Safari: Hiding sidebar in Top Site\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.Safari ShowSidebarInTopSites -bool false > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Safari: Disabling thumbnail cache\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2 > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Safari: Enable debug, developer and inspector menus\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.Safari IncludeInternalDebugMenu -bool true > /dev/null 2>&1
+#     defaults write com.apple.Safari IncludeDevelopMenu -bool true > /dev/null 2>&1
+#     defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true > /dev/null 2>&1
+#     defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true > /dev/null 2>&1
+#     defaults write NSGlobalDomain WebKitDeveloperExtras -bool true > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Safari: Show full URLs\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.safari "ShowFullURLInSmartSearchField" -bool true > /dev/null 2>&1
+#     defaults write com.apple.safari ShowOverlayStatusBar -int 1
+
+# # Other OS Related Preferences
+# echo -e | tee -a $LOGFILE
+# echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee -a $LOGFILE
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: System apps to show temprarture in celsius\033[0m" | tee -a $LOGFILE
+#     defaults write -g AppleTemperatureUnit -string "Celsius" > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Menubar Battery Percentage\033[0m" | tee -a $LOGFILE
+#     defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1 > /dev/null 2>&1
+#     defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Disable Mission Control\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.dashboard mcx-disabled -bool true > /dev/null 2>&1
+#     defaults write com.apple.dashboard enabled-state -int 1 > /dev/null 2>&1
+#     defaults write com.apple.dock dashboard-in-overlay -bool true > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Menubar hide spotlight and wifi\033[0m" | tee -a $LOGFILE
+#     defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1 > /dev/null 2>&1
+#     defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Menubar format time (EEE d MMM HH:mm) \033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm\"" > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Disable the sound effects on boot\033[0m" | tee -a $LOGFILE
+#     sudo nvram SystemAudioVolume=" " > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: iOS charging chime when plugged into magsafe\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.PowerChime ChimeOnAllHardware -bool true || true > /dev/null 2>&1
+#     open /System/Library/CoreServices/PowerChime.app || true > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Preventing Time Machine from prompting to use new backup volumes\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Remove duplicates in the 'Open With' menu\033[0m" | tee -a $LOGFILE
+#     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Stop 'Photos' app from opening automatically\033[0m" | tee -a $LOGFILE
+#     defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Disable quartine on download messages nusiance\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.LaunchServices LSQuarantine -bool false > /dev/null 2>&1
+
+# # Other App Specific Preferences
+# echo -e | tee -a $LOGFILE
+# echo -e "\033[0;36mUpdating preferences (App specific preferences)...\033[0m" | tee -a $LOGFILE
+
+#     # https://stackoverflow.com/questions/39972335/how-do-i-press-and-hold-a-key-and-have-it-repeat-in-vscode
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: VS Code Allow pressing and holding a key to repeat it\033[0m" | tee -a $LOGFILE
+#     defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: VS Code enable subpixel anti-aliasing\033[0m" | tee -a $LOGFILE
+#     defaults write com.microsoft.VSCode CGFontRenderingFontSmoothingDisabled -bool false > /dev/null 2>&1
+#     defaults write com.microsoft.VSCode.helper CGFontRenderingFontSmoothingDisabled -bool false > /dev/null 2>&1
+#     defaults write com.microsoft.VSCode.helper.EH CGFontRenderingFontSmoothingDisabled -bool false > /dev/null 2>&1
+#     defaults write com.microsoft.VSCode.helper.NP CGFontRenderingFontSmoothingDisabled -bool false > /dev/null 2>&1
+
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Apple Text Editor to use plain text only\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.TextEdit RichText -int 0 > /dev/null 2>&1
+#     defaults write com.apple.TextEdit PlainTextEncoding -int 4 > /dev/null 2>&1
+#     defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4 > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Apple contacts set locale and allways show birth date\033[0m" | tee -a $LOGFILE
+#     defaults write com.apple.AddressBook ABBirthDayVisible -bool true > /dev/null 2>&1
+#     defaults write com.apple.AddressBook ABDefaultAddressCountryCode -string $COUNTRYCODE > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Unarchiver show folder after extract\033[0m" | tee -a $LOGFILE
+#     defaults write com.macpaw.site.theunarchiver openExtractedFolder -bool true > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: Docker enable auto-update\033[0m" | tee -a $LOGFILE
+#     defaults write com.docker.docker SUAutomaticallyUpdate -bool true > /dev/null 2>&1
+#     defaults write com.docker.docker SUEnableAutomaticChecks -bool true > /dev/null 2>&1
+
+#     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Apps: GPG Use Keychain to Store Secrets\033[0m" | tee -a $LOGFILE
+#     defaults write org.gpgtools.pinentry-mac DisableKeychain -bool false > /dev/null 2>&1
