@@ -33,10 +33,10 @@ log_success "Disabled Siri and analytics"
 
 # Disable IPv6 on Wi-Fi and Ethernet adapters
 log_info "Disabling IPv6 on Wi-Fi and Ethernet adapters..."
-network_services=$(networksetup -listallnetworkservices | tail +2)
+network_services=$(networksetup -listallnetworkservices | tail -n +2)
 while IFS= read -r service; do
     if [[ "$service" != *"Bluetooth"* ]]; then
-        sudo networksetup -setv6off "$service" 2>/dev/null || true
+        sudo networksetup -setv6off "$service" 2>/dev/null || log_warning "Failed to disable IPv6 for: $service"
         log_success "Disabled IPv6 for: $service"
     fi
 done <<< "$network_services"
@@ -49,26 +49,21 @@ log_success "Enabled Secure Keyboard Entry in Terminal.app"
 sudo spctl --master-enable
 log_success "Enabled Gatekeeper"
 
-# Enable firewall
-sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
-log_success "Firewall enabled"
-
-# Enable firewall logging
-sudo defaults write /Library/Preferences/com.apple.alf loggingenabled -bool true
-log_success "Firewall logging enabled"
-
-# Enable stealth mode
-sudo defaults write /Library/Preferences/com.apple.alf stealthenabled -int 1
-log_success "Stealth mode enabled"
+# Configure and enable firewall
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
+sudo pkill -HUP socketfilterfw
+log_success "Firewall enabled with logging and stealth mode"
 
 # Disable Wake on LAN
 sudo pmset -a womp 0
 log_success "Disabled Wake on LAN"
 
 # Enable FileVault encryption
-if fdesetup status | grep -q "Off"; then
+if ! fdesetup status | grep -q "FileVault is On."; then
     log_info "Enabling FileVault (this may require a reboot)..."
-    sudo fdesetup enable -user "$USER"
+    sudo fdesetup enable -user "$USER" || log_error "Failed to enable FileVault"
     log_success "FileVault enabled"
 else
     log_info "FileVault is already enabled"
@@ -89,14 +84,11 @@ defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
 log_success "Set requirement for password immediately after sleep or screen saver"
 
-# Disable guest user
+# Disable guest user and console login
 sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false
 sudo sysadminctl -guestAccount off
-log_success "Disabled guest user"
-
-# Disable console login
 sudo defaults write /Library/Preferences/com.apple.loginwindow DisableConsoleAccess -bool true
-log_success "Disabled console login"
+log_success "Disabled guest user and console login"
 
 ############################
 # Update Related Security Tweaks
@@ -108,11 +100,12 @@ log_info "Configuring update settings..."
 sudo softwareupdate --schedule on
 sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
 sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool true
+sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
 sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool true
 sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdateRestartRequired -bool true
 log_success "Enabled automatic system updates"
 
-# Check for updates daily instead of weekly
+# Check for updates daily
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 log_success "Set software update check frequency to daily"
 
@@ -122,26 +115,45 @@ log_success "Set software update check frequency to daily"
 
 log_info "Applying privacy-related security settings..."
 
-# Safari: Send 'Do Not Track' header
+# Safari: Send 'Do Not Track' header and disable search suggestions
 defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
-log_success "Enabled 'Do Not Track' in Safari"
+defaults write com.apple.Safari UniversalSearchEnabled -bool false
+defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+log_success "Configured Safari privacy settings"
 
 # Disable potential DNS leaks
 sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool true
 log_success "Disabled multicast DNS advertisements"
 
-# Disable search data sharing in Safari
-defaults write com.apple.Safari UniversalSearchEnabled -bool false
-defaults write com.apple.Safari SuppressSearchSuggestions -bool true
-log_success "Disabled Safari search data sharing"
-
 # Remove Google Software Updater if present
-if [ -f ~/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/ksinstall ]; then
-    ~/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/ksinstall --nuke
+google_updater="$HOME/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/ksinstall"
+if [ -f "$google_updater" ]; then
+    "$google_updater" --nuke
     log_success "Removed Google Software Updater"
 else
     log_info "Google Software Updater not found"
 fi
+
+############################
+# Additional Security Measures
+############################
+
+# Enable Secure Empty Trash (if available on the system)
+if defaults read com.apple.finder EmptyTrashSecurely &>/dev/null; then
+    defaults write com.apple.finder EmptyTrashSecurely -bool true
+    log_success "Enabled Secure Empty Trash"
+else
+    log_info "Secure Empty Trash option not available on this system"
+fi
+
+# Disable Bonjour multicast advertisements
+sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool true
+log_success "Disabled Bonjour multicast advertisements"
+
+# Enable application layer firewall
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedapp on
+log_success "Enabled application layer firewall"
 
 ############################
 # Restart Affected Applications
@@ -149,7 +161,8 @@ fi
 
 log_info "Restarting affected applications to apply changes..."
 
-for app in "Safari" "Terminal"; do
-    killall "$app" &> /dev/null || true
-    log_success "Restarted $app"
+for app in "Finder" "Safari" "Terminal"; do
+    killall "$app" &>/dev/null && log_success "Restarted $app" || log_info "$app was not running"
 done
+
+log_success "Security settings applied successfully"
