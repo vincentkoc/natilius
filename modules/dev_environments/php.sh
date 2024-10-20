@@ -1,35 +1,26 @@
 #!/bin/bash
 
 # natilius - 🐚 Automated One-Click Mac Developer Environment
-#
-# Copyright (C) 2023 Vincent Koc (@vincent_koc)
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>.
-#
+# https://github.com/vincent_koc/natilius
 
 # PHP Development Environment Module
 
 log_info "Setting up PHP environment..."
 
-# Install PHP using Homebrew if not installed
-if ! command -v php &> /dev/null; then
-    log_info "PHP not found. Installing PHP..."
-    brew install php
-    log_success "PHP installed"
-else
-    log_success "PHP is already installed."
-    php -v | tee -a "$LOGFILE"
-fi
+# Tap shivammathur/php for installing multiple PHP versions
+brew tap shivammathur/php
+
+# Install the specified PHP version
+log_info "Installing PHP version $PHPVER..."
+brew install shivammathur/php/php@$PHPVER
+
+# Unlink other PHP versions and link the desired version
+log_info "Linking PHP version $PHPVER..."
+brew unlink php 2>/dev/null || true
+brew link --force --overwrite php@$PHPVER
+
+# Verify the installed PHP version
+php -v | tee -a "$LOGFILE"
 
 # Install Composer
 if ! command -v composer &> /dev/null; then
@@ -50,9 +41,17 @@ else
     composer --version | tee -a "$LOGFILE"
 fi
 
+# Install default PEAR packages
+log_info "Installing default PEAR packages..."
+pear config-set auto_discover 1
+for package in "${PEAR_PACKAGES[@]}"; do
+    pear install -f "$package" | tee -a "$LOGFILE" || true
+    log_success "Installed PEAR package: $package"
+done
+
 # Install global PHP tools using Composer
-log_info "Installing global PHP tools..."
-composer global require "$GLOBAL_PHP_PACKAGES" | tee -a "$LOGFILE"
-log_success "Installed global PHP packages"
+log_info "Installing global PHP Composer packages..."
+composer global require "${GLOBAL_PHP_PACKAGES[@]}" | tee -a "$LOGFILE"
+log_success "Installed global PHP Composer packages"
 
 log_success "PHP environment setup complete"
