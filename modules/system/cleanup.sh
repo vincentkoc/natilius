@@ -51,7 +51,6 @@ sudo rm -rf /Library/Caches/*
 sudo rm -rf /System/Library/Caches/*
 sudo rm -rf /private/var/folders/*
 sudo rm -rf /private/var/tmp/*
-sudo rm -rf /var/log/asl/*.asl
 sudo rm -rf /var/log/asl/*.asl || true
 
 log_success "System cleanup and optimization complete"
