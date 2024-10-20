@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# natilius - 🐚 Automated One-Click Mac Developer Environment
+# natilius - 🐚 Automated One-Click Mac Developer Environment (https://github.com/vincent_koc/natilius)
 #
-# Copyright (C) 2023 Vincent Koc (@koconder)
+# Copyright (C) 2023 Vincent Koc (@vincent_koc)
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>.
 #
-
-# Natilius - Modular Mac Developer Environment Setup
-# https://github.com/koconder/natilius
 
 set -e
 
