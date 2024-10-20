@@ -4,6 +4,58 @@ ENABLED_MODULES=(
     "system_preferences"
     "security"
     "homebrew"
+    "directories"
     "apps"
     # ... other modules ...
+)
+
+# Directories to create
+DIRS=(
+    "~/.mackup"
+    "~/.config"
+    "~/GIT"
+    "~/GIT/_Apps"
+    "~/GIT/_Perso"
+    "~/GIT/_Hipages"
+    "~/GIT/_Stj"
+    "~/GIT/_Airbyte"
+)
+
+# Time Machine exclusions
+DIRSTOEXCLUDEFROMTIMEMACHINE=(
+    "~/.mackup"
+    "~/GIT"
+    "~/Dropbox"
+    "~/.gnupg"
+    "~/.ssh"
+    "~/.config"
+)
+
+# Homebrew Taps
+BREWTAPS=(
+    "homebrew/cask"
+    "adoptopenjdk/openjdk"
+    "github/gh"
+    "r-lib/rig"
+    "rfidresearchgroup/proxmark3"
+    "mongodb/brew"
+    "warrensbox/tap"
+    "derailed/popeye"
+)
+
+# Homebrew Packages
+BREWPACKAGES=(
+    "ack"
+    "awscli"
+    "bat"
+    "coreutils"
+    # ... Add other packages as needed
+)
+
+# Homebrew Casks
+BREWCASKS=(
+    "1password"
+    "1password-cli"
+    "aerial"
+    # ... Add other casks as needed
 )
