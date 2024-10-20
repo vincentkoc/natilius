@@ -88,8 +88,8 @@ echo -e "\033[0;36mUpdating preferences (Other OS preferences)...\033[0m" | tee 
     defaults write -g AppleTemperatureUnit -string "Celsius" > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Menubar Battery Percentage\033[0m" | tee -a $LOGFILE
-    defaults write com.apple.menuextra.battery ShowTime -string "NO" > /dev/null 2>&1
-    defaults write com.apple.menuextra.battery ShowPercent -string "YES" > /dev/null 2>&1
+    defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1 > /dev/null 2>&1
+    defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false > /dev/null 2>&1
 
     echo -e "\033[0;32m[ ✓ ]\033[0m \033[0;36mPref > Other: Disable Mission Control\033[0m" | tee -a $LOGFILE
     defaults write com.apple.dashboard mcx-disabled -bool true > /dev/null 2>&1
