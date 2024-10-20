@@ -3,6 +3,11 @@
 # Natilius - One-click Mac Developer Environment Setup
 # https://github.com/koconder/natilius
 
+# Warning
+echo -e "\033[0;31m⚠️  !! Warning: Use at your own risk, and ensure you have a backup !!  ⚠️\033[0m"
+read -r -s -p $'Press enter to continue...'
+echo -e
+
 # Ensure Homebrew is installed
 if ! command -v brew &> /dev/null; then
     echo -e "\033[0;36mInstalling Homebrew...\033[0m"
