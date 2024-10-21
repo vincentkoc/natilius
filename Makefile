@@ -24,7 +24,7 @@ test: install-deps
 # Run integration tests
 integration-test: install-deps
 	@echo "Running integration tests..."
-	@BATS_LIB_PATH="$(pwd)/lib" bats bats tests/integration_tests.bats
+	@BATS_LIB_PATH="$(pwd)/lib" bats tests/integration_tests.bats
 
 # Run config validator test
 test-config: install-deps
