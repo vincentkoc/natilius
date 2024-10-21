@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# natilius - 🐚 Automated One-Click Mac Developer Environment (https://github.com/vincent_koc/natilius)
+# natilius - 🐚 Automated One-Click Mac Developer Environment (https://github.com/vincentkoc/natilius)
 #
 # Copyright (C) 2023 Vincent Koc (@vincent_koc)
 #
@@ -215,7 +215,7 @@ cat << EOF
  Your logfile is saved at $LOGFILE
 
  You are welcome to leave feedback, comments, and issues
- directly on GitHub at (https://github.com/vincent_koc/natilius).
+ directly on GitHub at (https://github.com/vincentkoc/natilius).
 
  I also welcome PRs and suggestions to speed up the
  setup of your development environment.

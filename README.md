@@ -19,10 +19,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/license/vincent_koc/natilius" alt="License">
-  <img src="https://img.shields.io/github/stars/vincent_koc/natilius" alt="Stars">
-  <img src="https://img.shields.io/github/forks/vincent_koc/natilius" alt="Forks">
-  <img src="https://img.shields.io/github/issues/vincent_koc/natilius" alt="Issues">
+  <img src="https://img.shields.io/github/license/vincentkoc/natilius" alt="License">
+  <img src="https://img.shields.io/github/stars/vincentkoc/natilius" alt="Stars">
+  <img src="https://img.shields.io/github/forks/vincentkoc/natilius" alt="Forks">
+  <img src="https://img.shields.io/github/issues/vincentkoc/natilius" alt="Issues">
 </p>
 
 Natilius is a powerful, customizable, and easy-to-use tool that automates the setup of a complete Mac development environment. With just one click, it installs and configures essential developer tools, applications, and settings, saving you hours of manual setup time.
@@ -99,7 +99,7 @@ Natilius stands on the shoulders of giants. We'd like to thank:
 
 If you find Natilius useful, please consider starring the repository on GitHub. It helps others discover the project and motivates further development.
 
-For issues, feature requests, or questions, please use the [GitHub Issues](https://github.com/vincent_koc/natilius/issues) page.
+For issues, feature requests, or questions, please use the [GitHub Issues](https://github.com/vincentkoc/natilius/issues) page.
 
 ## Roadmap
 
@@ -108,10 +108,10 @@ For issues, feature requests, or questions, please use the [GitHub Issues](https
 - [ ] Create a web-based configuration generator
 - [ ] Add support for Linux distributions
 
-Check our [project board](https://github.com/vincent_koc/natilius/projects) for more details on upcoming features and enhancements.
+Check our [project board](https://github.com/vincentkoc/natilius/projects) for more details on upcoming features and enhancements.
 
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/vincent_koc">Vincent Koc</a>
+  Made with ❤️ by <a href="https://github.com/vincentkoc">Vincent Koc</a>
 </p>

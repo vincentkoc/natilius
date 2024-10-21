@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# natilius - 🐚 Automated One-Click Mac Developer Environment (https://github.com/vincent_koc/natilius)
+# natilius - 🐚 Automated One-Click Mac Developer Environment (https://github.com/vincentkoc/natilius)
 #
 # Copyright (C) 2023 Vincent Koc (@vincent_koc)
 #
@@ -35,7 +35,7 @@ if ! command -v git &> /dev/null; then
 fi
 
 # Clone the full Natilius repository
-git clone https://github.com/vincent_koc/natilius.git ~/.natilius
+git clone https://github.com/vincentkoc/natilius.git ~/.natilius
 
 # Run the main Natilius script
 bash ~/.natilius/natilius.sh

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # natilius - 🐚 Automated One-Click Mac Developer Environment
-# https://github.com/vincent_koc/natilius
+# https://github.com/vincentkoc/natilius
 
 # PHP Development Environment Module
 

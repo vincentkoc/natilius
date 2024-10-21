@@ -24,3 +24,8 @@ repos:
         entry: bats tests
         language: system
         pass_filenames: false
+      - id: config-validator
+        name: Validate Natilius configuration
+        entry: bash tests/test_config_validator.sh
+        language: system
+        pass_filenames: false
