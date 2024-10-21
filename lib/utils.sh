@@ -176,8 +176,10 @@ keep_sudo_alive() {
 stop_sudo_keep_alive() {
     if [ -n "$SUDO_KEEP_ALIVE_PID" ]; then
         set +e  # Temporarily disable exit on error
-        kill -TERM "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true
-        wait "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true
+        kill -0 "$SUDO_KEEP_ALIVE_PID" 2>/dev/null && {
+            kill -TERM "$SUDO_KEEP_ALIVE_PID" 2>/dev/null
+            wait "$SUDO_KEEP_ALIVE_PID" 2>/dev/null
+        }
         set -e  # Re-enable exit on error
         unset SUDO_KEEP_ALIVE_PID
     fi

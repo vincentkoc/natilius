@@ -24,23 +24,6 @@ if [[ "$(uname)" != "Darwin" ]]; then
     exit 1
 fi
 
-# Function to keep sudo session alive
-keep_sudo_alive() {
-    while true; do
-        sudo -n true
-        sleep 60
-        kill -0 "$$" 2>/dev/null || exit
-    done 2>/dev/null &
-    SUDO_KEEP_ALIVE_PID=$!
-}
-
-stop_sudo_keep_alive() {
-    if [ -n "$SUDO_KEEP_ALIVE_PID" ]; then
-        kill "$SUDO_KEEP_ALIVE_PID" 2>/dev/null
-        wait "$SUDO_KEEP_ALIVE_PID" 2>/dev/null
-    fi
-}
-
 # Error handling function
 handle_error() {
     local line_number=$1
@@ -262,7 +245,7 @@ log_info "Sudo keep-alive process stopped."
 sleep 1
 
 # Conclusion
-echo -e "\n\n" | tee -a "$LOGFILE"
+echo -e "\n" | tee -a "$LOGFILE"
 echo -e "\033[0;32m[ 🐚 ]\033[0m \033[0;36mNatilius install script has completed!\033[0m" | tee -a "$LOGFILE"
 echo -e "\033[0;33m" | tee -a "$LOGFILE"
 cat << EOF | tee -a "$LOGFILE"
