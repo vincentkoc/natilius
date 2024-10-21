@@ -13,6 +13,9 @@ setup() {
 
   # Mock LOGFILE
   export LOGFILE="/dev/null"
+
+  # Mock TEST_MODE
+  export TEST_MODE=true
 }
 
 # Utility function tests
@@ -69,6 +72,8 @@ setup() {
 
 @test "check_for_updates function exists and runs without errors" {
   run check_for_updates
+  echo "Status: $status"
+  echo "Output: $output"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Checking for Natilius updates..."* ]]
   [[ "$output" == *"Natilius is up to date"* ]]

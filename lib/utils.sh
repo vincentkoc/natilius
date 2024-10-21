@@ -62,7 +62,33 @@ check_for_updates() {
     fi
 
     log_info "Checking for Natilius updates..."
-    # Simplified update check (for testing purposes)
-    log_success "Natilius is up to date."
+
+    if [ "$TEST_MODE" = true ]; then
+        log_success "Natilius is up to date."
+        return 0
+    fi
+
+    git -C "$NATILIUS_DIR" fetch origin --tags
+    local current_version
+    local latest_version
+    current_version=$(git -C "$NATILIUS_DIR" describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+    latest_version=$(git -C "$NATILIUS_DIR" describe --tags --abbrev=0 origin/main 2>/dev/null || echo "v0.0.0")
+
+    if [ "$current_version" != "$latest_version" ]; then
+        log_warning "A new version of Natilius is available: $latest_version (current: $current_version)"
+        read -p "Do you want to update Natilius? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            git -C "$NATILIUS_DIR" checkout main
+            git -C "$NATILIUS_DIR" pull origin main
+            git -C "$NATILIUS_DIR" checkout "$latest_version"
+            log_success "Natilius updated to version $latest_version. Please restart the script."
+            exit 0
+        else
+            log_info "Update skipped. Continuing with current version."
+        fi
+    else
+        log_success "Natilius is up to date (version $current_version)."
+    fi
     return 0
 }
