@@ -36,7 +36,8 @@ keep_sudo_alive() {
 
 stop_sudo_keep_alive() {
     if [ -n "$SUDO_KEEP_ALIVE_PID" ]; then
-        kill "$SUDO_KEEP_ALIVE_PID"
+        kill "$SUDO_KEEP_ALIVE_PID" 2>/dev/null
+        wait "$SUDO_KEEP_ALIVE_PID" 2>/dev/null
     fi
 }
 
@@ -47,7 +48,7 @@ handle_error() {
     log_error "Error occurred at line $line_number: $error_message"
     log_error "Stack trace:"
     local frame=0
-    while caller $frame; do
+    while caller "$frame"; do  # Fixed: Added quotes around $frame
         ((frame++))
     done | sed 's/^/    /' | tee -a "$LOGFILE"
     exit 1
@@ -238,6 +239,7 @@ for module in "${SELECTED_MODULES[@]}"; do
         log_info "Running module: $module"
         refresh_sudo
         source "$MODULE_PATH"
+        log_info "Finished running module: $module"
     else
         log_warning "Module not found: $module"
         log_info "Searched in: $MODULE_PATH"
@@ -252,14 +254,18 @@ if [[ " ${SELECTED_MODULES[*]} " =~ " ide_setup " ]]; then
 fi
 
 # Stop the sudo keep-alive process
+log_info "Stopping sudo keep-alive process..."
 stop_sudo_keep_alive
+log_info "Sudo keep-alive process stopped."
+
+# Add a small delay to allow for process cleanup
+sleep 1
 
 # Conclusion
-echo -e | tee -a "$LOGFILE"
-echo -e | tee -a "$LOGFILE"
+echo -e "\n\n" | tee -a "$LOGFILE"
 echo -e "\033[0;32m[ 🐚 ]\033[0m \033[0;36mNatilius install script has completed!\033[0m" | tee -a "$LOGFILE"
-echo -e "\033[0;33m"
-cat << EOF
+echo -e "\033[0;33m" | tee -a "$LOGFILE"
+cat << EOF | tee -a "$LOGFILE"
  Thanks for using Natilius :)
  Your logfile is saved at $LOGFILE
 
@@ -273,4 +279,10 @@ cat << EOF
  Vince
 
 EOF
-echo -e "\033[0m"
+echo -e "\033[0m" | tee -a "$LOGFILE"
+
+# Ensure all output is flushed
+sync
+
+# Clean exit
+exit 0

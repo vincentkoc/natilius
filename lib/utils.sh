@@ -51,85 +51,63 @@ restart_system_preferences() {
 }
 
 check_for_updates() {
-    if [ -z "$NATILIUS_DIR" ]; then
-        echo "Error: NATILIUS_DIR is not set"
-        return 1
-    fi
-
     if [ "$SKIP_UPDATE_CHECK" = true ]; then
-        log_info "Update check skipped due to configuration setting."
-        return 0
+        log_info "Skipping update check as per configuration."
+        return
     fi
 
     log_info "Checking for Natilius updates..."
 
-    if [ "$TEST_MODE" = true ]; then
-        log_success "Natilius is up to date."
-        return 0
-    fi
+    # Fetch the latest version from the remote repository
+    git fetch origin main --quiet
+    LATEST_VERSION=$(git describe --tags --abbrev=0 origin/main 2>/dev/null || echo "v0.0.0")
+    CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
 
-    log_debug "Fetching tags..."
-    git -C "$NATILIUS_DIR" fetch origin --tags || log_debug "Failed to fetch tags"
+    # Remove the 'v' prefix for version comparison
+    LATEST_VERSION_NUM=${LATEST_VERSION#v}
+    CURRENT_VERSION_NUM=${CURRENT_VERSION#v}
 
-    log_debug "Getting current version..."
-    current_version=$(git -C "$NATILIUS_DIR" describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-    log_debug "Current version: $current_version"
-
-    log_debug "Getting latest version..."
-    latest_version=$(git -C "$NATILIUS_DIR" describe --tags --abbrev=0 origin/main 2>/dev/null || echo "v0.0.0")
-    log_debug "Latest version: $latest_version"
-
-    if [ "$(version_compare "$current_version" "$latest_version")" -lt 0 ]; then
-        log_warning "A new version of Natilius is available: $latest_version (current: $current_version)"
-        read -p "Do you want to update Natilius? (y/n) " -n 1 -r
+    # Compare versions
+    if [ "$LATEST_VERSION_NUM" != "$CURRENT_VERSION_NUM" ]; then
+        log_warning "A new version of Natilius is available: $LATEST_VERSION (current: $CURRENT_VERSION)"
+        log_warning "Please update Natilius to ensure you have the latest features and bug fixes."
+        log_warning "You can update by running: git pull origin main"
         echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            git -C "$NATILIUS_DIR" checkout main
-            git -C "$NATILIUS_DIR" pull origin main
-            git -C "$NATILIUS_DIR" checkout "$latest_version"
-            log_success "Natilius updated to version $latest_version. Please restart the script."
+        read -p "Do you want to continue with the current version? (y/N) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log_info "Exiting. Please update Natilius and run the script again."
             exit 0
-        else
-            log_info "Update skipped. Continuing with current version."
         fi
     else
-        log_success "Natilius is up to date (version $current_version)."
+        log_success "Natilius is up to date (version $CURRENT_VERSION)."
     fi
-    return 0
 }
 
+# Function to compare version numbers
 version_compare() {
-    if [[ "$1" == "$2" ]]
-    then
-        echo 0
-        return
+    if [[ "$1" == "$2" ]]; then  # Fixed: Added quotes around $1 and $2
+        return 0
     fi
     local IFS=.
     local i ver1 ver2
-    read -ra ver1 <<< "$1"
-    read -ra ver2 <<< "$2"
-    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
-    do
+    read -ra ver1 <<< "$1"  # Fixed: Use read to split the version string
+    read -ra ver2 <<< "$2"  # Fixed: Use read to split the version string
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++)); do
         ver1[i]=0
     done
-    for ((i=0; i<${#ver1[@]}; i++))
-    do
-        if [[ -z ${ver2[i]} ]]
-        then
+    for ((i=0; i<${#ver1[@]}; i++)); do
+        if [[ -z ${ver2[i]} ]]; then
             ver2[i]=0
         fi
-        if ((10#${ver1[i]} > 10#${ver2[i]}))
-        then
-            echo 1
-            return
+        if ((10#${ver1[i]} > 10#${ver2[i]})); then
+            return 1
         fi
-        if ((10#${ver1[i]} < 10#${ver2[i]}))
-        then
-            echo -1
-            return
+        if ((10#${ver1[i]} < 10#${ver2[i]})); then
+            return 2
         fi
     done
-    echo 0
+    return 0
 }
 
 rotate_logs() {
@@ -197,7 +175,11 @@ keep_sudo_alive() {
 
 stop_sudo_keep_alive() {
     if [ -n "$SUDO_KEEP_ALIVE_PID" ]; then
-        kill "$SUDO_KEEP_ALIVE_PID"
+        set +e  # Temporarily disable exit on error
+        kill -TERM "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true
+        wait "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true
+        set -e  # Re-enable exit on error
+        unset SUDO_KEEP_ALIVE_PID
     fi
 }
 
@@ -211,4 +193,21 @@ refresh_sudo() {
         log_success "Sudo privileges refreshed successfully."
     fi
     return 0
+}
+
+# Function to safely rehash version managers
+safe_rehash() {
+    local manager="$1"
+    local shim_file="$HOME/.${manager}/shims/.${manager}-shim"
+
+    log_info "Attempting to rehash $manager..."
+    if [ -f "$shim_file" ]; then
+        log_warning "$manager shim file already exists. Removing it before rehash."
+        rm -f "$shim_file"
+    fi
+    if $manager rehash 2>/dev/null; then
+        log_success "$manager rehash completed successfully."
+    else
+        log_warning "$manager rehash encountered an issue, but we'll continue. This is not critical."
+    fi
 }

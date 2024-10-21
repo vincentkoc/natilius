@@ -25,10 +25,6 @@ if ! command -v rbenv &> /dev/null; then
     log_info "rbenv not found. Installing rbenv..."
     brew install rbenv
 
-    # Initialize rbenv
-    export PATH="$HOME/.rbenv/bin:$PATH"
-    eval "$(rbenv init -)"
-
     # Install ruby-build as an rbenv plugin
     if [ ! -d "$(rbenv root)/plugins/ruby-build" ]; then
         log_info "Installing ruby-build plugin for rbenv..."
@@ -46,11 +42,12 @@ if ! command -v rbenv &> /dev/null; then
     cat << EOF > "$(rbenv root)/default-gems"
 bundler
 EOF
-else
-    # Initialize rbenv
-    export PATH="$HOME/.rbenv/bin:$PATH"
-    eval "$(rbenv init -)"
 fi
+
+# Initialize rbenv
+log_info "Adding rbenv to PATH and initializing..."
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init - | grep -v 'rbenv rehash')"
 
 # Check if desired Ruby version is installed
 CURRENTVER=$(get_current_version rbenv)
@@ -83,9 +80,6 @@ else
         log_info "Set highest Ruby version [$HIGHESTVER] as global version."
     fi
 
-    # Rehash rbenv shims
-    rbenv rehash
-
     # Show the active Ruby version
     ruby --version | tee -a "$LOGFILE"
 
@@ -101,12 +95,14 @@ else
     if ! gem list bundler -i > /dev/null; then
         log_info "Installing Bundler..."
         gem install bundler | tee -a "$LOGFILE"
-        rbenv rehash
     fi
 
     # Use rbenv-doctor to check the setup
     log_info "Running rbenv-doctor to verify the setup..."
     curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash | tee -a "$LOGFILE"
+
+    log_success "Ruby environment setup complete"
 fi
 
-log_success "Ruby environment setup complete"
+# Use the safe_rehash function
+safe_rehash "rbenv"

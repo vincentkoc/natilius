@@ -38,3 +38,21 @@ log_warning() {
 log_error() {
     echo -e "$(get_timestamp) \033[0;31m[ERROR]\033[0m \033[0;36m$1\033[0m" | tee -a "$LOGFILE"
 }
+
+keep_sudo_alive() {
+    trap 'exit 0' SIGTERM
+    while true; do
+        sudo -n true
+        sleep 30
+        kill -0 "$$" 2>/dev/null || exit 0
+    done 2>/dev/null &
+    SUDO_KEEP_ALIVE_PID=$!
+}
+
+stop_sudo_keep_alive() {
+    if [ -n "$SUDO_KEEP_ALIVE_PID" ]; then
+        kill -TERM "$SUDO_KEEP_ALIVE_PID" 2>/dev/null
+        wait "$SUDO_KEEP_ALIVE_PID" 2>/dev/null
+        unset SUDO_KEEP_ALIVE_PID
+    fi
+}

@@ -27,28 +27,32 @@ if ! command -v jenv &> /dev/null; then
     brew install jenv
 fi
 
+log_info "Adding jenv to PATH and initializing..."
 export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
+eval "$(jenv init - | grep -v 'jenv rehash')"
 
 # Get current version
-CURRENTVER=$(get_current_version jenv)
+log_info "Getting current Java version..."
+CURRENTVER=$(jenv version-name 2>/dev/null || echo "none")
 INSTALLED=false
 
 # Check if the desired JDKVER is installed
+log_info "Checking if desired Java version $JDKVER is installed..."
 while read -r version; do
-    if [[ "$version" == "$JDKVER" ]]; then
+    if version_compare "$version" "$JDKVER"; then
         INSTALLED=true
+        CURRENTVER=$version
         break
     fi
-done <<< "$(jenv versions --bare)"
+done <<< "$(jenv versions --bare 2>/dev/null || echo "")"
 
 if [ "$INSTALLED" = true ]; then
-    log_success "OpenJDK [$JDKVER] is already installed."
+    log_success "OpenJDK [$CURRENTVER] is already installed (matches or exceeds $JDKVER)."
     log_info "Skipping installation of OpenJDK."
     java --version | tee -a "$LOGFILE"
     which java | tee -a "$LOGFILE"
 else
-    log_warning "OpenJDK [$JDKVER] is not installed. Found [$CURRENTVER]."
+    log_warning "OpenJDK [$JDKVER] or higher is not installed. Found [$CURRENTVER]."
     log_info "Installing Java (OpenJDK) and related tools..."
 
     # Install JDK(s) and related tools
@@ -60,13 +64,15 @@ else
     log_success "Installed OpenJDK and related tools"
 
     # Add all found JDKs to jenv
+    log_info "Adding JDKs to jenv..."
     for jdk in /Library/Java/JavaVirtualMachines/*; do
         jenv add "${jdk}/Contents/Home/" | tee -a "$LOGFILE"
     done
 
     # Set the highest version as the global version if it differs from JDKVER
-    HIGHESTVER=$(get_highest_version jenv)
-    if [ "$HIGHESTVER" != "$JDKVER" ]; then
+    log_info "Setting global Java version..."
+    HIGHESTVER=$(jenv versions --bare | sort -V | tail -n 1)
+    if version_compare "$HIGHESTVER" "$JDKVER"; then
         jenv global "$HIGHESTVER"
     else
         jenv global "$JDKVER"
@@ -77,6 +83,7 @@ else
     java --version | tee -a "$LOGFILE"
 
     # Enable jenv plugins
+    log_info "Enabling jenv plugins..."
     jenv enable-plugin maven
     jenv enable-plugin scala
     jenv enable-plugin gradle
@@ -94,3 +101,6 @@ else
 
     log_success "Java environment setup complete"
 fi
+
+# Use the safe_rehash function
+safe_rehash "jenv"

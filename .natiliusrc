@@ -1,29 +1,25 @@
 # Natilius Configuration
 
-# Enabled modules
-# "system/system_update"
-# "system/directories"
-# "system/security"
-# "preferences/mac_preferences"
-# "preferences/system_preferences"
-# "applications/homebrew"
-# "applications/apps"
-# "applications/espanso"
-# "dev_environments/java"
-# "dev_environments/ruby"
-# "dev_environments/python"
-# "dev_environments/node"
-# "dev_environments/rust"
-# "dev_environments/go"
-# "dev_environments/php"
-# "dev_environments/flutter"
-# "ide/ide_setup"
-# "dotfiles"
-# "system/cleanup"
 ENABLED_MODULES=(
-    "system/system_update"
-    "system/cleanup"
-    "dev_environments/java"
+	# "system/system_update"
+	# "system/directories"
+	# "system/security"
+	# "preferences/mac_preferences"
+	# "preferences/system_preferences"
+	# "applications/homebrew"
+	# "applications/apps"
+	# "applications/espanso"
+	# "dev_environments/java"
+	# "dev_environments/ruby"
+	"dev_environments/python"
+	# "dev_environments/node"
+	# "dev_environments/rust"
+	# "dev_environments/go"
+	# "dev_environments/php"
+	# "dev_environments/flutter"
+	# "ide/ide_setup"
+	# "dotfiles"
+	# "system/cleanup"
     # Add other modules you want to run
 )
 
@@ -41,9 +37,9 @@ FLUTTER_CHANNEL="stable"
 SKIP_UPDATE_CHECK=false
 
 # IDE Configuration
-INSTALL_VSCODE=true
+INSTALL_VSCODE=false
 INSTALL_CURSOR=false
-INSTALL_JETBRAINS=true
+INSTALL_JETBRAINS=false
 INSTALL_SUBLIME=false
 INSTALL_ZED=false
 
@@ -250,8 +246,28 @@ APPSTORE=(
 
 # Global Node.js Packages
 GLOBAL_NODE_PACKAGES=(
+    "yarn"
     "eslint"
     "gatsby"
+    "json"
+    "sort-json"
+    "nodemon"
+    "express-generator"
+    "create-react-app"
+    "vue-cli"
+    "angular-cli"
+    "prettier"
+    "mocha"
+    "jest"
+    "typescript"
+    "grunt-cli"
+    "gulp-cli"
+    "webpack-cli"
+    "pm2"
+    "serverless"
+    "npm-check-updates"
+    "istanbul"
+    "nyc"
     # ... other Node.js packages ...
 )
 
