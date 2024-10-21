@@ -1,16 +1,27 @@
 # Natilius Configuration
 
 # Enabled modules
+# "system/system_update"
+# "system/directories"
+# "system/security"
+# "preferences/mac_preferences"
+# "preferences/system_preferences"
+# "applications/homebrew"
+# "applications/apps"
+# "applications/espanso"
+# "dev_environments/java"
+# "dev_environments/ruby"
+# "dev_environments/python"
+# "dev_environments/node"
+# "dev_environments/rust"
+# "dev_environments/go"
+# "dev_environments/php"
+# "dev_environments/flutter"
+# "ide/ide_setup"
+# "dotfiles"
+# "system/cleanup"
 ENABLED_MODULES=(
-    "system/system_update"
-    "system/security"
-    "applications/homebrew"
-    "dev_environments/python"
-    "dev_environments/node"
-    "applications/apps"
-    "preferences/mac_preferences"
     "system/cleanup"
-    "ide/ide_setup"
 )
 
 # Custom variables
@@ -20,17 +31,25 @@ PYTHONVER="3.9.11"
 RUBYVER="3.2.1"
 NODEVER="18.14.0"
 GOVER="1.20.0"
+PHPVER="8.1.0"
+FLUTTER_CHANNEL="stable"
+
+# Set to true to skip update checks
+SKIP_UPDATE_CHECK=false
+
+# IDE Configuration
+INSTALL_VSCODE=true
+INSTALL_CURSOR=false
+INSTALL_JETBRAINS=true
+INSTALL_SUBLIME=false
+INSTALL_ZED=false
+
 
 # Directories to create
 DIRS=(
     "~/.mackup"
     "~/.config"
     "~/GIT"
-    "~/GIT/_Apps"
-    "~/GIT/_Perso"
-    "~/GIT/_Hipages"
-    "~/GIT/_Stj"
-    "~/GIT/_Airbyte"
 )
 
 # Time Machine exclusions
@@ -41,18 +60,6 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
     "~/.gnupg"
     "~/.ssh"
     "~/.config"
-)
-
-# Applications to kill after setup
-KILLAPPS=(
-    "Address Book"
-    "Dock"
-    "Finder"
-    "Mail"
-    "iCal"
-    "iTunes"
-    "Safari"
-    "SystemUIServer"
 )
 
 # Homebrew Taps
@@ -72,7 +79,99 @@ BREWPACKAGES=(
     "ack"
     "awscli"
     "bat"
+    "ca-certificates"
     "coreutils"
+    "curl"
+    "ctop"
+    "croc"
+    "diff-so-fancy"
+    "docker-compose"
+    "espanso"
+    "eza"
+    "fd"
+    "fzf"
+    "git"
+    "gh"
+    "git-lfs"
+    "glow"
+    "go"
+    "gping"
+    "gpg"
+    "gradle"
+    "helm"
+    "hexyl"
+    "htop"
+    "httpie"
+    "icdiff"
+    "jenv"
+    "jc"
+    "jq"
+    "keychain"
+    "kubectl"
+    "kubernetes-cli"
+    "kubectx"
+    "libfido2"
+    "lynx"
+    "mackup"
+    "make"
+    "mas"
+    "minikube"
+    "mosh"
+    "neovim"
+    "nmap"
+    "node"
+    "nodenv"
+    "npm"
+    "openssl"
+    "openssh"
+    "peco"
+    "derailed/popeye/popeye"
+    "pinentry"
+    "pinentry-mac"
+    "pre-commit"
+    "pyenv"
+    "pyenv-virtualenv"
+    "pipenv"
+    "procs"
+    "rbenv"
+    "rbenv-bundler"
+    "rbenv-default-gems"
+    "readline"
+    "rustup-init"
+    "speedtest-cli"
+    "sqlite"
+    "sqlite3"
+    "tealdeer"
+    "telnet"
+    "terraform"
+    "terraformer"
+    "tflint"
+    "tfsec"
+    "warrensbox/tap/tfswitch"
+    "tig"
+    "tmux"
+    "reattach-to-user-namespace"
+    "tokei"
+    "trash"
+    "tree"
+    "vim"
+    "watch"
+    "wget"
+    "xz"
+    "yamllint"
+    "ykman"
+    "yt-dlp"
+    "zlib"
+    "zoxide"
+    "zsh-completions"
+    # fonts at the end, via fonts-cask
+    "font-source-sans-pro"
+    "font-ubuntu"
+    "font-roboto"
+    "font-fira-code"
+    "font-fira-code-nerd-font"
+    "font-fira-mono-nerd-font"
+    "font-meslo-lg-nerd-font"
     # ... Add other packages as needed
 )
 
@@ -81,22 +180,140 @@ BREWCASKS=(
     "1password"
     "1password-cli"
     "aerial"
-    # ... Add other casks as needed
+    "airbuddy"
+    "alfred"
+    "alt-tab"
+    "amazon-chime"
+    "balenaetcher"
+    "bartender"
+    "brave-browser"
+    "clay"
+    "charles"
+    "cheatsheet"
+    "discord"
+    "docker"
+    "dropbox"
+    "espanso"
+    "firefox"
+    "font-fira-code"
+    "github"
+    "gpg-suite"
+    "imageoptim"
+    "iterm2"
+    "kap"
+    "keybase"
+    "keycastr"
+    "keyboard-maestro"
+    "logseq"
+    "loom"
+    "mamp"
+    "microsoft-office"
+    "miro"
+    "muzzle"
+    "mysqlworkbench"
+    "netnewswire"
+    "notion"
+    "obsidian"
+    "onyx"
+    "rescuetime"
+    "rfidresearchgroup/proxmark3/proxmark3"
+    "rig"
+    "slack"
+    "spotify"
+    "sublime-merge"
+    "sublime-text"
+    "the-unarchiver"
+    "transmit"
+    "tripmode"
+    "visual-studio-code"
+    "vlc"
+    "xquartz"
+    "zoom"
 )
 
 # Mac App Store Apps (App IDs)
 APPSTORE=(
     "441258766"   # Magnet
     "937984704"   # Amphetamine
+    "1564015476"  # Shell History
+    "975937182"   # Fantastical
+    "639968404"   # Parcel
+    "1246781916"  # Kerberos Ticket
+    "1484348796"  # Endel
+    "1423210932"  # Flow
+    "1039633667"  # Irvue
     # ... Add other app IDs as needed
 )
 
-# Set to true to skip update checks
-SKIP_UPDATE_CHECK=false
+# Global Node.js Packages
+GLOBAL_NODE_PACKAGES=(
+    "eslint"
+    "gatsby"
+    # ... other Node.js packages ...
+)
 
-# IDE Configuration
-INSTALL_VSCODE=true
-INSTALL_CURSOR=false
-INSTALL_JETBRAINS=true
-INSTALL_SUBLIME=false
-INSTALL_ZED=false
+# Global Python Packages
+GLOBAL_PYTHON_PACKAGES=(
+    "pip"
+    "virtualenv"
+    "setuptools"
+    "wheel"
+    "numpy"
+    "pandas"
+    "scipy"
+    "matplotlib"
+    "seaborn"
+    "scikit-learn"
+    "requests"
+    "beautifulsoup4"
+    "flask"
+    "pre-commit"
+    "flake8"
+    "isort"
+    "coverage"
+    "regex"
+    "cython"
+    "Jinja2"
+    "six"
+    "tabula"
+    "dbt-core"
+    "PyYAML"
+    "sqlfluff"
+    # ... other Python packages ...
+)
+
+# Global PHP Composer Packages
+GLOBAL_PHP_PACKAGES=(
+    "phpunit/phpunit"
+    "laravel/installer"
+    # Add other global Composer packages as needed
+)
+
+# Default PEAR Packages
+PEAR_PACKAGES=(
+    "pear/Archive_Tar"
+    "pear/Console_Getopt"
+    "pear/DB"
+    "pear/HTTP_Request2"
+    "pear/Log"
+    "pear/Mail"
+    "pear/MDB2"
+    "pear/Net_SMTP"
+    "pear/Net_Socket"
+    "pear/PEAR"
+    "pear/Structures_Graph"
+    "pear/XML_Util"
+    # Add other PEAR packages as needed
+)
+
+# Applications to kill after setup
+KILLAPPS=(
+    "Address Book"
+    "Dock"
+    "Finder"
+    "Mail"
+    "iCal"
+    "iTunes"
+    "Safari"
+    "SystemUIServer"
+)

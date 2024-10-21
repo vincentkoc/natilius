@@ -1,4 +1,4 @@
-.PHONY: all precommit test lint install-deps integration-test
+.PHONY: all precommit test lint install-deps integration-test test-config
 
 # Default target
 all: precommit
@@ -26,8 +26,13 @@ integration-test: install-deps
 	@echo "Running integration tests..."
 	@bash tests/integration_tests.sh
 
+# Run config validator test
+test-config: install-deps
+	@echo "Running config validator test..."
+	@bash tests/test_config_validator.sh
+
 # Run all tests
-test-all: test integration-test
+test-all: test test-config integration-test
 
 # Run linting
 lint: install-deps

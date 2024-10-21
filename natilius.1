@@ -1,0 +1,55 @@
+.TH NATILIUS 1 "May 2023" "Version 1.0" "Natilius Manual"
+.SH NAME
+natilius \- Automated Mac developer environment setup tool
+.SH SYNOPSIS
+.B natilius
+[\fIOPTION\fR]...
+.SH DESCRIPTION
+.B natilius
+is an automated tool for setting up a complete Mac development environment.
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit
+.TP
+.BR \-i ", " \-\-interactive
+Run in interactive mode
+.TP
+.BR \-p ", " \-\-profile " " \fINAME\fR
+Use a specific profile configuration
+.TP
+.BR \-\-dry\-run
+Perform a dry run without making changes
+.SH FILES
+.TP
+.I ~/.natiliusrc
+User configuration file
+.TP
+.I ~/.natiliusrc.PROFILE
+Profile-specific configuration file
+.SH ENVIRONMENT
+.TP
+.B NATILIUS_DIR
+Directory containing Natilius scripts and modules
+.SH EXAMPLES
+.TP
+Run Natilius with default settings:
+.B natilius
+.TP
+Run Natilius in interactive mode:
+.B natilius \-i
+.TP
+Run Natilius with a specific profile:
+.B natilius \-p work
+.TP
+Perform a dry run:
+.B natilius \-\-dry\-run
+.SH AUTHOR
+Written by Vincent Koc.
+.SH REPORTING BUGS
+Report bugs to <https://github.com/vincentkoc/natilius/issues>.
+.SH COPYRIGHT
+Copyright © 2023 Vincent Koc. License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.
+.SH SEE ALSO
+Full documentation and source code available at: <https://github.com/vincentkoc/natilius>

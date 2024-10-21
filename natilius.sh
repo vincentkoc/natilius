@@ -17,6 +17,13 @@
 # this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
+# Check if running on macOS
+if [[ "$(uname)" != "Darwin" ]]; then
+    echo "Error: This script is only supported on macOS."
+    echo "Other operating systems are not supported yet."
+    exit 1
+fi
+
 set -e
 trap 'handle_error $LINENO "$BASH_COMMAND"' ERR
 
