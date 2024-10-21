@@ -64,6 +64,9 @@ log_debug() {
 }
 
 # Parse command-line arguments
+INTERACTIVE_MODE=false
+DRY_RUN=false
+
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --interactive|-i)
@@ -73,6 +76,9 @@ while [[ "$#" -gt 0 ]]; do
             shift
             PROFILE="$1"
             CONFIG_FILE="$HOME/.natiliusrc.$PROFILE"
+            ;;
+        --dry-run|--test)
+            DRY_RUN=true
             ;;
         *)
             log_warning "Unknown parameter passed: $1"
@@ -96,6 +102,12 @@ SKIP_UPDATE_CHECK=${SKIP_UPDATE_CHECK:-false}
 # After sourcing the config file
 log_info "Loaded configuration from $CONFIG_FILE"
 log_info "Enabled modules: ${ENABLED_MODULES[*]}"
+
+# After loading configuration and before any system-modifying operations:
+if [ "$DRY_RUN" = true ]; then
+    log_info "Running in dry-run mode. No system changes will be made."
+    exit 0
+fi
 
 # Start logging
 log_info "Logging enabled..."
@@ -160,20 +172,25 @@ fi
 
 echo
 
-# Attempt to get sudo privileges
-log_info "Attempting to validate sudo privileges..."
-log_debug "Current user: $(whoami)"
-log_debug "Current directory: $(pwd)"
-log_debug "Script location: $0"
-log_debug "NATILIUS_DIR: $NATILIUS_DIR"
-log_debug "LOGFILE: $LOGFILE"
-if sudo -v; then
-    log_success "Sudo privileges validated successfully."
-    keep_sudo_alive
+# Skip sudo validation if SKIP_SUDO is set (for CI environments)
+if [[ -n "${SKIP_SUDO}" ]]; then
+    log_info "Skipping sudo validation (SKIP_SUDO is set)"
 else
-    log_error "Failed to validate sudo privileges. Error code: $?"
-    log_error "Please ensure you have sudo access and try again."
-    exit 1
+    # Attempt to get sudo privileges
+    log_info "Attempting to validate sudo privileges..."
+    log_debug "Current user: $(whoami)"
+    log_debug "Current directory: $(pwd)"
+    log_debug "Script location: $0"
+    log_debug "NATILIUS_DIR: $NATILIUS_DIR"
+    log_debug "LOGFILE: $LOGFILE"
+    if sudo -v; then
+        log_success "Sudo privileges validated successfully."
+        keep_sudo_alive
+    else
+        log_error "Failed to validate sudo privileges. Error code: $?"
+        log_error "Please ensure you have sudo access and try again."
+        exit 1
+    fi
 fi
 
 # Interactive Mode
