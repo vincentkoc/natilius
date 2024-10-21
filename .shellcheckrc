@@ -1,0 +1,14 @@
+# Allow following source directives
+external-sources=true
+
+# Suggest explicitly using -n in `[ $var ]`
+enable=avoid-nullary-conditions
+
+# Allow non-constant source
+disable=SC1090
+
+# Allow using echo with -n
+disable=SC2039
+
+# Allow using source
+disable=SC1091

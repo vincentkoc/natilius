@@ -1,1 +1,18 @@
+# Logs
+logs/
 *.log
+
+# macOS
+.DS_Store
+
+# Editor files
+.vscode/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.bak
+
+# User-specific files
+.natiliusrc
