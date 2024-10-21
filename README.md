@@ -103,12 +103,10 @@ For issues, feature requests, or questions, please use the [GitHub Issues](https
 
 ## Roadmap
 
-- [ ] Add support for more development environments
+- [ ] Add support for more development environments and applications
 - [ ] Implement a GUI for easier customization
 - [ ] Create a web-based configuration generator
 - [ ] Add support for Linux distributions
-
-Check our [project board](https://github.com/vincentkoc/natilius/projects) for more details on upcoming features and enhancements.
 
 ---
 
