@@ -127,7 +127,7 @@ echo -e "\033[1;33m⚠️  WARNING: This script will make changes to your system
 echo -e "\033[1;33m⚠️  Ensure you have a complete backup before proceeding.\033[0m" | tee -a "$LOGFILE"
 echo -e "\033[1;33m⚠️  Review the script and configuration before running.\033[0m" | tee -a "$LOGFILE"
 echo
-read -p "Press Enter to continue or Ctrl+C to abort..." | tee -a "$LOGFILE"
+read -r -p "Press Enter to continue or Ctrl+C to abort..." | tee -a "$LOGFILE"
 echo
 
 # Prompt for sudo password at the start
