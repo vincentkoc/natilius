@@ -27,7 +27,7 @@ if ! command -v brew &> /dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | tee -a "$LOGFILE"
     log_success "Homebrew installed"
     # Add Homebrew to PATH
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
+    echo "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" >> "$HOME/.zprofile"
     eval "$(/opt/homebrew/bin/brew shellenv)"
 else
     log_success "Homebrew already installed"
@@ -71,4 +71,3 @@ done
 
 log_info "Running post-install cleanup..."
 brew cleanup | tee -a "$LOGFILE"
-

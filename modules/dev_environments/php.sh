@@ -12,12 +12,12 @@ brew tap shivammathur/php
 
 # Install the specified PHP version
 log_info "Installing PHP version $PHPVER..."
-brew install shivammathur/php/php@$PHPVER
+brew install shivammathur/php/php@"$PHPVER"
 
 # Unlink other PHP versions and link the desired version
 log_info "Linking PHP version $PHPVER..."
 brew unlink php 2>/dev/null || true
-brew link --force --overwrite php@$PHPVER
+brew link --force --overwrite php@"$PHPVER"
 
 # Verify the installed PHP version
 php -v | tee -a "$LOGFILE"

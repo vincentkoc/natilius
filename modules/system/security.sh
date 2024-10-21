@@ -161,8 +161,16 @@ log_success "Enabled application layer firewall"
 
 log_info "Restarting affected applications to apply changes..."
 
-for app in "Finder" "Safari" "Terminal"; do
-    killall "$app" &>/dev/null && log_success "Restarted $app" || log_info "$app was not running"
+for app in "Finder" "Dock" "SystemUIServer" "Terminal"; do
+    if pgrep "$app" > /dev/null; then
+        if killall "$app"; then
+            log_success "Restarted $app"
+        else
+            log_warning "Failed to restart $app"
+        fi
+    else
+        log_info "$app was not running"
+    fi
 done
 
 log_success "Security settings applied successfully"
