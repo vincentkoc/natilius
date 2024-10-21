@@ -68,11 +68,16 @@ check_for_updates() {
         return 0
     fi
 
-    git -C "$NATILIUS_DIR" fetch origin --tags
-    local current_version
-    local latest_version
+    log_debug "Fetching tags..."
+    git -C "$NATILIUS_DIR" fetch origin --tags || log_debug "Failed to fetch tags"
+
+    log_debug "Getting current version..."
     current_version=$(git -C "$NATILIUS_DIR" describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+    log_debug "Current version: $current_version"
+
+    log_debug "Getting latest version..."
     latest_version=$(git -C "$NATILIUS_DIR" describe --tags --abbrev=0 origin/main 2>/dev/null || echo "v0.0.0")
+    log_debug "Latest version: $latest_version"
 
     if [ "$(version_compare "$current_version" "$latest_version")" -lt 0 ]; then
         log_warning "A new version of Natilius is available: $latest_version (current: $current_version)"
@@ -131,9 +136,17 @@ rotate_logs() {
     local log_dir="$NATILIUS_DIR/logs"
     local max_logs=5
 
+    # Count the number of log files
+    local log_count
+    log_count=$(find "$log_dir" -maxdepth 1 -type f | wc -l)
+
     # Remove old logs if there are more than max_logs
-    if [ "$(find "$log_dir" -maxdepth 1 -type f | wc -l)" -gt "$max_logs" ]; then
-        find "$log_dir" -maxdepth 1 -type f -printf '%T@ %p\n' | sort -n | head -n -"$max_logs" | cut -d' ' -f2- | xargs rm
+    if [ "$log_count" -gt "$max_logs" ]; then
+        find "$log_dir" -maxdepth 1 -type f -printf '%T@ %p\n' | \
+        sort -n | \
+        head -n -"$max_logs" | \
+        cut -d' ' -f2- | \
+        xargs rm
     fi
 }
 
@@ -152,4 +165,24 @@ get_enabled_dev_environments() {
         esac
     done
     echo "${enabled_envs[@]}"
+}
+
+# Function to check sudo privileges
+check_sudo() {
+    if ! sudo -n true 2>/dev/null; then
+        log_error "Sudo privileges have expired. Please run the script again."
+        exit 1
+    fi
+}
+
+# Function to check if a reboot is required
+check_reboot_required() {
+    if [ -f /var/db/.AppleSetupDone ]; then
+        REBOOT_REQUIRED=$(sudo /usr/sbin/softwareupdate --history | grep "restart")
+        if [ -n "$REBOOT_REQUIRED" ]; then
+            log_warning "A reboot is required to complete the installation of updates."
+            return 0
+        fi
+    fi
+    return 1
 }

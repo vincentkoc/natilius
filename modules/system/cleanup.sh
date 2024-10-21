@@ -57,16 +57,16 @@ fi
 # Remove temporary files
 log_info "Removing temporary files and caches..."
 rm -rf "$HOME/Library/Caches/"* 2>/dev/null || log_info "Failed to remove user caches"
-sudo rm -rf /Library/Caches/* 2>/dev/null || log_info "Failed to remove system caches"
-sudo rm -rf /System/Library/Caches/* 2>/dev/null || log_info "Failed to remove system library caches"
-sudo rm -rf /private/var/folders/* 2>/dev/null || log_info "Failed to remove private folders"
-sudo rm -rf /private/var/tmp/* 2>/dev/null || log_info "Failed to remove private tmp files"
-sudo rm -rf /var/log/asl/*.asl 2>/dev/null || log_info "Failed to remove ASL logs"
+sudo -n rm -rf /Library/Caches/* 2>/dev/null || log_warning "Failed to remove system caches. Sudo rights may have expired."
+sudo -n rm -rf /System/Library/Caches/* 2>/dev/null || log_warning "Failed to remove system library caches. Sudo rights may have expired."
+sudo -n rm -rf /private/var/folders/* 2>/dev/null || log_warning "Failed to remove private folders. Sudo rights may have expired."
+sudo -n rm -rf /private/var/tmp/* 2>/dev/null || log_warning "Failed to remove private tmp files. Sudo rights may have expired."
+sudo -n rm -rf /var/log/asl/*.asl 2>/dev/null || log_warning "Failed to remove ASL logs. Sudo rights may have expired."
 
 # Clear system and application logs
 log_info "Clearing system and application logs..."
-sudo rm -rf /var/log/*log /var/log/*.out 2>/dev/null || log_info "Failed to remove system logs"
-sudo rm -rf /Library/Logs/* 2>/dev/null || log_info "Failed to remove library logs"
+sudo -n rm -rf /var/log/*log /var/log/*.out 2>/dev/null || log_warning "Failed to remove system logs. Sudo rights may have expired."
+sudo -n rm -rf /Library/Logs/* 2>/dev/null || log_warning "Failed to remove library logs. Sudo rights may have expired."
 rm -rf "$HOME/Library/Logs/"* 2>/dev/null || log_info "Failed to remove user logs"
 
 # Clear XCode derived data and archives (if XCode is installed)

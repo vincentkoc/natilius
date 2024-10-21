@@ -21,7 +21,10 @@
 # "dotfiles"
 # "system/cleanup"
 ENABLED_MODULES=(
+    "system/system_update"
     "system/cleanup"
+    "dev_environments/java"
+    # Add other modules you want to run
 )
 
 # Custom variables

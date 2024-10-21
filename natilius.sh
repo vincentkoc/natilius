@@ -24,6 +24,29 @@ if [[ "$(uname)" != "Darwin" ]]; then
     exit 1
 fi
 
+# Function to keep sudo session alive
+keep_sudo_alive() {
+    while true; do
+        sudo -n true
+        sleep 15  # Reduced from 30 to 15 seconds
+        kill -0 "$$" || exit
+    done 2>/dev/null &
+}
+
+# Error handling function
+handle_error() {
+    local line_number=$1
+    local error_message=$2
+    log_error "Error occurred at line $line_number: $error_message"
+    log_error "Stack trace:"
+    local frame=0
+    while caller $frame; do
+        ((frame++))
+    done | sed 's/^/    /' | tee -a "$LOGFILE"
+    exit 1
+}
+
+# Set up error handling
 set -e
 trap 'handle_error $LINENO "$BASH_COMMAND"' ERR
 
@@ -45,19 +68,9 @@ mkdir -p "$NATILIUS_DIR/logs"
 source "$NATILIUS_DIR/lib/utils.sh"
 source "$NATILIUS_DIR/lib/logging.sh"
 
-handle_error() {
-    local line_number=$1
-    local error_message=$2
-    log_error "Error occurred at line $line_number: $error_message"
-    log_error "Stack trace:"
-    local frame=0
-    while caller $frame; do
-        ((frame++))
-    done | sed 's/^/    /' | tee -a "$LOGFILE"
-    exit 1
+log_debug() {
+    echo "[DEBUG] $1" >> "$LOGFILE"
 }
-
-INTERACTIVE_MODE=false
 
 # Parse command-line arguments
 while [[ "$#" -gt 0 ]]; do
@@ -83,11 +96,15 @@ if [ -f "$CONFIG_FILE" ]; then
 else
     cp "$NATILIUS_DIR/.natiliusrc.example" "$CONFIG_FILE"
     log_info "Created default configuration file at $CONFIG_FILE"
-    source "$CONFIG_FILE"
 fi
+source "$CONFIG_FILE"  # Always source the config file, even if it existed before
 
 # Set default value for SKIP_UPDATE_CHECK
 SKIP_UPDATE_CHECK=${SKIP_UPDATE_CHECK:-false}
+
+# After sourcing the config file
+log_info "Loaded configuration from $CONFIG_FILE"
+log_info "Enabled modules: ${ENABLED_MODULES[*]}"
 
 # Start logging
 log_info "Logging enabled..."
@@ -106,17 +123,16 @@ cat << "EOF"
  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣾⣿⣿⣿⠀⢸⣿⣿⣿⣿⣶⣶⣤⣀⠀⠀⠀⠀⠀
- ⠀⠀⠀⠀⠀⢀⣴⡇⢀⣾⣿⣿⣿⣿⣿⠀⣾⣿⣿⣿⣿⣿⣿⣿⠿⠓⠀⠀⠀⠀
- ⠀⠀⠀⠀⣰⣿⣿⡀⢸⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠟⠁⣠⣄⠀⠀⠀⠀
- ⠀⠀⠀⢠⣿⣿⣿⣇⠀⢻⣿⣿⣿⣿⣿⠀⢻⣿⣿⣿⡿⢃⣠⣾⣿⣿⣧⡀⠀⠀
- ⠀⠀⠀⢸⣿⣿⣿⣿⣆⠘⢿⣿⡿⠛⢉⠀⠀⠉⠙⠛⣠⣿⣿⣿⣿⣿⣿⣷⠀⠀
+ ⠀⠀⠀⠀⠀⢀⣴⡇⢀⣾⣿⣿⣿⣿⣿⠀⣾⣿⣿⣿⣿⣿⣿⠿⠓⠀⠀⠀⠀
+ ⠀⠀⠀⠀⣰⣿⣿⣿⡀⢸⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⠁⣠⣄⠀⠀⠀⠀
+ ⠀⠀⠀⢠⣿⣿⣿⣿⣇⠀⢻⣿⣿⣿⣿⣿⠀⢻⣿⣿⣿⡿⢃⣠⣾⣿⣿⣧⡀⠀⠀
+ ⠀⠀⠀⢸⣿⣿⣿⣿⣿⣧⠈⢿⣿⡿⠛⢉⠀⠀⠉⠙⠛⣠⣿⣿⣿⣿⣿⣷⠀⠀
  ⠀⠀⠠⣾⣿⣿⣿⣿⣿⣧⠈⠋⢀⣴⣧⠀⣿⡏⢠⡀⢸⣿⣿⣿⣿⣿⣿⣿⡇⠀
- ⠀⠀⣀⠙⢿⣿⣿⣿⣿⣿⠇⢠��⣿⣿⡄⠹⠃⠼⠃⠈⠉⠛⠛⠛⠛⠛⠻⠇⠀
+ ⠀⠀⣀⠙⢿⣿⣿⣿⣿⣿⠇⢠⣿⣿⡄⠹⠃⠼⠃⠈⠉⠛⠛⠛⠛⠛⠻⠇⠀
  ⠀⢸⡟⢠⣤⠉⠛⠿⢿⣿⠀⢸⣿⡿⠋⣠⣤⣄⠀⣾⣿⣣⣶⣶⣶⣦⡄⠀⠀⠀
  ⠀⠸⠀⣾⠏⣸⣷⠂⣠⣤⠀⠘⢁⣴⣾⣿⣿⣿⡆⠘⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀
- ⠀⠀⠀⠛⠀⣿⡟⠀⢻⣿⡄⠸⣿⣿⣿⣿⣿⣿⣿⡀⠘⣿⣿⣿⣿⠟⠀⠀⠀⠀
- ⠀⠀⠀⠀⠀⣿⠇⠀⠀⢻⡿⠀⠈⠻⣿⣿⣿⣿⣿⡇⠀⢹⣿⠿⠋⠀⠀⠀⠀⠀
- ⠀⠀⠀⠀⠀⠋⠀⠀⠀⡘⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀
+ ⠀⠀⠀⠛⠀⣿⡟⠀⢻⡿⠀⠈⠻⣿⣿⣿⣿⣿⡇⠀⢹⣿⠿⠋⠀⠀⠀⠀⠀
+ ⠀⠀⠀⠀⠀⣿⠇⠀⠀⡘⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀
                    _ _ _
               _   (_) (_)
   ____   ____| |_  _| |_ _   _  ___
@@ -144,17 +160,31 @@ echo -e "\033[1;33m⚠️  WARNING: This script will make changes to your system
 echo -e "\033[1;33m⚠️  Ensure you have a complete backup before proceeding.\033[0m" | tee -a "$LOGFILE"
 echo -e "\033[1;33m⚠️  Review the script and configuration before running.\033[0m" | tee -a "$LOGFILE"
 echo
-read -r -p "Press Enter to continue or Ctrl+C to abort..." | tee -a "$LOGFILE"
+
+if [ "$INTERACTIVE_MODE" = true ]; then
+    read -r -p "Press Enter to continue or Ctrl+C to abort..." | tee -a "$LOGFILE"
+else
+    log_info "Running in non-interactive mode. Proceeding automatically."
+fi
+
 echo
 
-# Prompt for sudo password at the start
-log_info "Please provide your password to proceed with sudo privileges (may auto-skip)..."
-sudo -v
-
-# Keep-alive: update existing `sudo` time stamp until the script has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-
-log_success "Sudo password validated"
+# Attempt to get sudo privileges
+log_info "Attempting to validate sudo privileges..."
+log_debug "Current user: $(whoami)"
+log_debug "Current directory: $(pwd)"
+log_debug "Script location: $0"
+log_debug "NATILIUS_DIR: $NATILIUS_DIR"
+log_debug "LOGFILE: $LOGFILE"
+if sudo -v; then
+    log_success "Sudo privileges validated successfully."
+    # Start the keep-alive process
+    keep_sudo_alive
+else
+    log_error "Failed to validate sudo privileges. Error code: $?"
+    log_error "Please ensure you have sudo access and try again."
+    exit 1
+fi
 
 # Interactive Mode
 if [ "$INTERACTIVE_MODE" = true ]; then
@@ -195,16 +225,19 @@ else
 fi
 
 # Run selected modules
+log_info "Starting to run selected modules..."
 for module in "${SELECTED_MODULES[@]}"; do
     MODULE_PATH="$NATILIUS_DIR/modules/$module.sh"
     if [ -f "$MODULE_PATH" ]; then
         log_info "Running module: $module"
+        check_sudo
         source "$MODULE_PATH"
     else
         log_warning "Module not found: $module"
         log_info "Searched in: $MODULE_PATH"
     fi
 done
+log_info "Finished running all selected modules."
 
 # Run IDE setup after all other modules
 if [[ " ${SELECTED_MODULES[*]} " =~ " ide_setup " ]]; then
