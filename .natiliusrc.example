@@ -2,16 +2,15 @@
 
 # Enabled modules
 ENABLED_MODULES=(
-    "system_preferences"
-    "security"
-    "homebrew"
-    "apps"
-    "dev_environments/java"
-    "dev_environments/ruby"
+    "system/system_update"
+    "system/security"
+    "applications/homebrew"
     "dev_environments/python"
     "dev_environments/node"
-    "dev_environments/rust"
-    "dotfiles"
+    "applications/apps"
+    "preferences/mac_preferences"
+    "system/cleanup"
+    "ide/ide_setup"
 )
 
 # Custom variables
@@ -94,3 +93,10 @@ APPSTORE=(
 
 # Set to true to skip update checks
 SKIP_UPDATE_CHECK=false
+
+# IDE Configuration
+INSTALL_VSCODE=true
+INSTALL_CURSOR=false
+INSTALL_JETBRAINS=true
+INSTALL_SUBLIME=false
+INSTALL_ZED=false

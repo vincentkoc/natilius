@@ -199,6 +199,12 @@ for module in "${SELECTED_MODULES[@]}"; do
     fi
 done
 
+# Run IDE setup after all other modules
+if [[ " ${SELECTED_MODULES[*]} " =~ " ide_setup " ]]; then
+    log_info "Running IDE setup module"
+    source "$NATILIUS_DIR/modules/ide/ide_setup.sh"
+fi
+
 # Conclusion
 echo -e | tee -a "$LOGFILE"
 echo -e | tee -a "$LOGFILE"

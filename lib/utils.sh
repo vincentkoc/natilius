@@ -136,3 +136,20 @@ rotate_logs() {
         find "$log_dir" -maxdepth 1 -type f -printf '%T@ %p\n' | sort -n | head -n -"$max_logs" | cut -d' ' -f2- | xargs rm
     fi
 }
+
+get_enabled_dev_environments() {
+    local enabled_envs=()
+    for module in "${ENABLED_MODULES[@]}"; do
+        case $module in
+            dev_environments/python) enabled_envs+=("python") ;;
+            dev_environments/node) enabled_envs+=("node") ;;
+            dev_environments/ruby) enabled_envs+=("ruby") ;;
+            dev_environments/php) enabled_envs+=("php") ;;
+            dev_environments/java) enabled_envs+=("java") ;;
+            dev_environments/go) enabled_envs+=("go") ;;
+            dev_environments/flutter) enabled_envs+=("flutter") ;;
+            # Add more development environments as needed
+        esac
+    done
+    echo "${enabled_envs[@]}"
+}
