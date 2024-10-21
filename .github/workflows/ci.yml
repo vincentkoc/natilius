@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          brew install bats-core shellcheck
+      - name: Run unit tests
+        run: make test
+      - name: Run integration tests
+        run: make integration-test
+      - name: Run linter
+        run: make lint

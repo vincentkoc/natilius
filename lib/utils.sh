@@ -74,7 +74,7 @@ check_for_updates() {
     current_version=$(git -C "$NATILIUS_DIR" describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
     latest_version=$(git -C "$NATILIUS_DIR" describe --tags --abbrev=0 origin/main 2>/dev/null || echo "v0.0.0")
 
-    if [ "$current_version" != "$latest_version" ]; then
+    if [ "$(version_compare "$current_version" "$latest_version")" -lt 0 ]; then
         log_warning "A new version of Natilius is available: $latest_version (current: $current_version)"
         read -p "Do you want to update Natilius? (y/n) " -n 1 -r
         echo
@@ -91,4 +91,48 @@ check_for_updates() {
         log_success "Natilius is up to date (version $current_version)."
     fi
     return 0
+}
+
+version_compare() {
+    if [[ "$1" == "$2" ]]
+    then
+        echo 0
+        return
+    fi
+    local IFS=.
+    local i ver1 ver2
+    read -ra ver1 <<< "$1"
+    read -ra ver2 <<< "$2"
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            echo 1
+            return
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            echo -1
+            return
+        fi
+    done
+    echo 0
+}
+
+rotate_logs() {
+    local log_dir="$NATILIUS_DIR/logs"
+    local max_logs=5
+
+    # Remove old logs if there are more than max_logs
+    if [ "$(find "$log_dir" -maxdepth 1 -type f | wc -l)" -gt "$max_logs" ]; then
+        find "$log_dir" -maxdepth 1 -type f -printf '%T@ %p\n' | sort -n | head -n -"$max_logs" | cut -d' ' -f2- | xargs rm
+    fi
 }

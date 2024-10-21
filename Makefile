@@ -1,4 +1,4 @@
-.PHONY: all precommit test lint install-deps
+.PHONY: all precommit test lint install-deps integration-test
 
 # Default target
 all: precommit
@@ -16,15 +16,23 @@ precommit: install-deps
 	@echo "Running pre-commit hooks..."
 	@pre-commit run --all-files
 
-# Run tests
+# Run unit tests
 test: install-deps
-	@echo "Running tests..."
-	@BATS_LIB_PATH="$(pwd)/lib" bats tests
+	@echo "Running unit tests..."
+	@BATS_LIB_PATH="$(pwd)/lib" bats tests/test_natilius.bats
+
+# Run integration tests
+integration-test: install-deps
+	@echo "Running integration tests..."
+	@bash tests/integration_tests.sh
+
+# Run all tests
+test-all: test integration-test
 
 # Run linting
 lint: install-deps
 	@echo "Running shellcheck..."
-	@shellcheck -x natilius.sh modules/**/*.sh lib/*.sh
+	@shellcheck -x natilius.sh modules/**/*.sh lib/*.sh tests/*.sh
 
 # Clean up
 clean:

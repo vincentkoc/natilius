@@ -18,7 +18,7 @@
 #
 
 set -e
-trap 'handle_error $LINENO' ERR
+trap 'handle_error $LINENO "$BASH_COMMAND"' ERR
 
 # Get the directory of the script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -39,7 +39,14 @@ source "$NATILIUS_DIR/lib/utils.sh"
 source "$NATILIUS_DIR/lib/logging.sh"
 
 handle_error() {
-    log_error "Error occurred at line $1."
+    local line_number=$1
+    local error_message=$2
+    log_error "Error occurred at line $line_number: $error_message"
+    log_error "Stack trace:"
+    local frame=0
+    while caller $frame; do
+        ((frame++))
+    done | sed 's/^/    /' | tee -a "$LOGFILE"
     exit 1
 }
 
@@ -82,6 +89,9 @@ export LOGFILE
 
 # Check for updates
 check_for_updates
+
+# Rotate logs
+rotate_logs
 
 # Display the ASCII intro
 echo -e "\033[0;33m"
