@@ -12,3 +12,6 @@ disable=SC2039
 
 # Allow using source
 disable=SC1091
+
+# Allow unreachable code
+disable=SC2317

@@ -56,24 +56,39 @@ fi
 
 # Remove temporary files
 log_info "Removing temporary files and caches..."
-rm -rf "$HOME/Library/Caches/"* 2>/dev/null || log_info "Failed to remove user caches"
-sudo -n rm -rf /Library/Caches/* 2>/dev/null || log_warning "Failed to remove system caches. Sudo rights may have expired."
-sudo -n rm -rf /System/Library/Caches/* 2>/dev/null || log_warning "Failed to remove system library caches. Sudo rights may have expired."
-sudo -n rm -rf /private/var/folders/* 2>/dev/null || log_warning "Failed to remove private folders. Sudo rights may have expired."
-sudo -n rm -rf /private/var/tmp/* 2>/dev/null || log_warning "Failed to remove private tmp files. Sudo rights may have expired."
-sudo -n rm -rf /var/log/asl/*.asl 2>/dev/null || log_warning "Failed to remove ASL logs. Sudo rights may have expired."
+rm -rf "$HOME/Library/Caches/"* 2>/dev/null || log_info "Failed to remove some user caches"
+
+# Function to safely remove system caches
+remove_system_caches() {
+    local dir="$1"
+    sudo find "$dir" -mindepth 1 -maxdepth 1 -print0 | while IFS= read -r -d '' item; do
+        if sudo rm -rf "$item" 2>/dev/null; then
+            log_info "Removed: $item"
+        else
+            log_warning "Failed to remove: $item (possibly in use)"
+        fi
+    done
+}
+
+refresh_sudo
+remove_system_caches "/Library/Caches"
+remove_system_caches "/System/Library/Caches"
+
+sudo rm -rf /private/var/folders/* 2>/dev/null || log_warning "Failed to remove some private folders"
+sudo rm -rf /private/var/tmp/* 2>/dev/null || log_warning "Failed to remove some private tmp files"
+sudo rm -rf /var/log/asl/*.asl 2>/dev/null || log_warning "Failed to remove some ASL logs"
 
 # Clear system and application logs
 log_info "Clearing system and application logs..."
-sudo -n rm -rf /var/log/*log /var/log/*.out 2>/dev/null || log_warning "Failed to remove system logs. Sudo rights may have expired."
-sudo -n rm -rf /Library/Logs/* 2>/dev/null || log_warning "Failed to remove library logs. Sudo rights may have expired."
-rm -rf "$HOME/Library/Logs/"* 2>/dev/null || log_info "Failed to remove user logs"
+sudo rm -rf /var/log/*log /var/log/*.out 2>/dev/null || log_warning "Failed to remove some system logs"
+sudo rm -rf /Library/Logs/* 2>/dev/null || log_warning "Failed to remove some library logs"
+rm -rf "$HOME/Library/Logs/"* 2>/dev/null || log_info "Failed to remove some user logs"
 
 # Clear XCode derived data and archives (if XCode is installed)
 if [ -d "$HOME/Library/Developer/Xcode" ]; then
     log_info "Clearing XCode derived data and archives..."
-    rm -rf "$HOME/Library/Developer/Xcode/DerivedData"/* 2>/dev/null || log_info "Failed to remove XCode derived data"
-    rm -rf "$HOME/Library/Developer/Xcode/Archives"/* 2>/dev/null || log_info "Failed to remove XCode archives"
+    rm -rf "$HOME/Library/Developer/Xcode/DerivedData"/* 2>/dev/null || log_info "Failed to remove some XCode derived data"
+    rm -rf "$HOME/Library/Developer/Xcode/Archives"/* 2>/dev/null || log_info "Failed to remove some XCode archives"
 fi
 
 log_success "System cleanup and optimization complete"

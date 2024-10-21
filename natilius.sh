@@ -28,9 +28,16 @@ fi
 keep_sudo_alive() {
     while true; do
         sudo -n true
-        sleep 15  # Reduced from 30 to 15 seconds
-        kill -0 "$$" || exit
+        sleep 60
+        kill -0 "$$" 2>/dev/null || exit
     done 2>/dev/null &
+    SUDO_KEEP_ALIVE_PID=$!
+}
+
+stop_sudo_keep_alive() {
+    if [ -n "$SUDO_KEEP_ALIVE_PID" ]; then
+        kill "$SUDO_KEEP_ALIVE_PID"
+    fi
 }
 
 # Error handling function
@@ -178,7 +185,6 @@ log_debug "NATILIUS_DIR: $NATILIUS_DIR"
 log_debug "LOGFILE: $LOGFILE"
 if sudo -v; then
     log_success "Sudo privileges validated successfully."
-    # Start the keep-alive process
     keep_sudo_alive
 else
     log_error "Failed to validate sudo privileges. Error code: $?"
@@ -230,7 +236,7 @@ for module in "${SELECTED_MODULES[@]}"; do
     MODULE_PATH="$NATILIUS_DIR/modules/$module.sh"
     if [ -f "$MODULE_PATH" ]; then
         log_info "Running module: $module"
-        check_sudo
+        refresh_sudo
         source "$MODULE_PATH"
     else
         log_warning "Module not found: $module"
@@ -244,6 +250,9 @@ if [[ " ${SELECTED_MODULES[*]} " =~ " ide_setup " ]]; then
     log_info "Running IDE setup module"
     source "$NATILIUS_DIR/modules/ide/ide_setup.sh"
 fi
+
+# Stop the sudo keep-alive process
+stop_sudo_keep_alive
 
 # Conclusion
 echo -e | tee -a "$LOGFILE"

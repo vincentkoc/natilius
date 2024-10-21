@@ -138,15 +138,14 @@ rotate_logs() {
 
     # Count the number of log files
     local log_count
-    log_count=$(find "$log_dir" -maxdepth 1 -type f | wc -l)
+    log_count=$(find "$log_dir" -type f | wc -l)
 
     # Remove old logs if there are more than max_logs
     if [ "$log_count" -gt "$max_logs" ]; then
-        find "$log_dir" -maxdepth 1 -type f -printf '%T@ %p\n' | \
-        sort -n | \
-        head -n -"$max_logs" | \
-        cut -d' ' -f2- | \
-        xargs rm
+        find "$log_dir" -type f -print0 | \
+        xargs -0 ls -t | \
+        tail -n +"$((max_logs + 1))" | \
+        xargs -I {} rm -- {}
     fi
 }
 
@@ -185,4 +184,31 @@ check_reboot_required() {
         fi
     fi
     return 1
+}
+
+keep_sudo_alive() {
+    while true; do
+        sudo -n true
+        sleep 30
+        kill -0 "$$" 2>/dev/null || exit
+    done 2>/dev/null &
+    SUDO_KEEP_ALIVE_PID=$!
+}
+
+stop_sudo_keep_alive() {
+    if [ -n "$SUDO_KEEP_ALIVE_PID" ]; then
+        kill "$SUDO_KEEP_ALIVE_PID"
+    fi
+}
+
+refresh_sudo() {
+    if ! sudo -n true 2>/dev/null; then
+        log_warning "Sudo privileges expired. Requesting password again..."
+        if ! sudo -v; then
+            log_error "Failed to refresh sudo privileges. Some operations may fail."
+            return 1
+        fi
+        log_success "Sudo privileges refreshed successfully."
+    fi
+    return 0
 }
