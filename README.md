@@ -10,8 +10,8 @@
 
 <p align="center">
   <a href="#features">Features</a> •
-  <a href="#quick-start">Quick Start</a> •
   <a href="#installation">Installation</a> •
+  <a href="#quick-start">Quick Start</a> •
   <a href="#usage">Usage</a> •
   <a href="#customization">Customization</a> •
   <a href="#contributing">Contributing</a> •
@@ -78,6 +78,46 @@ Natilius uses a modular approach to set up your Mac:
 6. **macOS Preferences**: Configures macOS settings for optimal development experience.
 
 Each step is customizable and can be enabled or disabled as needed.
+
+## Installation
+
+To install Natilius, follow these steps:
+
+1. Open Terminal on your Mac.
+2. Run the following command to download and install Natilius:
+
+   ```
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
+   ```
+
+3. Follow the on-screen prompts to complete the installation.
+
+## Quick Start
+
+After installing Natilius, you can quickly set up your Mac development environment:
+
+1. Open Terminal.
+2. Run the following command:
+
+   ```
+   natilius setup
+   ```
+
+3. Natilius will guide you through the setup process, allowing you to choose which components to install and configure.
+
+4. Sit back and relax while Natilius sets up your Mac!
+
+## Usage
+
+Natilius provides several commands to help you manage your development environment:
+
+- `natilius setup`: Run the full setup process
+- `natilius update`: Update Natilius to the latest version
+- `natilius customize`: Open the configuration file for customization
+- `natilius doctor`: Check your system for potential issues
+- `natilius help`: Display help information and available commands
+
+For more detailed usage instructions, run `natilius help` or check our [documentation](docs/usage.md).
 
 ## Contributing
 
