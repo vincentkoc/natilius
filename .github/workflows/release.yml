@@ -1,0 +1,120 @@
+---
+# yamllint disable rule:line-length
+name: Release
+
+'on':
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  discussions: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify tag format
+        run: |
+          if [[ ! "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid tag format. Expected: v1.2.3"
+            exit 1
+          fi
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the previous tag
+          PREV_TAG=$(git describe --tags --abbrev=0 ${{ github.ref_name }}^ 2>/dev/null || echo "")
+
+          if [ -z "$PREV_TAG" ]; then
+            echo "changelog=Initial release" >> $GITHUB_OUTPUT
+          else
+            echo "changelog<<EOF" >> $GITHUB_OUTPUT
+            git log --pretty=format:"* %s (%h)" ${PREV_TAG}..${{ github.ref_name }} >> $GITHUB_OUTPUT
+            echo "" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run tests before release
+        run: |
+          # Install dependencies
+          brew install bats-core shellcheck
+          # Run full test suite
+          make test-all
+
+      - name: Create installation package
+        run: |
+          # Create a release package
+          mkdir -p release-package
+
+          # Copy main files
+          cp natilius.sh release-package/
+          cp install.sh release-package/
+          cp README.md release-package/
+          cp LICENSE.md release-package/
+          cp .natiliusrc.example release-package/
+
+          # Copy directories
+          cp -r modules release-package/
+          cp -r lib release-package/
+          cp -r completions release-package/
+
+          # Create tarball
+          tar -czf natilius-${{ github.ref_name }}.tar.gz -C release-package .
+
+          # Create checksums
+          shasum -a 256 natilius-${{ github.ref_name }}.tar.gz > natilius-${{ github.ref_name }}.tar.gz.sha256
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Natilius ${{ github.ref_name }}"
+          body: |
+            ## What's Changed
+
+            ${{ steps.changelog.outputs.changelog }}
+
+            ## Installation
+
+            ### Quick Install
+            ```bash
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/${{ github.ref_name }}/install.sh)"
+            ```
+
+            ### Manual Install
+            1. Download the tarball below
+            2. Extract: `tar -xzf natilius-${{ github.ref_name }}.tar.gz`
+            3. Run: `./natilius.sh`
+
+            ## Shell Completions
+
+            ### Bash
+            ```bash
+            source completions/natilius-completion.bash
+            ```
+
+            ### Zsh
+            ```bash
+            source completions/natilius-completion.zsh
+            ```
+
+            ## Verification
+
+            Verify the download with SHA256:
+            ```bash
+            shasum -a 256 -c natilius-${{ github.ref_name }}.tar.gz.sha256
+            ```
+          files: |
+            natilius-${{ github.ref_name }}.tar.gz
+            natilius-${{ github.ref_name }}.tar.gz.sha256
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
+          discussion_category_name: "Announcements"
