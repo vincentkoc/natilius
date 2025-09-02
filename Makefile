@@ -119,7 +119,7 @@ coverage: install-deps
 # Run linting
 lint: install-deps
 	@echo "🔍 Running shellcheck..."
-	@shellcheck -x natilius.sh modules/**/*.sh lib/*.sh tests/*.sh .devcontainer/setup.sh
+	@shellcheck -x natilius.sh modules/**/*.sh lib/*.sh tests/*.sh
 
 # Format shell scripts
 format:
