@@ -46,7 +46,6 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-12    # macOS Monterey
           - macos-13    # macOS Ventura
           - macos-14    # macOS Sonoma
           - macos-15    # macOS Sequoia (latest)
