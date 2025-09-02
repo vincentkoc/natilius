@@ -103,7 +103,7 @@ coverage: install-deps
 	@find tests -name "*.bats" -o -name "*.sh" | wc -l | xargs echo "  BATS/Shell tests:" >> coverage/report.txt
 	@echo "" >> coverage/report.txt
 	@echo "Source Files:" >> coverage/report.txt
-	@find . -name "*.sh" -not -path "./tests/*" -not -path "./.devcontainer/*" | wc -l | xargs echo "  Shell scripts:" >> coverage/report.txt
+	@find . -name "*.sh" -not -path "./tests/*" | wc -l | xargs echo "  Shell scripts:" >> coverage/report.txt
 	@echo "" >> coverage/report.txt
 	@echo "Module Coverage:" >> coverage/report.txt
 	@find modules -name "*.sh" | while read -r module; do \
