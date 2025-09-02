@@ -11,6 +11,10 @@ name: CI
     # Run daily at 2 AM UTC to catch issues with dependencies
     - cron: '0 2 * * *'
 
+permissions:
+  contents: read
+  security-events: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -103,7 +107,7 @@ jobs:
 
   security:
     name: Security Scan
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: lint
     steps:
       - name: Checkout code
