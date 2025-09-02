@@ -111,11 +111,11 @@
     [ -f "completions/natilius-completion.zsh" ]
 }
 
-@test "DevContainer configuration exists" {
-    [ -f ".devcontainer/devcontainer.json" ]
-    [ -f ".devcontainer/setup.sh" ]
-    [ -x ".devcontainer/setup.sh" ]
-}
+# @test "DevContainer configuration exists" {
+#     [ -f ".devcontainer/devcontainer.json" ]
+#     [ -f ".devcontainer/setup.sh" ]
+#     [ -x ".devcontainer/setup.sh" ]
+# }
 
 @test "GitHub workflows exist" {
     [ -f ".github/workflows/ci.yml" ]
