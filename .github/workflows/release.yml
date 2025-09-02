@@ -117,4 +117,3 @@ jobs:
             natilius-${{ github.ref_name }}.tar.gz.sha256
           draft: false
           prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
-          discussion_category_name: "Announcements"
