@@ -17,12 +17,7 @@
 # this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-# Check if running on macOS
-if [[ "$(uname)" != "Darwin" ]]; then
-    echo "Error: This script is only supported on macOS."
-    echo "Other operating systems are not supported yet."
-    exit 1
-fi
+# Early macOS check will be done after parsing help/version commands
 
 # Error handling function
 # shellcheck disable=SC2329  # Function is used by trap
@@ -360,6 +355,13 @@ run_doctor() {
 if [ "$SHOW_VERSION" = true ]; then
     show_version
     exit 0
+fi
+
+# Check if running on macOS (after help/version commands)
+if [[ "$(uname)" != "Darwin" ]]; then
+    echo "Error: This script is only supported on macOS."
+    echo "Other operating systems are not supported yet."
+    exit 1
 fi
 
 # Handle specific commands
