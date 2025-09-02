@@ -44,7 +44,13 @@ install-deps:
 			sudo yum install -y ShellCheck; \
 		fi; \
 	fi
-	@command -v pre-commit >/dev/null 2>&1 || pip3 install --user pre-commit
+	@if ! command -v pre-commit >/dev/null 2>&1; then \
+		if command -v brew >/dev/null 2>&1; then \
+			brew install pre-commit; \
+		else \
+			pip3 install --user pre-commit; \
+		fi; \
+	fi
 	@if [ -f ".pre-commit-config.yaml" ]; then pre-commit install; fi
 
 # Development environment setup

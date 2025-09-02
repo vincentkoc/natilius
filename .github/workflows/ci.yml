@@ -25,8 +25,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Install shellcheck via brew on macOS
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install shellcheck
+          # Install shellcheck and pre-commit via brew on macOS
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install shellcheck pre-commit
 
       - name: Run shellcheck
         run: make lint
