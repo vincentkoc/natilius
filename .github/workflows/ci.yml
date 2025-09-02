@@ -18,15 +18,15 @@ concurrency:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install shellcheck
+      - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y shellcheck
+          # Install shellcheck via brew on macOS
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install shellcheck
 
       - name: Run shellcheck
         run: make lint
