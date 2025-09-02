@@ -96,32 +96,161 @@ To install Natilius, follow these steps:
 
 After installing Natilius, you can quickly set up your Mac development environment:
 
-1. Open Terminal.
-2. Run the following command:
+### Basic Setup
+```bash
+# Run the full setup
+natilius setup
 
-   ```
-   natilius setup
-   ```
+# Or run interactively to choose modules
+natilius --interactive setup
+```
 
-3. Natilius will guide you through the setup process, allowing you to choose which components to install and configure.
+### Check Before Installing
+```bash
+# See what would be installed without making changes
+natilius --check
 
-4. Sit back and relax while Natilius sets up your Mac!
+# Run system diagnostics
+natilius doctor
+
+# List all available modules
+natilius list-modules
+```
 
 ## Usage
 
-Natilius provides several commands to help you manage your development environment:
+Natilius provides a comprehensive CLI interface with multiple commands and options:
 
-- `natilius setup`: Run the full setup process
-- `natilius update`: Update Natilius to the latest version
-- `natilius customize`: Open the configuration file for customization
-- `natilius doctor`: Check your system for potential issues
-- `natilius help`: Display help information and available commands
+### Commands
 
-For more detailed usage instructions, run `natilius help` or check our [documentation](docs/usage.md).
+```bash
+natilius setup           # Run the full setup process (default)
+natilius doctor          # Run system diagnostics and health checks
+natilius list-modules    # List all available modules
+natilius version         # Show version information
+natilius help            # Show help message
+```
+
+### Options
+
+```bash
+-v, --verbose       # Enable verbose output
+-q, --quiet         # Suppress non-error output
+-i, --interactive   # Run in interactive mode
+-c, --check         # Run in check/dry-run mode (no changes)
+-p, --profile NAME  # Use a specific configuration profile
+--dry-run           # Same as --check
+-h, --help          # Show help message
+```
+
+### Examples
+
+```bash
+# Basic usage
+natilius                    # Run default setup
+natilius --check            # Dry run to see what would be done
+natilius doctor             # Run system diagnostics
+natilius list-modules       # Show available modules
+
+# Advanced usage
+natilius -v setup           # Run setup with verbose output
+natilius -i setup           # Run setup in interactive mode
+natilius -p work setup      # Use 'work' profile configuration
+natilius --quiet setup      # Run setup with minimal output
+```
+
+### System Diagnostics
+
+The `doctor` command provides comprehensive system analysis:
+
+- ✅ System information (macOS version, architecture)
+- ✅ Development tools verification (Xcode, Homebrew, Git)
+- ✅ Configuration validation
+- ✅ Disk space monitoring
+- ✅ Network connectivity testing
+- ✅ Security settings analysis
+- ✅ Apple Silicon compatibility (Rosetta 2)
+
+### Shell Completions
+
+Natilius includes shell completions for enhanced productivity:
+
+```bash
+# Bash
+source completions/natilius-completion.bash
+
+# Zsh
+source completions/natilius-completion.zsh
+```
+
+For more detailed usage instructions, run `natilius help`.
+
+## Development
+
+### Prerequisites
+
+- macOS (for full testing)
+- Homebrew (recommended)
+- Git
+
+### Quick Development Setup
+
+```bash
+# Clone and setup
+git clone https://github.com/vincentkoc/natilius.git
+cd natilius
+make dev-setup
+```
+
+### Development Commands
+
+```bash
+make help           # Show all available commands
+make test           # Run unit tests
+make test-all       # Run all tests
+make lint           # Run shellcheck linting
+make precommit      # Run pre-commit hooks
+make coverage       # Generate coverage report
+make check-version  # Check version consistency
+make release-check  # Check if ready for release
+```
+
+### VS Code Development
+
+Natilius includes a complete VS Code devcontainer setup:
+
+1. Open the repository in VS Code
+2. Click "Reopen in Container" when prompted
+3. Everything will be automatically configured!
+
+### Testing
+
+Natilius uses BATS (Bash Automated Testing System) for testing:
+
+```bash
+# Run specific test suites
+make test              # Unit tests
+make integration-test  # Integration tests
+make test-config       # Configuration tests
+
+# Coverage analysis
+make coverage
+```
 
 ## Contributing
 
-We welcome contributions! Whether it's bug reports, feature requests, or code contributions, please feel free to contribute. See our [Contributing Guide](CONTRIBUTING.md) for more details on how to get started.
+We welcome contributions! Whether it's bug reports, feature requests, or code contributions, please feel free to contribute.
+
+### Development Process
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `make test-all`
+5. Run linting: `make lint`
+6. Submit a pull request
+
+See our [Contributing Guide](CONTRIBUTING.md) for more details.
 
 ## License
 

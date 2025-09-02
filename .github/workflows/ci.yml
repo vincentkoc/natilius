@@ -1,22 +1,182 @@
+---
+# yamllint disable rule:line-length
 name: CI
 
-on:
+'on':
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+  schedule:
+    # Run daily at 2 AM UTC to catch issues with dependencies
+    - cron: '0 2 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    runs-on: macos-latest
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Run shellcheck
+        run: make lint
+
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@v3.0.1
+
+  test:
+    name: Test on macOS ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-12    # macOS Monterey
+          - macos-13    # macOS Ventura
+          - macos-14    # macOS Sonoma
+          - macos-15    # macOS Sequoia (latest)
+
+    env:
+      SKIP_SUDO: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: System Information
+        run: |
+          echo "macOS Version: $(sw_vers -productVersion)"
+          echo "Architecture: $(uname -m)"
+          echo "Available disk space:"
+          df -h /
+
       - name: Install dependencies
         run: |
-          brew install bats-core shellcheck
+          # Install dependencies without sudo prompts
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install bats-core shellcheck
+          # Install kcov for coverage if available
+          brew install kcov || echo "kcov not available on this platform"
+
       - name: Run unit tests
         run: make test
+
       - name: Run integration tests
         run: make integration-test
-      - name: Run linter
-        run: make lint
+
+      - name: Run config validator tests
+        run: make test-config
+
+      - name: Test CLI commands
+        run: |
+          # Test new CLI commands
+          ./natilius.sh --help
+          ./natilius.sh --version
+          ./natilius.sh doctor
+          ./natilius.sh list-modules
+          ./natilius.sh --check
+
+      - name: Test with different verbosity levels
+        run: |
+          ./natilius.sh --verbose --check
+          ./natilius.sh --quiet --check
+
+      - name: Upload test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts-${{ matrix.os }}
+          path: |
+            logs/
+            *.log
+          retention-days: 7
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  coverage:
+    name: Code Coverage
+    runs-on: macos-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install bats-core shellcheck
+
+      - name: Generate coverage report
+        run: |
+          # Create coverage directory
+          mkdir -p coverage
+          # Run tests with coverage (basic approach for shell scripts)
+          make test-all 2>&1 | tee coverage/test-output.log
+          # Count test coverage metrics
+          find tests -name '*.bats' -o -name '*.sh' | wc -l | \
+            xargs echo "Test files:" > coverage/metrics.txt
+          find . -name '*.sh' -not -path './tests/*' | wc -l | \
+            xargs echo "Source files:" >> coverage/metrics.txt
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
+
+  release-check:
+    name: Release Readiness
+    runs-on: macos-latest
+    needs: [test, security]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if ready for release
+        run: |
+          # Check if there are any unreleased changes
+          if git describe --exact-match --tags HEAD 2>/dev/null; then
+            echo "Current commit is already tagged"
+          else
+            echo "Ready for release - no current tag found"
+            # yamllint disable-line rule:line-length
+            echo "Latest tag: $(git describe --tags --abbrev=0 2>/dev/null || \
+              echo 'No tags found')"
+            # yamllint disable-line rule:line-length
+            echo "Commits since last tag: $(git rev-list --count \
+              $(git describe --tags --abbrev=0 2>/dev/null || echo 'HEAD')..HEAD \
+              2>/dev/null || echo 'N/A')"
+          fi

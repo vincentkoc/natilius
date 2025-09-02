@@ -3,7 +3,7 @@
 @test "Natilius exits immediately in dry-run mode" {
     run ./natilius.sh --dry-run
     [ "$status" -eq 0 ]
-    [[ "$output" == *"Running in dry-run mode. No system changes will be made."* ]]
+    [[ "$output" == *"Running in check/dry-run mode. No system changes will be made."* ]]
 }
 
 @test "Natilius loads configuration in dry-run mode" {

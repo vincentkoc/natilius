@@ -25,6 +25,7 @@ if [[ "$(uname)" != "Darwin" ]]; then
 fi
 
 # Error handling function
+# shellcheck disable=SC2329  # Function is used by trap
 handle_error() {
     local line_number=$1
     local error_message=$2
@@ -59,33 +60,115 @@ mkdir -p "$NATILIUS_DIR/logs"
 source "$NATILIUS_DIR/lib/utils.sh"
 source "$NATILIUS_DIR/lib/logging.sh"
 
-log_debug() {
-    echo "[DEBUG] $1" >> "$LOGFILE"
-}
+# Override logging functions based on verbosity settings
+if [ "$QUIET_MODE" = true ]; then
+    log_info() { :; }
+    log_success() { :; }
+    log_warning() { echo "[WARNING] $1" >&2; }
+    log_error() { echo "[ERROR] $1" >&2; }
+fi
+
+if [ "$VERBOSE_MODE" = true ]; then
+    log_debug() {
+        echo "[DEBUG] $1" | tee -a "$LOGFILE"
+    }
+else
+    log_debug() {
+        echo "[DEBUG] $1" >> "$LOGFILE"
+    }
+fi
 
 # Parse command-line arguments
 INTERACTIVE_MODE=false
 DRY_RUN=false
+VERBOSE_MODE=false
+QUIET_MODE=false
+SHOW_VERSION=false
+COMMAND=""
+
+# Function to show help
+show_help() {
+    cat << EOF
+Natilius - 🐚 Automated One-Click Mac Developer Environment
+
+USAGE:
+    natilius [OPTIONS] [COMMAND]
+
+COMMANDS:
+    setup           Run the full setup process (default)
+    doctor          Run system diagnostics and checks
+    list-modules    List all available modules
+    version         Show version information
+    help            Show this help message
+
+OPTIONS:
+    -v, --verbose       Enable verbose output
+    -q, --quiet         Suppress non-error output
+    -i, --interactive   Run in interactive mode
+    -c, --check         Run in check/dry-run mode (no changes)
+    -p, --profile NAME  Use a specific configuration profile
+    --dry-run           Same as --check
+    -h, --help          Show this help message
+
+EXAMPLES:
+    natilius                    # Run default setup
+    natilius --check            # Dry run to see what would be done
+    natilius doctor             # Run system diagnostics
+    natilius list-modules       # Show available modules
+    natilius -v setup           # Run setup with verbose output
+
+For more information, visit: https://github.com/vincentkoc/natilius
+EOF
+}
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
+        setup)
+            COMMAND="setup"
+            ;;
+        doctor)
+            COMMAND="doctor"
+            ;;
+        list-modules)
+            COMMAND="list-modules"
+            ;;
+        version|--version|-V)
+            SHOW_VERSION=true
+            ;;
+        help|--help|-h)
+            show_help
+            exit 0
+            ;;
         --interactive|-i)
             INTERACTIVE_MODE=true
+            ;;
+        --verbose|-v)
+            VERBOSE_MODE=true
+            ;;
+        --quiet|-q)
+            QUIET_MODE=true
             ;;
         --profile|-p)
             shift
             PROFILE="$1"
             CONFIG_FILE="$HOME/.natiliusrc.$PROFILE"
             ;;
-        --dry-run|--test)
+        --dry-run|--test|--check|-c)
             DRY_RUN=true
             ;;
         *)
-            log_warning "Unknown parameter passed: $1"
+            echo "Unknown parameter: $1"
+            echo "Use 'natilius --help' for usage information."
+            exit 1
             ;;
     esac
     shift
 done
+
+# Set default command if none specified
+if [ -z "$COMMAND" ] && [ "$SHOW_VERSION" = false ]; then
+    COMMAND="setup"
+fi
 
 # Load user configuration
 if [ -f "$CONFIG_FILE" ]; then
@@ -99,13 +182,211 @@ source "$CONFIG_FILE"  # Always source the config file, even if it existed befor
 # Set default value for SKIP_UPDATE_CHECK
 SKIP_UPDATE_CHECK=${SKIP_UPDATE_CHECK:-false}
 
+# Version information
+NATILIUS_VERSION="1.1.0"
+
+# Function to show version
+show_version() {
+    echo "Natilius version $NATILIUS_VERSION"
+    echo "Copyright (C) 2023 Vincent Koc (@vincent_koc)"
+    echo "License: GPLv3+"
+}
+
+# Function to list modules
+list_modules() {
+    echo "Available Natilius Modules:"
+    echo ""
+    echo "System Modules:"
+    for module in "$NATILIUS_DIR"/modules/system/*.sh; do
+        if [ -f "$module" ]; then
+            module_name=$(basename "$module" .sh)
+            echo "  - system/$module_name"
+        fi
+    done
+    echo ""
+    echo "Development Environment Modules:"
+    for module in "$NATILIUS_DIR"/modules/dev_environments/*.sh; do
+        if [ -f "$module" ]; then
+            module_name=$(basename "$module" .sh)
+            echo "  - dev_environments/$module_name"
+        fi
+    done
+    echo ""
+    echo "Application Modules:"
+    for module in "$NATILIUS_DIR"/modules/applications/*.sh; do
+        if [ -f "$module" ]; then
+            module_name=$(basename "$module" .sh)
+            echo "  - applications/$module_name"
+        fi
+    done
+    echo ""
+    echo "IDE Modules:"
+    for module in "$NATILIUS_DIR"/modules/ide/*.sh; do
+        if [ -f "$module" ]; then
+            module_name=$(basename "$module" .sh)
+            echo "  - ide/$module_name"
+        fi
+    done
+    echo ""
+    echo "Preference Modules:"
+    for module in "$NATILIUS_DIR"/modules/preferences/*.sh; do
+        if [ -f "$module" ]; then
+            module_name=$(basename "$module" .sh)
+            echo "  - preferences/$module_name"
+        fi
+    done
+    echo ""
+    echo "Other Modules:"
+    if [ -f "$NATILIUS_DIR/modules/dotfiles.sh" ]; then
+        echo "  - dotfiles"
+    fi
+    echo ""
+    echo "Currently enabled modules in $CONFIG_FILE:"
+    for module in "${ENABLED_MODULES[@]}"; do
+        echo "  * $module"
+    done
+}
+
+# Function to run doctor diagnostics
+run_doctor() {
+    echo "Natilius Doctor - System Diagnostics"
+    echo "====================================="
+    echo ""
+
+    # Check system information
+    echo "System Information:"
+    echo "  macOS Version: $(sw_vers -productVersion)"
+    echo "  Architecture: $(uname -m)"
+    echo "  Hostname: $(hostname)"
+    echo "  User: $(whoami)"
+    echo ""
+
+    # Check Xcode Command Line Tools
+    echo "Development Tools:"
+    if xcode-select -p &> /dev/null; then
+        echo "  ✓ Xcode Command Line Tools: $(xcode-select -p)"
+    else
+        echo "  ✗ Xcode Command Line Tools: Not installed"
+    fi
+
+    # Check Homebrew
+    if command -v brew &> /dev/null; then
+        echo "  ✓ Homebrew: $(brew --version | head -n1)"
+    else
+        echo "  ✗ Homebrew: Not installed"
+    fi
+
+    # Check Git
+    if command -v git &> /dev/null; then
+        echo "  ✓ Git: $(git --version)"
+    else
+        echo "  ✗ Git: Not installed"
+    fi
+    echo ""
+
+    # Check configuration
+    echo "Configuration:"
+    if [ -f "$CONFIG_FILE" ]; then
+        echo "  ✓ Config file: $CONFIG_FILE"
+        echo "  ✓ Enabled modules: ${#ENABLED_MODULES[@]}"
+    else
+        echo "  ✗ Config file: Not found at $CONFIG_FILE"
+    fi
+    echo ""
+
+    # Check disk space
+    echo "Disk Space:"
+    df -h / | awk 'NR==2 {print "  Available: " $4 " (" $5 " used)"}'
+    echo ""
+
+    # Check network
+    echo "Network:"
+    if ping -c 1 -t 2 google.com &> /dev/null; then
+        echo "  ✓ Internet connection: Active"
+    else
+        echo "  ✗ Internet connection: No connection"
+    fi
+    echo ""
+
+    # Check for common issues
+    echo "Common Issues:"
+    issues_found=false
+
+    # Check sudo access
+    if sudo -n true 2>/dev/null; then
+        echo "  ✓ Sudo access: Available without password"
+    elif sudo -v 2>/dev/null; then
+        echo "  ⚠ Sudo access: Requires password"
+    else
+        echo "  ✗ Sudo access: Not available"
+        issues_found=true
+    fi
+
+    # Check SIP status
+    if csrutil status | grep -q "enabled"; then
+        echo "  ✓ System Integrity Protection: Enabled (recommended)"
+    else
+        echo "  ⚠ System Integrity Protection: Disabled"
+    fi
+
+    # Check for Rosetta on Apple Silicon
+    if [ "$(uname -m)" == "arm64" ]; then
+        if /usr/bin/pgrep oahd >/dev/null 2>&1; then
+            echo "  ✓ Rosetta 2: Installed"
+        else
+            echo "  ⚠ Rosetta 2: Not installed (may be needed for some apps)"
+        fi
+    fi
+
+    if [ "$issues_found" = false ]; then
+        echo "  ✓ No critical issues found"
+    fi
+    echo ""
+
+    echo "Recommendations:"
+    if ! xcode-select -p &> /dev/null; then
+        echo "  • Install Xcode Command Line Tools: xcode-select --install"
+    fi
+    if ! command -v brew &> /dev/null; then
+        echo "  • Install Homebrew: See https://brew.sh"
+    fi
+    if [ ! -f "$CONFIG_FILE" ]; then
+        echo "  • Create configuration: cp $NATILIUS_DIR/.natiliusrc.example ~/.natiliusrc"
+    fi
+    echo ""
+}
+
+# Handle version flag
+if [ "$SHOW_VERSION" = true ]; then
+    show_version
+    exit 0
+fi
+
+# Handle specific commands
+if [ "$COMMAND" = "doctor" ]; then
+    run_doctor
+    exit 0
+fi
+
+if [ "$COMMAND" = "list-modules" ]; then
+    list_modules
+    exit 0
+fi
+
 # After sourcing the config file
 log_info "Loaded configuration from $CONFIG_FILE"
 log_info "Enabled modules: ${ENABLED_MODULES[*]}"
 
 # After loading configuration and before any system-modifying operations:
 if [ "$DRY_RUN" = true ]; then
-    log_info "Running in dry-run mode. No system changes will be made."
+    log_info "Running in check/dry-run mode. No system changes will be made."
+    echo ""
+    echo "The following modules would be executed:"
+    for module in "${ENABLED_MODULES[@]}"; do
+        echo "  - $module"
+    done
+    echo ""
+    echo "To actually run the setup, remove the --check flag."
     exit 0
 fi
 
