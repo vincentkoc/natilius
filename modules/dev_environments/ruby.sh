@@ -47,6 +47,7 @@ fi
 # Initialize rbenv
 log_info "Adding rbenv to PATH and initializing..."
 export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="$HOME/.rbenv/shims:$PATH"
 eval "$(rbenv init - | grep -v 'rbenv rehash')"
 
 # Check if desired Ruby version is installed

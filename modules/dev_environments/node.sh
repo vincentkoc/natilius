@@ -28,6 +28,7 @@ if ! command -v nodenv &> /dev/null; then
 fi
 
 export PATH="$HOME/.nodenv/bin:$PATH"
+export PATH="$HOME/.nodenv/shims:$PATH"
 eval "$(nodenv init -)"
 
 # Check if desired Node.js version is installed
