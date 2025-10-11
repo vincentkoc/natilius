@@ -61,6 +61,14 @@ setup() {
   [ "$result" = "3.0.1" ]
 }
 
+@test "get_current_version function works for goenv" {
+  goenv() {
+    echo "1.21.0"
+  }
+  result=$(get_current_version goenv)
+  [ "$result" = "1.21.0" ]
+}
+
 @test "restart_system_preferences function works" {
   osascript() {
     echo "System Preferences quit successfully"

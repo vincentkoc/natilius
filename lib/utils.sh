@@ -37,6 +37,8 @@ get_current_version() {
         CURRENTVER=$("$manager" version)
     elif [ "$manager" == "rbenv" ]; then
         CURRENTVER=$("$manager" version --bare)
+    elif [ "$manager" == "goenv" ]; then
+        CURRENTVER=$("$manager" version-name)
     else
         echo "Unknown version manager: $manager"
         return 1
