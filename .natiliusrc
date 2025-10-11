@@ -1,34 +1,33 @@
 # Natilius Configuration
 
 ENABLED_MODULES=(
-	# "system/system_update"
-	# "system/directories"
-	# "system/security"
-	# "preferences/mac_preferences"
-	# "preferences/system_preferences"
-	# "applications/homebrew"
-	# "applications/apps"
-	# "applications/espanso"
-	# "dev_environments/java"
-	# "dev_environments/ruby"
-	"dev_environments/python"
-	# "dev_environments/node"
-	# "dev_environments/rust"
-	# "dev_environments/go"
-	# "dev_environments/php"
-	# "dev_environments/flutter"
-	# "ide/ide_setup"
-	# "dotfiles"
-	# "system/cleanup"
-    # Add other modules you want to run
+    "system/system_update"
+    "system/directories"
+    "preferences/mac_preferences"
+    "preferences/system_preferences"
+    "applications/homebrew"
+    "applications/apps"
+    "dev_environments/python"
+    "dev_environments/node"
+    "dev_environments/rust"
+    "dev_environments/go"
+    "dev_environments/java"
+    "ide/ide_setup"
+    "dotfiles"
+    # "applications/espanso"
+    # "dev_environments/php"
+    # "dev_environments/flutter"
+    # "system/security"
+    # "system/cleanup"
 )
+
 
 # Custom variables
 COUNTRYCODE="au"
 JDKVER="20"
 PYTHONVER="3.9.11"
-RUBYVER="3.2.1"
-NODEVER="18.14.0"
+RUBYVER="3.4.2"
+NODEVER="22.20.0"
 GOVER="1.20.0"
 PHPVER="8.1.0"
 FLUTTER_CHANNEL="stable"
@@ -37,10 +36,10 @@ FLUTTER_CHANNEL="stable"
 SKIP_UPDATE_CHECK=false
 
 # IDE Configuration
-INSTALL_VSCODE=false
-INSTALL_CURSOR=false
+INSTALL_VSCODE=true
+INSTALL_CURSOR=true
 INSTALL_JETBRAINS=false
-INSTALL_SUBLIME=false
+INSTALL_SUBLIME=true
 INSTALL_ZED=false
 
 
@@ -92,6 +91,7 @@ BREWPACKAGES=(
     "git"
     "gh"
     "git-lfs"
+    "ripgrep"
     "glow"
     "go"
     "gping"
@@ -183,6 +183,7 @@ BREWCASKS=(
     "alfred"
     "alt-tab"
     "amazon-chime"
+    "cursor"
     "balenaetcher"
     "bartender"
     "brave-browser"
@@ -247,6 +248,7 @@ APPSTORE=(
 # Global Node.js Packages
 GLOBAL_NODE_PACKAGES=(
     "yarn"
+    "pnpm"
     "eslint"
     "gatsby"
     "json"
@@ -288,9 +290,13 @@ GLOBAL_PYTHON_PACKAGES=(
     "flask"
     "pre-commit"
     "flake8"
+    "black"
+    "ruff"
     "isort"
     "coverage"
     "regex"
+    "mypy"
+    "pipx"
     "cython"
     "Jinja2"
     "six"
