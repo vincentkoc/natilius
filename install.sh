@@ -34,10 +34,15 @@ if ! command -v git &> /dev/null; then
     brew install git
 fi
 
-# Clone the full Natilius repository
-git clone https://github.com/vincentkoc/natilius.git ~/.natilius
+# Clone or update the Natilius repository
+if [ -d "$HOME/.natilius/.git" ]; then
+    echo -e "\033[0;36mUpdating existing Natilius checkout...\033[0m"
+    git -C "$HOME/.natilius" pull --ff-only
+else
+    git clone https://github.com/vincentkoc/natilius.git "$HOME/.natilius"
+fi
 
 # Run the main Natilius script
-bash ~/.natilius/natilius.sh
+bash "$HOME/.natilius/natilius.sh"
 
 echo -e "\033[0;32mNatilius installation complete!\033[0m"
