@@ -7,9 +7,6 @@ name: CI
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
-  schedule:
-    # Run daily at 2 AM UTC to catch issues with dependencies
-    - cron: '0 2 * * *'
 
 permissions:
   contents: read
