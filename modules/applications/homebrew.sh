@@ -24,7 +24,7 @@ log_info "Setting up Homebrew..."
 # Ensure Homebrew is installed
 if ! command -v brew &> /dev/null; then
     log_info "Homebrew not found. Installing..."
-    retry_network_operation /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | tee -a "$LOGFILE"
+    retry_network_operation /bin/bash -c "curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | /bin/bash" | tee -a "$LOGFILE"
     log_success "Homebrew installed"
     # Add Homebrew to PATH
     echo "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" >> "$HOME/.zprofile"

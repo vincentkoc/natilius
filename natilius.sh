@@ -35,6 +35,7 @@ handle_error() {
 
 # Set up error handling
 set -e
+set -o pipefail
 trap 'handle_error $LINENO "$BASH_COMMAND"' ERR
 
 # Get the directory of the script
@@ -54,6 +55,7 @@ mkdir -p "$NATILIUS_DIR/logs"
 # Source utility functions and logging
 source "$NATILIUS_DIR/lib/utils.sh"
 source "$NATILIUS_DIR/lib/logging.sh"
+source "$NATILIUS_DIR/lib/network_utils.sh"
 
 # Override logging functions based on verbosity settings
 if [ "$QUIET_MODE" = true ]; then
@@ -171,8 +173,8 @@ if [ -f "$CONFIG_FILE" ]; then
 else
     cp "$NATILIUS_DIR/.natiliusrc.example" "$CONFIG_FILE"
     log_info "Created default configuration file at $CONFIG_FILE"
+    source "$CONFIG_FILE"
 fi
-source "$CONFIG_FILE"  # Always source the config file, even if it existed before
 
 # Set default value for SKIP_UPDATE_CHECK
 SKIP_UPDATE_CHECK=${SKIP_UPDATE_CHECK:-false}
@@ -308,7 +310,9 @@ run_doctor() {
     issues_found=false
 
     # Check sudo access
-    if sudo -n true 2>/dev/null; then
+    if [[ -n "${SKIP_SUDO}" ]]; then
+        echo "  ⚠ Sudo access: Skipped (SKIP_SUDO is set)"
+    elif sudo -n true 2>/dev/null; then
         echo "  ✓ Sudo access: Available without password"
     elif sudo -v 2>/dev/null; then
         echo "  ⚠ Sudo access: Requires password"

@@ -100,7 +100,12 @@ else
 
     # Use rbenv-doctor to check the setup
     log_info "Running rbenv-doctor to verify the setup..."
-    curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash | tee -a "$LOGFILE"
+    rbenv_doctor_tmp="$(mktemp)"
+    retry_network_operation curl -fsSL \
+        "https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor" \
+        -o "$rbenv_doctor_tmp"
+    bash "$rbenv_doctor_tmp" | tee -a "$LOGFILE"
+    rm -f "$rbenv_doctor_tmp"
 
     log_success "Ruby environment setup complete"
 fi

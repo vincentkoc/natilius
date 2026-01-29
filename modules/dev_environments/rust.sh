@@ -71,7 +71,12 @@ uninstall_rust() {
 # Function to install Rust
 install_rust() {
     log_info "Installing Rust for ARM64..."
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    rustup_tmp="$(mktemp)"
+    retry_network_operation curl --proto '=https' --tlsv1.2 -sSf \
+        "https://sh.rustup.rs" \
+        -o "$rustup_tmp"
+    sh "$rustup_tmp" -s -- -y
+    rm -f "$rustup_tmp"
     source "$HOME/.cargo/env"
 }
 
