@@ -91,4 +91,24 @@ if [ -d "$HOME/Library/Developer/Xcode" ]; then
     rm -rf "$HOME/Library/Developer/Xcode/Archives"/* 2>/dev/null || log_info "Failed to remove some XCode archives"
 fi
 
+# Mole cleanup (optional - more thorough)
+# See: https://github.com/tw93/Mole
+if [[ "${USE_MOLE_CLEANUP:-false}" == "true" ]]; then
+    # Install mole if not present
+    if ! command -v mo &> /dev/null; then
+        log_info "Installing Mole for deep cleanup..."
+        brew install mole | tee -a "$LOGFILE"
+    fi
+
+    if command -v mo &> /dev/null; then
+        log_info "Running Mole deep cleanup..."
+        if [[ "$DRY_RUN" == "true" ]]; then
+            mo clean --dry-run | tee -a "$LOGFILE"
+        else
+            mo clean | tee -a "$LOGFILE"
+        fi
+        log_success "Mole cleanup complete"
+    fi
+fi
+
 log_success "System cleanup and optimization complete"

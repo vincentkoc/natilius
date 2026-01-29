@@ -1,3 +1,5 @@
+#!/bin/bash
+# shellcheck disable=SC2034,SC2088,SC2148
 # Natilius Configuration
 #
 # This file controls which modules run and what gets installed.
@@ -42,7 +44,7 @@ ENABLED_MODULES=(
 )
 
 # Custom variables
-COUNTRYCODE="au"
+COUNTRYCODE="us"
 JDKVER="20"
 PYTHONVER="3.9.11"
 RUBYVER="3.4.2"
@@ -53,6 +55,10 @@ FLUTTER_CHANNEL="stable"
 
 # Set to true to skip update checks
 SKIP_UPDATE_CHECK=false
+
+# Use Mole for deep cleanup (more thorough than built-in)
+# See: https://github.com/tw93/Mole
+USE_MOLE_CLEANUP=false
 
 # IDE Configuration
 INSTALL_VSCODE=true
@@ -84,6 +90,20 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
     "~/.gnupg"
     "~/.ssh"
     "~/.config"
+    "~/.aws"
+    "~/.bun"
+    "~/.cache"
+    "~/.cursor/worktrees"
+    "~/.factory/sessions"
+    "~/.ollama/models"
+    "~/.npm"
+    "~/.cargo"
+    "~/.local/share/pnpm"
+    "~/.pyenv"
+    "~/.rbenv"
+    "~/.rustup"
+    "~/.nodenv"
+    "~/go"
 )
 
 # Homebrew Taps
@@ -100,96 +120,158 @@ BREWTAPS=(
 
 # Homebrew Packages
 BREWPACKAGES=(
-    "ack"
-    "awscli"
-    "bat"
-    "ca-certificates"
-    "coreutils"
-    "curl"
-    "ctop"
-    "croc"
-    "diff-so-fancy"
-    "docker-compose"
-    "espanso"
-    "eza"
-    "fd"
-    "fzf"
+    # -------------------------------------------------------------------------
+    # Version Control
+    # -------------------------------------------------------------------------
     "git"
     "gh"
     "git-lfs"
-    "glow"
-    "gum"
-    "go"
-    "gping"
-    "gpg"
-    "gradle"
-    "helm"
-    "hexyl"
-    "htop"
-    "httpie"
-    "icdiff"
-    "jenv"
-    "jc"
+    "git-xet"
+    "tig"
+    "diff-so-fancy"
+
+    # -------------------------------------------------------------------------
+    # Shell Essentials
+    # -------------------------------------------------------------------------
+    "coreutils"
+    "curl"
+    "wget"
     "jq"
+    "jc"
+    "fzf"
+    "bat"
+    "eza"
+    "fd"
+    "ripgrep"
+    "ack"
+    "tree"
+    "htop"
+    "procs"
+    "zoxide"
+    "peco"
+    "tealdeer"
+    "zsh-completions"
+
+    # -------------------------------------------------------------------------
+    # Editors & Terminal
+    # -------------------------------------------------------------------------
+    "vim"
+    "neovim"
+    "tmux"
+    "reattach-to-user-namespace"
+
+    # -------------------------------------------------------------------------
+    # Security & Encryption
+    # -------------------------------------------------------------------------
+    "gpg"
+    "pinentry"
+    "pinentry-mac"
+    "openssl"
+    "openssh"
+    "ca-certificates"
     "keychain"
+    "libfido2"
+    "ykman"
+    "nmap"
+
+    # -------------------------------------------------------------------------
+    # Media & Preview
+    # -------------------------------------------------------------------------
+    "ffmpeg"
+    "imagemagick"
+    "poppler"
+    "p7zip"
+    "resvg"
+    "yt-dlp"
+    "hexyl"
+
+    # -------------------------------------------------------------------------
+    # Networking & Remote
+    # -------------------------------------------------------------------------
+    "mosh"
+    "httpie"
+    "gping"
+    "speedtest-cli"
+    "telnet"
+    "lynx"
+    "croc"
+
+    # -------------------------------------------------------------------------
+    # Containers & Kubernetes
+    # -------------------------------------------------------------------------
+    "docker-compose"
     "kubectl"
     "kubernetes-cli"
     "kubectx"
-    "libfido2"
-    "lynx"
-    "mackup"
-    "make"
-    "mas"
+    "helm"
     "minikube"
-    "mosh"
-    "neovim"
-    "nmap"
-    "node"
-    "nodenv"
-    "npm"
-    "openssl"
-    "openssh"
-    "peco"
+    "ctop"
     "derailed/popeye/popeye"
-    "pinentry"
-    "pinentry-mac"
-    "pre-commit"
-    "pyenv"
-    "pyenv-virtualenv"
-    "pipenv"
-    "procs"
-    "rbenv"
-    "rbenv-bundler"
-    "rbenv-default-gems"
-    "readline"
-    "rustup-init"
-    "speedtest-cli"
-    "sqlite"
-    "sqlite3"
-    "tealdeer"
-    "telnet"
+
+    # -------------------------------------------------------------------------
+    # Infrastructure as Code
+    # -------------------------------------------------------------------------
     "terraform"
     "terraformer"
     "tflint"
     "tfsec"
     "warrensbox/tap/tfswitch"
-    "tig"
-    "tmux"
-    "reattach-to-user-namespace"
-    "tokei"
-    "trash"
-    "tree"
-    "vim"
-    "watch"
-    "wget"
-    "xz"
+
+    # -------------------------------------------------------------------------
+    # Cloud CLIs
+    # -------------------------------------------------------------------------
+    "awscli"
+
+    # -------------------------------------------------------------------------
+    # Language Version Managers
+    # -------------------------------------------------------------------------
+    "nodenv"
+    "node"
+    "npm"
+    "pyenv"
+    "pyenv-virtualenv"
+    "pipenv"
+    "rbenv"
+    "rbenv-bundler"
+    "rbenv-default-gems"
+    "jenv"
+    "go"
+    "rustup-init"
+
+    # -------------------------------------------------------------------------
+    # Build Tools & Code Quality
+    # -------------------------------------------------------------------------
+    "make"
+    "gradle"
+    "pre-commit"
     "yamllint"
-    "ykman"
-    "yt-dlp"
+    "tokei"
+    "icdiff"
+
+    # -------------------------------------------------------------------------
+    # Databases
+    # -------------------------------------------------------------------------
+    "sqlite"
+    "sqlite3"
+    "readline"
+
+    # -------------------------------------------------------------------------
+    # Utilities
+    # -------------------------------------------------------------------------
+    "mackup"
+    "mas"
+    "trash"
+    "watch"
+    "glow"
+    "gum"
+    "vhs"
+    "espanso"
+    "xz"
     "zlib"
-    "zoxide"
-    "zsh-completions"
-    # fonts at the end, via fonts-cask
+
+    # -------------------------------------------------------------------------
+    # Fonts
+    # -------------------------------------------------------------------------
     "font-source-sans-pro"
     "font-ubuntu"
     "font-roboto"
@@ -197,63 +279,135 @@ BREWPACKAGES=(
     "font-fira-code-nerd-font"
     "font-fira-mono-nerd-font"
     "font-meslo-lg-nerd-font"
-    # ... Add other packages as needed
 )
 
 # Homebrew Casks
 BREWCASKS=(
+    # -------------------------------------------------------------------------
+    # Security & Privacy
+    # -------------------------------------------------------------------------
     "1password"
     "1password-cli"
-    "aerial"
-    "airbuddy"
+    "gpg-suite"
+    "keybase"
+    "muzzle"            # Silence notifications during screen sharing
+
+    # -------------------------------------------------------------------------
+    # Browsers
+    # -------------------------------------------------------------------------
+    "google-chrome"
+    "brave-browser"
+    "firefox"
+
+    # -------------------------------------------------------------------------
+    # Productivity & System
+    # -------------------------------------------------------------------------
+    "raycast"           # Alternative: "alfred"
     "alfred"
     "alt-tab"
-    "amazon-chime"
-    "balenaetcher"
     "bartender"
-    "brave-browser"
-    "clay"
-    "charles"
     "cheatsheet"
-    "discord"
-    "docker"
-    "dropbox"
-    "espanso"
-    "firefox"
-    "font-fira-code"
-    "github"
-    "gpg-suite"
-    "imageoptim"
-    "iterm2"
-    "kap"
-    "keybase"
-    "keycastr"
     "keyboard-maestro"
-    "logseq"
-    "loom"
-    "mamp"
-    "microsoft-office"
-    "miro"
-    "muzzle"
+    "monitorcontrol"    # Alternative: "betterdisplay"
+    "stats"             # System monitor in menubar
+    "onyx"              # System maintenance
+
+    # -------------------------------------------------------------------------
+    # Terminal & Development
+    # -------------------------------------------------------------------------
+    "iterm2"
+    "itermai"           # iTerm2 AI Plugin
+    "docker"
+    "visual-studio-code"
+    "sublime-text"
+    "sublime-merge"
+    "xquartz"
+
+    # -------------------------------------------------------------------------
+    # Git Clients (choose one)
+    # -------------------------------------------------------------------------
+    "github"            # Alternatives: "tower", "fork", "gitkraken"
+
+    # -------------------------------------------------------------------------
+    # Database Tools (choose one)
+    # -------------------------------------------------------------------------
+    "tableplus"         # Alternatives: "dbeaver-community", "mysqlworkbench"
     "mysqlworkbench"
-    "netnewswire"
+
+    # -------------------------------------------------------------------------
+    # API & Network Debug
+    # -------------------------------------------------------------------------
+    "charles"           # HTTP proxy/debugging
+    "tailscale-app"     # Mesh VPN (includes CLI)
+    "tripmode"          # Control app network access
+
+    # -------------------------------------------------------------------------
+    # File Management & Transfer
+    # -------------------------------------------------------------------------
+    "transmit"
+    "the-unarchiver"
+    "dropbox"
+
+    # -------------------------------------------------------------------------
+    # Image & Video
+    # -------------------------------------------------------------------------
+    "balenaetcher"
+    "imageoptim"
+    "kap"               # Screen recording
+    "keycastr"          # Show keystrokes on screen
+
+    # -------------------------------------------------------------------------
+    # Communication
+    # -------------------------------------------------------------------------
+    "slack"
+    "zoom"
+    "discord"
+    "amazon-chime"
+    "loom"
+    "miro"
+
+    # -------------------------------------------------------------------------
+    # Notes & Knowledge
+    # -------------------------------------------------------------------------
     "notion"
     "obsidian"
-    "onyx"
-    "rescuetime"
-    "rfidresearchgroup/proxmark3/proxmark3"
-    "rig"
-    "slack"
+    "logseq"
+
+    # -------------------------------------------------------------------------
+    # Media & Entertainment
+    # -------------------------------------------------------------------------
     "spotify"
-    "sublime-merge"
-    "sublime-text"
-    "the-unarchiver"
-    "transmit"
-    "tripmode"
-    "visual-studio-code"
     "vlc"
-    "xquartz"
-    "zoom"
+    "aerial"            # Apple TV screensavers
+    "netnewswire"       # RSS reader
+
+    # -------------------------------------------------------------------------
+    # Office & Business
+    # -------------------------------------------------------------------------
+    "microsoft-office"
+
+    # -------------------------------------------------------------------------
+    # Hardware & Devices
+    # -------------------------------------------------------------------------
+    "airbuddy"          # AirPods integration
+    "rfidresearchgroup/proxmark3/proxmark3"
+
+    # -------------------------------------------------------------------------
+    # Development Languages
+    # -------------------------------------------------------------------------
+    "mamp"              # Local web server
+    "rig"               # R version manager
+
+    # -------------------------------------------------------------------------
+    # Text Expansion
+    # -------------------------------------------------------------------------
+    "espanso"
+
+    # -------------------------------------------------------------------------
+    # Other
+    # -------------------------------------------------------------------------
+    "clay"              # Contacts manager
+    "rescuetime"        # Time tracking
 )
 
 # Mac App Store Apps (App IDs)
@@ -267,12 +421,18 @@ APPSTORE=(
     "1484348796"  # Endel
     "1423210932"  # Flow
     "1039633667"  # Irvue
+    "1436522307"  # Transmit 5 (file transfer)
     # ... Add other app IDs as needed
 )
 
 # Global Node.js Packages
 GLOBAL_NODE_PACKAGES=(
     "eslint"
+    "prettier"
+    "typescript"
+    "ts-node"
+    "yarn"
+    "pnpm"
     "gatsby"
     # ... other Node.js packages ...
 )

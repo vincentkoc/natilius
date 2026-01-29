@@ -1,3 +1,5 @@
+#!/bin/bash
+# shellcheck disable=SC2034,SC2088,SC2148
 # Natilius Base Profile
 # Description: Shared base configuration for all profiles
 # Common configuration shared across all profiles
@@ -22,6 +24,15 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
     "~/.gnupg"
     "~/.ssh"
     "~/.config"
+    "~/.aws"
+    "~/.bun"
+    "~/.cache"
+    "~/.cursor/worktrees"
+    "~/.factory/sessions"
+    "~/.ollama/models"
+    "~/.npm"
+    "~/.cargo"
+    "~/.local/share/pnpm"
 )
 
 # ============================================================================
@@ -40,6 +51,7 @@ BREWPACKAGES=(
     "git"
     "gh"
     "git-lfs"
+    "git-xet"
 
     # Shell Essentials
     "coreutils"
@@ -50,10 +62,18 @@ BREWPACKAGES=(
     "bat"
     "eza"
     "fd"
+    "ripgrep"
     "tree"
     "htop"
     "procs"
     "zoxide"
+
+    # Media & Preview
+    "ffmpeg"
+    "imagemagick"
+    "poppler"
+    "p7zip"
+    "resvg"
 
     # Security
     "gpg"
@@ -63,6 +83,9 @@ BREWPACKAGES=(
     "ca-certificates"
     "ykman"
 
+    # Remote Access
+    "mosh"
+
     # Utilities
     "mackup"
     "mas"
@@ -71,6 +94,7 @@ BREWPACKAGES=(
     "tmux"
     "neovim"
     "tealdeer"
+    "vhs"
 
     # Fonts (essential)
     "font-fira-code"
@@ -90,10 +114,19 @@ BREWCASKS=(
     "iterm2"
     "visual-studio-code"
 
-    # Productivity
-    "alfred"
+    # Git Client (choose: github, tower, fork, gitkraken)
+    "github"
+
+    # Productivity & System
+    "raycast"           # Alternative: "alfred"
     "alt-tab"
     "the-unarchiver"
+    "monitorcontrol"    # Alternative: "betterdisplay"
+    "bartender"
+    "stats"             # System monitor in menubar
+
+    # Networking
+    "tailscale-app"     # Mesh VPN (includes CLI)
 
     # Communication
     "slack"

@@ -1,0 +1,256 @@
+#!/bin/bash
+# shellcheck disable=SC2034,SC2088,SC2148
+# Natilius Clawdbot Profile
+# Description: Minimal setup for clawdbot/moltbot on remote Macs
+# Optimized for Terraform provisioning with iCloud/Mackup config restoration
+# Use: natilius --profile clawdbot
+#
+# Post-setup (handled externally):
+#   - Mackup restore for Chrome extensions and app configs
+#   - iCloud sync for preferences
+#   - moltbot gateway install (run manually or via automation)
+
+# Source base configuration
+# shellcheck source=/dev/null
+[[ -f "$HOME/.natiliusrc.base" ]] && source "$HOME/.natiliusrc.base"
+
+# ============================================================================
+# ENABLED MODULES
+# ============================================================================
+ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "system/security"
+    "preferences/mac_preferences"
+    "preferences/system_preferences"
+    "applications/homebrew"
+    "applications/apps"
+    "dev_environments/node"
+    "dev_environments/python"
+    "dotfiles"
+    "system/cleanup"
+)
+
+# ============================================================================
+# OTHER CONFIGURATION
+# ============================================================================
+USE_MOLE_CLEANUP=true
+
+# ============================================================================
+# NODE.JS CONFIGURATION
+# ============================================================================
+# moltbot requires Node.js >= 22
+NODEVER="24"
+
+# ============================================================================
+# IDE CONFIGURATION (Minimal)
+# ============================================================================
+INSTALL_VSCODE=false
+INSTALL_CURSOR=false
+INSTALL_JETBRAINS=false
+INSTALL_SUBLIME=false
+INSTALL_ZED=false
+
+# ============================================================================
+# DIRECTORIES
+# ============================================================================
+DIRS=(
+    "~/.mackup"
+    "~/.config"
+    "~/.config/moltbot"
+    "~/GIT"
+)
+
+DIRSTOEXCLUDEFROMTIMEMACHINE=(
+    # "~/.config"
+    "~/.mackup"
+    "~/.gnupg"
+    "~/.ssh"
+    "~/.npm"
+    "~/.nodenv"
+    "~/.cache"
+    "~/.aws"
+    "~/.bun"
+    "~/.cursor"
+    "~/.factory"
+    "~/.ollama"
+    "~/.npm"
+    "~/.cargo"
+    "~/.local/share/pnpm"
+    "~/GIT"
+)
+
+# ============================================================================
+# HOMEBREW TAPS
+# ============================================================================
+BREWTAPS=(
+    "homebrew/cask"
+    "github/gh"
+)
+
+# ============================================================================
+# HOMEBREW PACKAGES (Minimal)
+# ============================================================================
+BREWPACKAGES=(
+    # Version Control
+    "git"
+    "gh"
+    "git-lfs"
+    "git-xet"
+    "diff-so-fancy"
+
+    # Shell Essentials
+    "coreutils"
+    "curl"
+    "wget"
+    "jq"
+    "jc"
+    "fzf"
+    "bat"
+    "eza"
+    "fd"
+    "ripgrep"
+    "ack"
+    "tree"
+    "htop"
+    "procs"
+    "zoxide"
+    "peco"
+    "tealdeer"
+    "zsh-completions"
+
+    # Editors & Terminal
+    "vim"
+    "tmux"
+    "reattach-to-user-namespace"
+
+    # Security & Encryption
+    "gpg"
+    "pinentry"
+    "pinentry-mac"
+    "openssl"
+    "openssh"
+    "ca-certificates"
+    "keychain"
+    "libfido2"
+    "nmap"
+
+    # Media & Preview
+    "ffmpeg"
+    "imagemagick"
+    "poppler"
+    "p7zip"
+    "resvg"
+    "yt-dlp"
+    "hexyl"
+
+    # Networking & Remote
+    "mosh"
+    "httpie"
+    "gping"
+    "telnet"
+    "lynx"
+    "croc"
+
+    # Language Version Managers
+    "nodenv"
+    "node"
+    "npm"
+    "pyenv"
+    "pyenv-virtualenv"
+    "pipenv"
+
+    # Build Tools & Code Quality
+    "make"
+    "pre-commit"
+    "yamllint"
+    "tokei"
+    "icdiff"
+
+    # Databases
+    "sqlite"
+    "sqlite3"
+    "readline"
+
+    # Utilities
+    "mackup"
+    "mas"
+    "trash"
+    "watch"
+    "glow"
+    "gum"
+    "vhs"
+    "xz"
+    "zlib"
+
+
+    # Fonts (essential)
+    "font-fira-code"
+    "font-fira-code-nerd-font"
+    "font-meslo-lg-nerd-font"
+)
+
+# ============================================================================
+# HOMEBREW CASKS
+# ============================================================================
+BREWCASKS=(
+    # Browser (for moltbot web interface)
+    "google-chrome"
+
+    # Security
+    "1password"
+    "1password-cli"
+    "tailscale-app"
+
+    # Development apps
+    "iterm2"
+    "github"
+    "claude-code"
+    "codex"
+    "sublime-text"
+    "imageoptim"
+)
+
+# ============================================================================
+# MAC APP STORE
+# ============================================================================
+APPSTORE=(
+    # No app store installs
+)
+
+# ============================================================================
+# NODE.JS PACKAGES (includes moltbot)
+# ============================================================================
+GLOBAL_NODE_PACKAGES=(
+    "moltbot"
+    "pnpm"
+    "eslint"
+    "prettier"
+    "typescript"
+    "ts-node"
+    "yarn"
+    "gatsby"
+)
+GLOBAL_PYTHON_PACKAGES=(
+    "pip"
+    "virtualenv"
+    "setuptools"
+    "wheel"
+    "numpy"
+    "pandas"
+    "pre-commit"
+)
+
+# ============================================================================
+# APPS TO RESTART
+# ============================================================================
+KILLAPPS=(
+    "Address Book"
+    "Dock"
+    "Finder"
+    "Mail"
+    "iCal"
+    "iTunes"
+    "Safari"
+    "SystemUIServer"
+)

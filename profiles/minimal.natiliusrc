@@ -1,3 +1,5 @@
+#!/bin/bash
+# shellcheck disable=SC2034,SC2088,SC2148
 # Natilius Minimal Profile
 # Description: Essential tools only (git, brew, shell)
 # Quick onboarding - essential tools only

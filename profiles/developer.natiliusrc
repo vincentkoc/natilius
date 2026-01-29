@@ -1,3 +1,5 @@
+#!/bin/bash
+# shellcheck disable=SC2034,SC2088,SC2148
 # Natilius Developer Profile
 # Description: Full dev environment (all languages + IDEs)
 # Full development environment with multiple languages
@@ -54,8 +56,11 @@ DIRS+=(
 DIRSTOEXCLUDEFROMTIMEMACHINE+=(
     "~/.mackup"
     "~/Projects"
-    "~/.npm"
-    "~/.cargo"
+    "~/.pyenv"
+    "~/.rbenv"
+    "~/.rustup"
+    "~/.nodenv"
+    "~/go"
 )
 
 # ============================================================================
@@ -101,13 +106,28 @@ BREWPACKAGES+=(
 # DEVELOPER CASKS
 # ============================================================================
 BREWCASKS+=(
+    # Containers
     "docker"
-    "github"
+
+    # Terminal Enhancements
+    "itermai"           # iTerm2 AI Plugin
+
+    # API & Network
+    "postman"
+    "charles"           # HTTP proxy/debugging
+
+    # Database (choose: tableplus, dbeaver-community)
+    "tableplus"
+
+    # Design
+    "figma"
+
+    # File Transfer
+    "transmit"
+
+    # Security
     "gpg-suite"
     "keybase"
-    "postman"
-    "tableplus"
-    "figma"
 )
 
 # ============================================================================
