@@ -8,7 +8,7 @@ _natilius_completion() {
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
     # Available commands
-    commands="setup doctor list-modules version help"
+    commands="init setup doctor modules profiles version help"
 
     # Available options
     opts="--verbose --quiet --interactive --check --dry-run --profile --help --version"
@@ -24,9 +24,15 @@ _natilius_completion() {
 
     case $prev in
         --profile|-p)
-            # Complete with existing profile files
-            local profiles
-            profiles=$(find ~ -maxdepth 1 -name ".natiliusrc.*" 2>/dev/null | sed 's/.*\.natiliusrc\.//' | grep -v example)
+            # Complete with built-in profiles and user profiles
+            local profiles builtin_profiles user_profiles
+            # Built-in profiles from ~/.natilius/profiles/ or install location
+            if [ -d "${HOME}/.natilius/profiles" ]; then
+                builtin_profiles=$(find "${HOME}/.natilius/profiles" -name "*.natiliusrc" 2>/dev/null | xargs -I {} basename {} .natiliusrc)
+            fi
+            # User profiles from home directory
+            user_profiles=$(find ~ -maxdepth 1 -name ".natiliusrc.*" 2>/dev/null | sed 's/.*\.natiliusrc\.//' | grep -v example)
+            profiles="$builtin_profiles $user_profiles"
             mapfile -t COMPREPLY < <(compgen -W "$profiles" -- "$cur")
             return 0
             ;;

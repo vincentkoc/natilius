@@ -54,35 +54,52 @@ restart_system_preferences() {
 
 check_for_updates() {
     if [ "$SKIP_UPDATE_CHECK" = true ]; then
-        log_info "Skipping update check as per configuration."
         return
     fi
 
-    log_info "Checking for Natilius updates..."
+    local CURRENT_VERSION LATEST_VERSION update_cmd
 
-    # Fetch the latest version from the remote repository
-    git fetch origin main --quiet
-    LATEST_VERSION=$(git describe --tags --abbrev=0 origin/main 2>/dev/null || echo "v0.0.0")
-    CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+    # Check if installed via Homebrew
+    if brew list natilius &>/dev/null; then
+        # Installed via Homebrew
+        CURRENT_VERSION=$(brew info natilius 2>/dev/null | head -n1 | awk '{print $3}' | tr -d ',')
+        LATEST_VERSION=$(brew outdated --verbose natilius 2>/dev/null | awk -F'<' '{print $2}' | tr -d ' ')
+        update_cmd="brew upgrade natilius"
 
-    # Remove the 'v' prefix for version comparison
-    LATEST_VERSION_NUM=${LATEST_VERSION#v}
-    CURRENT_VERSION_NUM=${CURRENT_VERSION#v}
-
-    # Compare versions
-    if [ "$LATEST_VERSION_NUM" != "$CURRENT_VERSION_NUM" ]; then
-        log_warning "A new version of Natilius is available: $LATEST_VERSION (current: $CURRENT_VERSION)"
-        log_warning "Please update Natilius to ensure you have the latest features and bug fixes."
-        log_warning "You can update by running: git pull origin main"
-        echo
-        read -p "Do you want to continue with the current version? (y/N) " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            log_info "Exiting. Please update Natilius and run the script again."
-            exit 0
+        if [ -n "$LATEST_VERSION" ] && [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
+            log_warning "Update available: v$LATEST_VERSION ${LOG_DIM}(current: v$CURRENT_VERSION)${LOG_RESET}"
+            echo -e "    ${LOG_DIM}Run: $update_cmd${LOG_RESET}"
+            echo
+            read -p "  Continue with current version? (y/N) " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo -e "  ${LOG_DIM}Exiting. Please update and run again.${LOG_RESET}"
+                exit 0
+            fi
         fi
     else
-        log_success "Natilius is up to date (version $CURRENT_VERSION)."
+        # Installed via git - fetch latest version silently
+        git fetch origin main --quiet 2>/dev/null || return
+
+        LATEST_VERSION=$(git describe --tags --abbrev=0 origin/main 2>/dev/null || echo "v0.0.0")
+        CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+        update_cmd="git pull origin main"
+
+        # Remove the 'v' prefix for version comparison
+        local LATEST_VERSION_NUM=${LATEST_VERSION#v}
+        local CURRENT_VERSION_NUM=${CURRENT_VERSION#v}
+
+        if [ "$LATEST_VERSION_NUM" != "$CURRENT_VERSION_NUM" ]; then
+            log_warning "Update available: $LATEST_VERSION ${LOG_DIM}(current: $CURRENT_VERSION)${LOG_RESET}"
+            echo -e "    ${LOG_DIM}Run: $update_cmd${LOG_RESET}"
+            echo
+            read -p "  Continue with current version? (y/N) " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo -e "  ${LOG_DIM}Exiting. Please update and run again.${LOG_RESET}"
+                exit 0
+            fi
+        fi
     fi
 }
 
@@ -113,12 +130,15 @@ version_compare() {
 }
 
 rotate_logs() {
-    local log_dir="$NATILIUS_DIR/logs"
+    local log_dir="$HOME/.natilius/logs"
     local max_logs=5
+
+    # Ensure log dir exists
+    mkdir -p "$log_dir"
 
     # Count the number of log files
     local log_count
-    log_count=$(find "$log_dir" -type f | wc -l)
+    log_count=$(find "$log_dir" -type f 2>/dev/null | wc -l)
 
     # Remove old logs if there are more than max_logs
     if [ "$log_count" -gt "$max_logs" ]; then

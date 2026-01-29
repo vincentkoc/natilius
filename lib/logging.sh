@@ -19,22 +19,33 @@
 
 # Logging Functions
 
+# Color definitions for consistent styling
+LOG_CYAN='\033[1;36m'
+LOG_GREEN='\033[1;32m'
+LOG_YELLOW='\033[1;33m'
+LOG_RED='\033[1;31m'
+LOG_DIM='\033[2m'
+LOG_RESET='\033[0m'
+
+# Export for use in subshells
+export LOG_DIM LOG_RESET
+
 get_timestamp() {
     date +"%Y-%m-%d %H:%M:%S"
 }
 
 log_info() {
-    echo -e "$(get_timestamp) [INFO] \033[0;36m$1\033[0m" | tee -a "$LOGFILE"
+    echo -e "  ${LOG_CYAN}→${LOG_RESET} $1" | tee -a "$LOGFILE"
 }
 
 log_success() {
-    echo -e "$(get_timestamp) \033[0;32m[SUCCESS]\033[0m \033[0;36m$1\033[0m" | tee -a "$LOGFILE"
+    echo -e "  ${LOG_GREEN}✓${LOG_RESET} $1" | tee -a "$LOGFILE"
 }
 
 log_warning() {
-    echo -e "$(get_timestamp) \033[0;33m[WARNING]\033[0m \033[0;36m$1\033[0m" | tee -a "$LOGFILE"
+    echo -e "  ${LOG_YELLOW}⚠${LOG_RESET} $1" | tee -a "$LOGFILE"
 }
 
 log_error() {
-    echo -e "$(get_timestamp) \033[0;31m[ERROR]\033[0m \033[0;36m$1\033[0m" | tee -a "$LOGFILE"
+    echo -e "  ${LOG_RED}✗${LOG_RESET} $1" | tee -a "$LOGFILE"
 }

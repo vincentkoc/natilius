@@ -61,6 +61,13 @@ INSTALL_JETBRAINS=true
 INSTALL_SUBLIME=false
 INSTALL_ZED=false
 
+# Enterprise/MDM Configuration
+# Set to true if your organization uses Jamf
+ENTERPRISE_MODE=false
+# Skip installations that conflict with MDM policies
+RESPECT_MDM_POLICIES=true
+# Run Jamf recon after setup completes
+JAMF_RECON_ON_COMPLETE=false
 
 # Directories to create
 DIRS=(
@@ -111,6 +118,7 @@ BREWPACKAGES=(
     "gh"
     "git-lfs"
     "glow"
+    "gum"
     "go"
     "gping"
     "gpg"

@@ -99,6 +99,58 @@
     declare -f validate_boolean >/dev/null
 }
 
+@test "Config validator validates version format correctly" {
+    source lib/config_validator.sh
+    run validate_version "TEST" "1.2.3"
+    [ "$status" -eq 0 ]
+
+    run validate_version "TEST" "invalid"
+    [ "$status" -eq 1 ]
+
+    run validate_version "TEST" "1.2.3.4.5"
+    [ "$status" -eq 0 ]
+
+    run validate_version "TEST" ""
+    [ "$status" -eq 1 ]
+}
+
+@test "Config validator validates boolean values correctly" {
+    source lib/config_validator.sh
+    run validate_boolean "TEST" "true"
+    [ "$status" -eq 0 ]
+
+    run validate_boolean "TEST" "false"
+    [ "$status" -eq 0 ]
+
+    run validate_boolean "TEST" "yes"
+    [ "$status" -eq 1 ]
+
+    run validate_boolean "TEST" "1"
+    [ "$status" -eq 1 ]
+}
+
+@test "Config validator has valid module list" {
+    source lib/config_validator.sh
+    [ ${#VALID_MODULES[@]} -gt 0 ]
+    # Check some known modules are in the list
+    local has_homebrew=false
+    for mod in "${VALID_MODULES[@]}"; do
+        if [[ "$mod" == "applications/homebrew" ]]; then
+            has_homebrew=true
+        fi
+    done
+    [ "$has_homebrew" = true ]
+}
+
+@test "is_valid_module function works" {
+    source lib/config_validator.sh
+    run is_valid_module "applications/homebrew"
+    [ "$status" -eq 0 ]
+
+    run is_valid_module "nonexistent/module"
+    [ "$status" -eq 1 ]
+}
+
 @test "Network utils has proper functions" {
     source lib/network_utils.sh
     # Check that network utility functions exist
@@ -109,6 +161,53 @@
 @test "Completions files exist" {
     [ -f "completions/natilius-completion.bash" ]
     [ -f "completions/natilius-completion.zsh" ]
+}
+
+@test "Bash completions have correct commands" {
+    source completions/natilius-completion.bash 2>/dev/null || true
+    # Check the completion script references key commands
+    grep -q "init" completions/natilius-completion.bash
+    grep -q "setup" completions/natilius-completion.bash
+    grep -q "doctor" completions/natilius-completion.bash
+    grep -q "modules" completions/natilius-completion.bash
+    grep -q "profiles" completions/natilius-completion.bash
+}
+
+@test "Zsh completions have correct commands" {
+    grep -q "init" completions/natilius-completion.zsh
+    grep -q "setup" completions/natilius-completion.zsh
+    grep -q "doctor" completions/natilius-completion.zsh
+    grep -q "modules" completions/natilius-completion.zsh
+    grep -q "profiles" completions/natilius-completion.zsh
+}
+
+@test "MDM utils library exists" {
+    [ -f "lib/mdm_utils.sh" ]
+    [ -r "lib/mdm_utils.sh" ]
+}
+
+@test "MDM utils has proper functions" {
+    source lib/mdm_utils.sh
+    declare -f get_mdm_provider >/dev/null
+    declare -f is_mdm_enrolled >/dev/null
+    declare -f get_mdm_server_url >/dev/null
+    declare -f get_mdm_provider_name >/dev/null
+}
+
+@test "Example config file exists and has required sections" {
+    [ -f ".natiliusrc.example" ]
+    # Check for key config sections
+    grep -q "ENABLED_MODULES" .natiliusrc.example
+    grep -q "BREWPACKAGES" .natiliusrc.example
+    grep -q "BREWCASKS" .natiliusrc.example
+    grep -q "PYTHONVER" .natiliusrc.example
+    grep -q "NODEVER" .natiliusrc.example
+}
+
+@test "Profile files exist in profiles directory" {
+    [ -d "profiles" ]
+    # At least one profile should exist
+    ls profiles/*.natiliusrc 2>/dev/null | head -n1 | grep -q ".natiliusrc"
 }
 
 

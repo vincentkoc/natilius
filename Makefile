@@ -241,6 +241,16 @@ docs-deploy: docs-deps
 install:
 	$(call show_banner,Installing locally...)
 	@chmod +x natilius.sh
+	@if [ -f /usr/local/bin/natilius ]; then \
+		if brew list natilius >/dev/null 2>&1; then \
+			echo "  $(CYAN)⚠$(RESET)  $(BOLD)Homebrew installation detected$(RESET)"; \
+			echo "  $(DIM)Run 'brew uninstall natilius' first, or use 'brew link --overwrite'$(RESET)"; \
+			echo ""; \
+			exit 1; \
+		else \
+			echo "  $(DIM)Existing installation found, replacing...$(RESET)"; \
+		fi; \
+	fi
 	@echo "  $(DIM)Admin password required for /usr/local/bin$(RESET)"
 	@sudo rm -f /usr/local/bin/natilius
 	@sudo ln -sf "$(PWD)/natilius.sh" /usr/local/bin/natilius

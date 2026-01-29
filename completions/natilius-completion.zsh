@@ -8,9 +8,11 @@ _natilius() {
     local -a commands options
 
     commands=(
+        'init:Interactive setup wizard (creates ~/.natiliusrc)'
         'setup:Run the full setup process'
         'doctor:Run system diagnostics and checks'
-        'list-modules:List all available modules'
+        'modules:List all available modules'
+        'profiles:List available configuration profiles'
         'version:Show version information'
         'help:Show help message'
     )
@@ -31,8 +33,17 @@ _natilius() {
 }
 
 _natilius_profiles() {
-    local profiles
-    profiles=(${(f)"$(ls ~/.natiliusrc.* 2>/dev/null | sed 's/.*\.natiliusrc\.//' | grep -v example)"})
+    local -a profiles builtin_profiles user_profiles
+
+    # Built-in profiles from ~/.natilius/profiles/
+    if [[ -d "${HOME}/.natilius/profiles" ]]; then
+        builtin_profiles=(${(f)"$(ls ${HOME}/.natilius/profiles/*.natiliusrc 2>/dev/null | xargs -I {} basename {} .natiliusrc)"})
+    fi
+
+    # User profiles from home directory
+    user_profiles=(${(f)"$(ls ~/.natiliusrc.* 2>/dev/null | sed 's/.*\.natiliusrc\.//' | grep -v example)"})
+
+    profiles=($builtin_profiles $user_profiles)
     _describe 'profiles' profiles
 }
 
