@@ -1,0 +1,154 @@
+---
+title: Development Setup
+description: 'Set up your environment for Natilius development.'
+sidebarTitle: 'Development'
+---
+
+## Prerequisites
+
+- macOS (for full testing)
+- Git
+- Homebrew (recommended)
+
+## Setup
+
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/natilius.git
+cd natilius
+
+# Install dependencies
+make dev-setup
+```
+
+This installs:
+- `bats-core` — Testing framework
+- `shellcheck` — Linter
+- `pre-commit` — Git hooks
+
+## Project Structure
+
+```
+natilius/
+├── natilius.sh          # Main entry point
+├── install.sh           # Installer
+├── uninstall.sh         # Uninstaller
+├── lib/                 # Shared libraries
+│   ├── utils.sh
+│   ├── logging.sh
+│   ├── config_validator.sh
+│   └── network_utils.sh
+├── modules/             # Feature modules
+│   ├── system/
+│   ├── applications/
+│   ├── dev_environments/
+│   ├── ide/
+│   └── preferences/
+├── profiles/            # Config profiles
+├── tests/               # Test suites
+├── docs/                # Documentation
+└── completions/         # Shell completions
+```
+
+## Development Workflow
+
+<Steps>
+  <Step title="Create a branch">
+    ```bash
+    git checkout -b feature/your-feature
+    ```
+  </Step>
+  <Step title="Make changes">
+    Edit files, add modules, fix bugs.
+  </Step>
+  <Step title="Test">
+    ```bash
+    make test      # Unit tests
+    make lint      # ShellCheck
+    make test-all  # Everything
+    ```
+  </Step>
+  <Step title="Commit">
+    ```bash
+    git add .
+    git commit -m "feat: add feature"
+    ```
+  </Step>
+  <Step title="Push and PR">
+    ```bash
+    git push origin feature/your-feature
+    ```
+    Then open a Pull Request on GitHub.
+  </Step>
+</Steps>
+
+## Testing
+
+```bash
+# All tests
+make test-all
+
+# Unit tests only
+make test
+
+# Integration tests
+make integration-test
+
+# Config validation
+make test-config
+
+# Single test file
+bats tests/test_natilius.bats
+```
+
+### Writing Tests
+
+```bash
+# tests/test_example.bats
+
+setup() {
+    source lib/utils.sh
+}
+
+@test "function returns success" {
+    run my_function "arg"
+    [ "$status" -eq 0 ]
+}
+
+@test "function outputs expected" {
+    run my_function "input"
+    [ "$output" = "expected" ]
+}
+```
+
+## Linting
+
+```bash
+# Run ShellCheck
+make lint
+
+# Check specific file
+shellcheck -x path/to/script.sh
+```
+
+## Pre-commit Hooks
+
+```bash
+# Run all hooks
+make precommit
+
+# Install hooks (done by dev-setup)
+pre-commit install
+```
+
+## Makefile Commands
+
+| Command | Description |
+|---------|-------------|
+| `make dev-setup` | Install dev dependencies |
+| `make test` | Run unit tests |
+| `make test-all` | Run all tests |
+| `make lint` | Run ShellCheck |
+| `make precommit` | Run pre-commit hooks |
+| `make coverage` | Generate coverage report |
+| `make check-version` | Verify version consistency |

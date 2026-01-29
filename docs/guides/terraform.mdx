@@ -1,0 +1,217 @@
+---
+title: Terraform Integration
+description: 'Provision Mac developer environments with Terraform.'
+sidebarTitle: 'Terraform'
+---
+
+Use Natilius to provision consistent Mac development environments via Terraform.
+
+## Quick Start
+
+```hcl
+resource "null_resource" "mac_setup" {
+  provisioner "remote-exec" {
+    inline = [
+      "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | bash -s devops"
+    ]
+  }
+}
+```
+
+## Provisioning Script
+
+Natilius includes `scripts/terraform-provision.sh` designed for Terraform:
+
+```bash
+# Usage
+./terraform-provision.sh [PROFILE]
+
+# Profiles: minimal, devops, developer
+./terraform-provision.sh devops
+```
+
+The script:
+1. Checks prerequisites (macOS, network, Xcode CLT)
+2. Clones/updates Natilius
+3. Installs the specified profile
+4. Runs setup non-interactively
+
+## Full Example
+
+```hcl
+# variables.tf
+variable "mac_host" {
+  description = "Mac hostname or IP"
+  type        = string
+}
+
+variable "mac_user" {
+  description = "SSH user"
+  type        = string
+  default     = "admin"
+}
+
+variable "ssh_key_path" {
+  description = "Path to SSH private key"
+  type        = string
+}
+
+variable "profile" {
+  description = "Natilius profile"
+  type        = string
+  default     = "devops"
+
+  validation {
+    condition     = contains(["minimal", "devops", "developer"], var.profile)
+    error_message = "Profile must be minimal, devops, or developer."
+  }
+}
+
+# main.tf
+resource "null_resource" "mac_setup" {
+  connection {
+    type        = "ssh"
+    host        = var.mac_host
+    user        = var.mac_user
+    private_key = file(var.ssh_key_path)
+    timeout     = "30m"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | bash -s ${var.profile}"
+    ]
+  }
+}
+
+output "setup_complete" {
+  value = "Mac ${var.mac_host} configured with ${var.profile} profile"
+}
+```
+
+## Custom Configuration
+
+Deploy a custom `.natiliusrc`:
+
+```hcl
+resource "null_resource" "mac_setup" {
+  connection {
+    type        = "ssh"
+    host        = var.mac_host
+    user        = var.mac_user
+    private_key = file(var.ssh_key_path)
+  }
+
+  # Upload custom config
+  provisioner "file" {
+    source      = "${path.module}/configs/${var.team}.natiliusrc"
+    destination = "~/.natiliusrc"
+  }
+
+  # Install natilius (skip auto-run)
+  provisioner "remote-exec" {
+    inline = [
+      "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh | SKIP_RUN=true bash"
+    ]
+  }
+
+  # Run setup
+  provisioner "remote-exec" {
+    inline = [
+      "NONINTERACTIVE=true ~/.natilius/natilius.sh setup"
+    ]
+  }
+}
+```
+
+## Templated Configuration
+
+Generate configs from Terraform variables:
+
+```hcl
+resource "local_file" "natiliusrc" {
+  filename = "${path.module}/generated/${var.team}.natiliusrc"
+  content  = templatefile("${path.module}/templates/natiliusrc.tftpl", {
+    python_version = var.python_version
+    node_version   = var.node_version
+    modules        = var.enabled_modules
+    packages       = var.brew_packages
+  })
+}
+```
+
+Template (`templates/natiliusrc.tftpl`):
+```bash
+ENABLED_MODULES=(
+%{ for module in modules ~}
+    "${module}"
+%{ endfor ~}
+)
+
+PYTHONVER="${python_version}"
+NODEVER="${node_version}"
+
+BREWPACKAGES=(
+%{ for pkg in packages ~}
+    "${pkg}"
+%{ endfor ~}
+)
+```
+
+## Idempotent Runs
+
+Trigger re-runs on config changes:
+
+```hcl
+resource "null_resource" "mac_setup" {
+  triggers = {
+    config_hash = filemd5("${path.module}/configs/team.natiliusrc")
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "~/.natilius/natilius.sh setup"
+    ]
+  }
+}
+```
+
+## Multiple Macs
+
+```hcl
+variable "macs" {
+  type = map(object({
+    host    = string
+    profile = string
+  }))
+  default = {
+    "dev-1" = { host = "192.168.1.10", profile = "developer" }
+    "dev-2" = { host = "192.168.1.11", profile = "devops" }
+  }
+}
+
+resource "null_resource" "mac_setup" {
+  for_each = var.macs
+
+  connection {
+    type        = "ssh"
+    host        = each.value.host
+    user        = var.mac_user
+    private_key = file(var.ssh_key_path)
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | bash -s ${each.value.profile}"
+    ]
+  }
+}
+```
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| SSH timeout | Increase `timeout` in connection block |
+| Sudo prompts | Use `SKIP_SUDO=true` environment variable |
+| Long installs | Run in background or increase timeout |

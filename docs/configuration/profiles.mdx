@@ -1,0 +1,164 @@
+---
+title: Profiles
+description: 'Pre-configured setups for different roles.'
+sidebarTitle: 'Profiles'
+---
+
+Profiles are pre-built configurations for common use cases. Use them as-is or as a starting point for customization.
+
+## Available Profiles
+
+<CardGroup cols={3}>
+  <Card title="minimal" icon="feather">
+    **Quick onboarding**
+
+    Git, Homebrew, VS Code, essential CLI tools. Fast setup for new team members.
+  </Card>
+  <Card title="devops" icon="cloud">
+    **Platform/SRE engineers**
+
+    Kubernetes, Terraform, Docker, cloud CLIs, Python, Go.
+  </Card>
+  <Card title="developer" icon="code">
+    **Full-stack developers**
+
+    Multiple languages, IDEs, databases, all dev tools.
+  </Card>
+</CardGroup>
+
+## Using Profiles
+
+### Direct Usage
+
+```bash
+natilius --profile devops
+```
+
+This loads `~/.natiliusrc.devops` (or the built-in profile if it doesn't exist).
+
+### Copy and Customize
+
+```bash
+# Copy profile to your config
+cp ~/.natilius/profiles/devops.natiliusrc ~/.natiliusrc
+
+# Edit to customize
+nano ~/.natiliusrc
+
+# Run setup
+natilius setup
+```
+
+### Named Profiles
+
+Create named profiles for different contexts:
+
+```bash
+# Work setup
+cp ~/.natilius/profiles/devops.natiliusrc ~/.natiliusrc.work
+
+# Personal setup
+cp ~/.natilius/profiles/developer.natiliusrc ~/.natiliusrc.personal
+
+# Use them
+natilius --profile work
+natilius --profile personal
+```
+
+## Profile Inheritance
+
+Create profiles that extend a base configuration:
+
+```bash
+# ~/.natiliusrc.myteam
+
+# Inherit from base
+source "$HOME/.natiliusrc.base"
+
+# Add team-specific modules
+ENABLED_MODULES+=("dev_environments/rust")
+
+# Add team tools
+BREWPACKAGES+=("mycompany-cli")
+
+# Override versions
+PYTHONVER="3.12.0"
+```
+
+## Profile Contents
+
+### minimal
+
+```bash
+ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "applications/homebrew"
+    "system/cleanup"
+)
+
+INSTALL_VSCODE=true
+INSTALL_JETBRAINS=false
+```
+
+### devops
+
+```bash
+ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "system/security"
+    "applications/homebrew"
+    "dev_environments/python"
+    "dev_environments/go"
+    "ide/ide_setup"
+    "system/cleanup"
+)
+
+BREWPACKAGES+=(
+    "kubectl" "helm" "terraform"
+    "awscli" "docker-compose"
+)
+```
+
+### developer
+
+```bash
+ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "system/security"
+    "applications/homebrew"
+    "dev_environments/python"
+    "dev_environments/node"
+    "dev_environments/go"
+    "dev_environments/rust"
+    "ide/ide_setup"
+    "dotfiles"
+    "system/cleanup"
+)
+
+INSTALL_VSCODE=true
+INSTALL_JETBRAINS=true
+```
+
+## Creating Custom Profiles
+
+<Steps>
+  <Step title="Start from a template">
+    ```bash
+    cp ~/.natilius/profiles/devops.natiliusrc ~/.natiliusrc.myprofile
+    ```
+  </Step>
+  <Step title="Customize">
+    Edit modules, packages, and settings for your needs.
+  </Step>
+  <Step title="Test">
+    ```bash
+    natilius --profile myprofile --check
+    ```
+  </Step>
+  <Step title="Share">
+    Commit to your dotfiles repo or share with your team.
+  </Step>
+</Steps>

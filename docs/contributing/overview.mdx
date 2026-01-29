@@ -1,0 +1,85 @@
+---
+title: Contributing
+description: 'How to contribute to Natilius.'
+sidebarTitle: 'Overview'
+---
+
+Thank you for your interest in contributing to Natilius!
+
+## Quick Start
+
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/natilius.git
+cd natilius
+
+# Set up development
+make dev-setup
+
+# Create a branch
+git checkout -b feature/your-feature
+
+# Make changes, test
+make test && make lint
+
+# Submit PR
+git push origin feature/your-feature
+```
+
+## Ways to Contribute
+
+<CardGroup cols={2}>
+  <Card title="Report Bugs" icon="bug" href="https://github.com/vincentkoc/natilius/issues">
+    Found an issue? Let us know.
+  </Card>
+  <Card title="Suggest Features" icon="lightbulb" href="https://github.com/vincentkoc/natilius/discussions">
+    Have an idea? Start a discussion.
+  </Card>
+  <Card title="Improve Docs" icon="book">
+    Documentation improvements are always welcome.
+  </Card>
+  <Card title="Add Modules" icon="puzzle-piece" href="/contributing/creating-modules">
+    Create new modules for additional functionality.
+  </Card>
+</CardGroup>
+
+## Guidelines
+
+### Code Standards
+
+- **Bash 3.2+** — macOS compatibility
+- **Pass ShellCheck** — `make lint`
+- **Pass Tests** — `make test`
+- **Quote Variables** — Always `"$variable"`
+
+### Commit Messages
+
+Use [Conventional Commits](https://conventionalcommits.org/):
+
+```
+feat(python): add support for Python 3.12
+fix(homebrew): handle missing taps
+docs(readme): update installation guide
+```
+
+### Pull Requests
+
+- One feature per PR
+- Include tests for new functionality
+- Update docs if needed
+- Reference related issues
+
+## Code of Conduct
+
+Be respectful and constructive. See [CODE_OF_CONDUCT.md](https://github.com/vincentkoc/natilius/blob/main/CODE_OF_CONDUCT.md).
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Development Setup" icon="laptop-code" href="/contributing/development">
+    Set up your development environment
+  </Card>
+  <Card title="Creating Modules" icon="puzzle-piece" href="/contributing/creating-modules">
+    Learn how to create new modules
+  </Card>
+</CardGroup>

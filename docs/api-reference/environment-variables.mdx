@@ -1,0 +1,147 @@
+---
+title: Environment Variables
+description: 'Control Natilius behavior via environment variables.'
+sidebarTitle: 'Environment Variables'
+---
+
+## Runtime Variables
+
+Set these when running Natilius to modify behavior:
+
+### SKIP_SUDO
+
+Skip sudo validation. Useful for CI/CD environments.
+
+```bash
+SKIP_SUDO=true natilius setup
+```
+
+<Warning>
+  Some modules (like `system/security`) require sudo. They will be skipped if sudo is unavailable.
+</Warning>
+
+### NONINTERACTIVE
+
+Disable all interactive prompts.
+
+```bash
+NONINTERACTIVE=true natilius setup
+```
+
+### DRY_RUN
+
+Preview mode—show what would happen without making changes.
+
+```bash
+DRY_RUN=true natilius setup
+```
+
+Equivalent to `natilius --check`.
+
+### VERBOSE_MODE
+
+Enable detailed debug output.
+
+```bash
+VERBOSE_MODE=true natilius setup
+```
+
+Equivalent to `natilius --verbose`.
+
+### QUIET_MODE
+
+Suppress non-error output.
+
+```bash
+QUIET_MODE=true natilius setup
+```
+
+Equivalent to `natilius --quiet`.
+
+### SKIP_UPDATE_CHECK
+
+Skip checking for Natilius updates on startup.
+
+```bash
+SKIP_UPDATE_CHECK=true natilius setup
+```
+
+### CI
+
+Indicates running in a CI environment. Enables non-interactive mode.
+
+```bash
+CI=true natilius setup
+```
+
+## Path Variables
+
+### NATILIUS_HOME
+
+Override the Natilius installation directory.
+
+```bash
+NATILIUS_HOME=/opt/natilius natilius setup
+```
+
+**Default:** `~/.natilius`
+
+## Installer Variables
+
+These are used during installation:
+
+### SKIP_RUN
+
+Install Natilius without running setup.
+
+```bash
+curl -fsSL .../install.sh | SKIP_RUN=true bash
+```
+
+### NATILIUS_BRANCH
+
+Install from a specific branch.
+
+```bash
+NATILIUS_BRANCH=develop bash install.sh
+```
+
+**Default:** `main`
+
+## Combining Variables
+
+```bash
+SKIP_SUDO=true \
+NONINTERACTIVE=true \
+QUIET_MODE=true \
+natilius setup
+```
+
+## In Scripts
+
+```bash
+#!/bin/bash
+export SKIP_SUDO=true
+export NONINTERACTIVE=true
+natilius --profile devops setup
+```
+
+## CI/CD Examples
+
+### GitHub Actions
+
+```yaml
+- name: Setup
+  run: |
+    SKIP_SUDO=true NONINTERACTIVE=true natilius setup
+```
+
+### Terraform
+
+```hcl
+provisioner "remote-exec" {
+  inline = [
+    "SKIP_SUDO=true NONINTERACTIVE=true natilius setup"
+  ]
+}
+```

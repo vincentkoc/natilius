@@ -1,109 +1,307 @@
-# Natilius 🐚
+<p align="center">
+  <img src="assets/natilius_image.png" alt="Natilius" width="180"/>
+</p>
+
+<h1 align="center">Natilius</h1>
 
 <p align="center">
-  <img src="assets/natilius_image.png" alt="Natilius Logo" width="200"/>
+  <strong>Set up your Mac for development in minutes, not hours.</strong>
 </p>
 
 <p align="center">
-  <strong>Automated One-Click Mac Developer Environment Setup</strong>
+  <a href="https://github.com/vincentkoc/natilius/actions/workflows/ci.yml"><img src="https://github.com/vincentkoc/natilius/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/vincentkoc/natilius/releases"><img src="https://img.shields.io/github/v/release/vincentkoc/natilius?include_prereleases" alt="Release"></a>
+  <a href="https://github.com/vincentkoc/natilius/blob/main/LICENSE"><img src="https://img.shields.io/github/license/vincentkoc/natilius" alt="License"></a>
+  <a href="https://github.com/vincentkoc/natilius/stargazers"><img src="https://img.shields.io/github/stars/vincentkoc/natilius" alt="Stars"></a>
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#usage">Usage</a> •
-  <a href="#customization">Customization</a> •
-  <a href="#contributing">Contributing</a> •
-  <a href="#license">License</a>
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#%EF%B8%8F-configuration">Configuration</a> •
+  <a href="#-profiles">Profiles</a> •
+  <a href="docs/README.md">Documentation</a>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/github/license/vincentkoc/natilius" alt="License">
-  <img src="https://img.shields.io/github/stars/vincentkoc/natilius" alt="Stars">
-  <img src="https://img.shields.io/github/forks/vincentkoc/natilius" alt="Forks">
-  <img src="https://img.shields.io/github/issues/vincentkoc/natilius" alt="Issues">
-</p>
+---
 
-Natilius is a powerful, customizable, and easy-to-use tool that automates the setup of a complete Mac development environment. With just one click, it installs and configures essential developer tools, applications, and settings, saving you hours of manual setup time.
+## Why Natilius?
+
+Setting up a new Mac for development is tedious. Installing Homebrew, configuring languages, setting up IDEs, tweaking system preferences—it takes hours of clicking and typing.
+
+**Natilius automates all of it.**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh | bash
+natilius setup
+```
+
+That's it. Go grab a coffee while Natilius sets up your entire development environment.
+
+---
+
+## Quick Start
+
+### One-Line Install
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
+```
+
+### Or via Homebrew
+
+```bash
+brew install vincentkoc/tap/natilius
+```
+
+### Then Run
+
+```bash
+natilius doctor    # Check your system
+natilius --check   # Preview what will be installed
+natilius setup     # Install everything
+```
+
+---
 
 ## Features
 
-- 🚀 **One-Click Setup**: Get your Mac ready for development in minutes, not hours.
-- 🛠 **Customizable**: Easily tailor the setup to your specific needs.
-- 📦 **Comprehensive**: Installs and configures a wide range of development tools and applications.
-- 🔒 **Secure**: Implements best practices for macOS security settings.
-- 🔄 **Idempotent**: Safely run multiple times without side effects.
-- 📊 **Modular**: Easily extend or modify functionality.
+| Feature | Description |
+|---------|-------------|
+| **One Command Setup** | Install 100+ tools, apps, and configurations with a single command |
+| **Modular Design** | Enable only what you need—skip what you don't |
+| **Role-Based Profiles** | Pre-configured setups for DevOps, Frontend, Backend, or minimal installs |
+| **Idempotent** | Run it multiple times safely—it only installs what's missing |
+| **Terraform Ready** | Built for automation—works with Terraform, Ansible, and CI/CD |
+| **macOS Hardened** | Configures FileVault, Firewall, Gatekeeper, and privacy settings |
 
-## Customization
+### What Gets Installed
 
-Natilius is highly customizable. Edit the `.natiliusrc` file in your home directory to tailor the installation to your needs. You can:
+<details>
+<summary><strong>Development Environments</strong></summary>
 
-- Choose which development environments to set up (e.g., Python, Node.js, Ruby)
-- Select which applications to install
-- Configure macOS preferences
-- And much more!
+- **Python** — pyenv, pipenv, virtualenv, popular packages
+- **Node.js** — nodenv, npm, yarn, pnpm
+- **Ruby** — rbenv, bundler
+- **Go** — goenv, popular tools
+- **Rust** — rustup, cargo
+- **Java** — jenv, Temurin JDK, Maven, Gradle
+- **PHP** — Composer, Laravel installer
+
+</details>
+
+<details>
+<summary><strong>DevOps & Cloud</strong></summary>
+
+- **Containers** — Docker, docker-compose, ctop
+- **Kubernetes** — kubectl, kubectx, helm, k9s, minikube, lens
+- **Infrastructure** — Terraform, tflint, tfsec, Ansible
+- **Cloud CLIs** — AWS CLI, Azure CLI
+
+</details>
+
+<details>
+<summary><strong>Developer Tools</strong></summary>
+
+- **Editors** — VS Code, Cursor, JetBrains IDEs, Sublime Text, Zed
+- **Terminal** — iTerm2, tmux, zsh completions
+- **Git** — git, gh CLI, git-lfs, tig, diff-so-fancy
+- **Utilities** — jq, fzf, ripgrep, bat, eza, htop
+
+</details>
+
+<details>
+<summary><strong>Applications</strong></summary>
+
+- **Productivity** — Alfred, 1Password, Notion, Obsidian
+- **Communication** — Slack, Zoom
+- **Browsers** — Firefox, Brave
+- **And 50+ more...**
+
+</details>
+
+---
+
+## Installation
+
+### Option 1: Homebrew (Recommended)
+
+```bash
+brew install vincentkoc/tap/natilius
+```
+
+### Option 2: Installer Script
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
+```
+
+This installs:
+- Natilius to `~/.natilius`
+- `natilius` command to your PATH
+- Shell completions (bash/zsh)
+- Default config at `~/.natiliusrc`
+
+### Option 3: Manual
+
+```bash
+git clone https://github.com/vincentkoc/natilius.git ~/.natilius
+cd ~/.natilius && ./install.sh
+```
+
+### Uninstall
+
+```bash
+# Homebrew
+brew uninstall natilius
+
+# Script install
+~/.natilius/uninstall.sh
+```
+
+---
+
+## Usage
+
+```bash
+natilius [command] [options]
+```
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `setup` | Run the full setup (default) |
+| `doctor` | Check system readiness and diagnose issues |
+| `list-modules` | Show all available modules |
+| `version` | Show version information |
+| `help` | Show help message |
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `-p, --profile NAME` | Use a specific profile (minimal, devops, developer) |
+| `-c, --check` | Dry run—preview changes without installing |
+| `-i, --interactive` | Choose modules interactively |
+| `-v, --verbose` | Show detailed output |
+| `-q, --quiet` | Suppress non-error output |
+
+### Examples
+
+```bash
+# Preview what would be installed
+natilius --check
+
+# Use the DevOps profile
+natilius --profile devops
+
+# Interactive module selection
+natilius --interactive
+
+# Quiet mode for automation
+natilius --quiet setup
+```
+
+---
+
+## Configuration
+
+Natilius is configured via `~/.natiliusrc`. This file controls:
+- Which modules run
+- What packages to install
+- Language versions
+- IDE preferences
+
+### Quick Config
+
+```bash
+# Edit your config
+nano ~/.natiliusrc
+
+# Or use a profile as a starting point
+cp ~/.natilius/profiles/devops.natiliusrc ~/.natiliusrc
+```
+
+### Key Settings
+
+```bash
+# Enable/disable modules
+ENABLED_MODULES=(
+    "system/system_update"
+    "applications/homebrew"
+    "dev_environments/python"
+    "dev_environments/node"
+    "ide/ide_setup"
+)
+
+# Language versions
+PYTHONVER="3.11.0"
+NODEVER="20.10.0"
+GOVER="1.21.0"
+
+# IDE preferences
+INSTALL_VSCODE=true
+INSTALL_JETBRAINS=false
+```
+
+See [Configuration Reference](docs/configuration.md) for all options.
+
+---
 
 ## Profiles
 
-Natilius supports role-based profiles for different use cases. Pre-built profiles are in the `profiles/` directory:
+Profiles are pre-configured setups for different roles. Use them as-is or as a starting point.
 
-| Profile | Use Case |
-|---------|----------|
-| `minimal` | Quick onboarding - essentials only |
-| `devops` | Kubernetes, Terraform, cloud infrastructure |
-| `developer` | Full dev environment with multiple languages |
-| `base` | Common foundation (sourced by other profiles) |
+| Profile | Best For | Includes |
+|---------|----------|----------|
+| `minimal` | Quick onboarding | Git, Homebrew, VS Code, essential CLI tools |
+| `devops` | Platform/SRE engineers | Kubernetes, Terraform, Docker, cloud CLIs, Python, Go |
+| `developer` | Full-stack developers | Multiple languages, IDEs, databases, all dev tools |
 
 ### Using Profiles
 
 ```bash
-# Use a specific profile
+# Use a profile directly
 natilius --profile devops
 
-# Or copy profile to config location
-cp profiles/devops.natiliusrc ~/.natiliusrc
-natilius
+# Or copy to customize
+cp ~/.natilius/profiles/devops.natiliusrc ~/.natiliusrc
+nano ~/.natiliusrc
+natilius setup
 ```
 
 ### Profile Inheritance
 
-Profiles can inherit from a base configuration:
+Create custom profiles that extend the base:
 
 ```bash
-# In your custom profile (~/.natiliusrc.myteam)
+# ~/.natiliusrc.myteam
 source ~/.natiliusrc.base
-ENABLED_MODULES+=("dev_environments/python")
-BREWPACKAGES+=("custom-tool")
+ENABLED_MODULES+=("dev_environments/rust")
+BREWPACKAGES+=("my-custom-tool")
 ```
+
+---
 
 ## Automation & Terraform
 
-Natilius is designed for infrastructure-as-code workflows and can be integrated with Terraform, Ansible, or other provisioning tools.
+Natilius is built for infrastructure-as-code workflows.
 
 ### Environment Variables
 
 | Variable | Description |
 |----------|-------------|
-| `SKIP_SUDO` | Skip sudo validation (for CI/CD) |
-| `DRY_RUN` | Run without making changes |
-| `QUIET_MODE` | Minimal output |
-| `SKIP_UPDATE_CHECK` | Skip version checking |
+| `SKIP_SUDO=true` | Skip sudo prompts (CI/CD) |
+| `NONINTERACTIVE=true` | No prompts at all |
+| `DRY_RUN=true` | Preview mode |
+| `QUIET_MODE=true` | Minimal output |
 
-### Terraform Integration
-
-Use the included provisioning script for Terraform:
+### Terraform Example
 
 ```hcl
 resource "null_resource" "mac_setup" {
-  connection {
-    type        = "ssh"
-    host        = var.mac_host
-    user        = var.mac_user
-    private_key = file(var.ssh_key_path)
-  }
-
   provisioner "remote-exec" {
     inline = [
       "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | bash -s devops"
@@ -112,305 +310,74 @@ resource "null_resource" "mac_setup" {
 }
 ```
 
-Or use the script directly:
+### CI/CD Example
 
-```bash
-# Download and run with a profile
-curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | bash -s devops
-
-# Or clone and run locally
-./scripts/terraform-provision.sh minimal
+```yaml
+- name: Setup Mac
+  run: |
+    SKIP_SUDO=true NONINTERACTIVE=true natilius --quiet setup
 ```
 
-### CI/CD Usage
+See [Automation Guide](docs/automation.md) for more examples.
 
-```bash
-# Non-interactive setup for pipelines
-SKIP_SUDO=true natilius --quiet --check  # Dry run
-SKIP_SUDO=true natilius --quiet          # Actual run
-```
+---
 
-### Dotfiles Integration
+## System Requirements
 
-Natilius works well alongside your existing dotfiles:
+- **macOS** 13 (Ventura) or later
+- **Architecture** Intel or Apple Silicon (M1/M2/M3/M4)
+- **Disk Space** ~10GB for full install
+- **Internet** Required for initial setup
 
-1. Natilius handles tool installation
-2. Your dotfiles repo handles configuration
-3. Mackup (included) syncs app preferences
+---
 
-```bash
-# Recommended flow
-natilius --profile devops                    # Install tools
-git clone git@github.com:you/dotfiles ~/.dotfiles  # Clone config
-~/.dotfiles/install.sh                       # Apply config
-mackup restore                               # Restore app prefs
-```
+## Documentation
 
-## What Gets Installed?
+| Document | Description |
+|----------|-------------|
+| [Configuration Reference](docs/configuration.md) | All config options explained |
+| [Module Guide](docs/modules.md) | Available modules and what they do |
+| [Automation Guide](docs/automation.md) | Terraform, Ansible, CI/CD integration |
+| [Troubleshooting](docs/troubleshooting.md) | Common issues and solutions |
+| [Contributing](CONTRIBUTING.md) | How to contribute |
+| [Quick Reference](QUICK_REFERENCE.md) | Cheat sheet for experienced users |
 
-Natilius can set up a complete development environment, including:
-
-- Xcode Command Line Tools
-- Homebrew and essential formulae
-- Programming languages and version managers (e.g., Python, Node.js, Ruby)
-- Developer tools (e.g., Git, Docker, Visual Studio Code)
-- Productivity apps (e.g., Alfred, iTerm2)
-- And much more!
-
-Check the [full list of installed software](docs/installed-software.md) for details.
-
-## Why Natilius?
-
-- **Time-saving**: Set up your development environment in minutes, not hours or days.
-- **Consistency**: Ensure all your Macs have the same setup, great for teams.
-- **Best Practices**: Implements security and performance best practices out of the box.
-- **Customizable**: Easily adapt to your specific needs and preferences.
-- **Open Source**: Benefit from community contributions and transparency.
-
-## How It Works
-
-Natilius uses a modular approach to set up your Mac:
-
-1. **System Update**: Ensures your Mac is up-to-date and installs necessary components like Xcode CLI tools.
-2. **Security**: Implements best-practice security settings for macOS.
-3. **Homebrew**: Installs Homebrew and manages package installations.
-4. **Development Environments**: Sets up various language environments (Python, Node.js, Ruby, etc.).
-5. **Applications**: Installs and configures both CLI and GUI applications.
-6. **macOS Preferences**: Configures macOS settings for optimal development experience.
-
-Each step is customizable and can be enabled or disabled as needed.
-
-## Installation
-
-### Option 1: Homebrew (Recommended)
-
-```bash
-# Install via Homebrew tap
-brew install vincentkoc/tap/natilius
-
-# Or use the tap explicitly
-brew tap vincentkoc/tap
-brew install natilius
-```
-
-### Option 2: One-Line Installer
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
-```
-
-This will:
-- Clone Natilius to `~/.natilius`
-- Install the `natilius` command to `/usr/local/bin`
-- Set up shell completions (bash/zsh)
-- Create a default `~/.natiliusrc` config
-
-### Option 3: Manual Installation
-
-```bash
-git clone https://github.com/vincentkoc/natilius.git ~/.natilius
-~/.natilius/install.sh
-```
-
-### Uninstalling
-
-```bash
-# If installed via Homebrew
-brew uninstall natilius
-
-# If installed via script
-~/.natilius/uninstall.sh
-# Or:
-curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/uninstall.sh | bash
-```
-
-## Quick Start
-
-After installing Natilius, you can quickly set up your Mac development environment:
-
-### Basic Setup
-```bash
-# Run the full setup
-natilius setup
-
-# Or run interactively to choose modules
-natilius --interactive setup
-```
-
-### Check Before Installing
-```bash
-# See what would be installed without making changes
-natilius --check
-
-# Run system diagnostics
-natilius doctor
-
-# List all available modules
-natilius list-modules
-```
-
-## Usage
-
-Natilius provides a comprehensive CLI interface with multiple commands and options:
-
-### Commands
-
-```bash
-natilius setup           # Run the full setup process (default)
-natilius doctor          # Run system diagnostics and health checks
-natilius list-modules    # List all available modules
-natilius version         # Show version information
-natilius help            # Show help message
-```
-
-### Options
-
-```bash
--v, --verbose       # Enable verbose output
--q, --quiet         # Suppress non-error output
--i, --interactive   # Run in interactive mode
--c, --check         # Run in check/dry-run mode (no changes)
--p, --profile NAME  # Use a specific configuration profile
---dry-run           # Same as --check
--h, --help          # Show help message
-```
-
-### Examples
-
-```bash
-# Basic usage
-natilius                    # Run default setup
-natilius --check            # Dry run to see what would be done
-natilius doctor             # Run system diagnostics
-natilius list-modules       # Show available modules
-
-# Advanced usage
-natilius -v setup           # Run setup with verbose output
-natilius -i setup           # Run setup in interactive mode
-natilius -p work setup      # Use 'work' profile configuration
-natilius --quiet setup      # Run setup with minimal output
-```
-
-### System Diagnostics
-
-The `doctor` command provides comprehensive system analysis:
-
-- ✅ System information (macOS version, architecture)
-- ✅ Development tools verification (Xcode, Homebrew, Git)
-- ✅ Configuration validation
-- ✅ Disk space monitoring
-- ✅ Network connectivity testing
-- ✅ Security settings analysis
-- ✅ Apple Silicon compatibility (Rosetta 2)
-
-### Shell Completions
-
-Natilius includes shell completions for enhanced productivity:
-
-```bash
-# Bash
-source completions/natilius-completion.bash
-
-# Zsh
-source completions/natilius-completion.zsh
-```
-
-For more detailed usage instructions, run `natilius help`.
-
-## Development
-
-### Prerequisites
-
-- macOS (for full testing)
-- Homebrew (recommended)
-- Git
-
-### Quick Development Setup
-
-```bash
-# Clone and setup
-git clone https://github.com/vincentkoc/natilius.git
-cd natilius
-make dev-setup
-```
-
-### Development Commands
-
-```bash
-make help           # Show all available commands
-make test           # Run unit tests
-make test-all       # Run all tests
-make lint           # Run shellcheck linting
-make precommit      # Run pre-commit hooks
-make coverage       # Generate coverage report
-make check-version  # Check version consistency
-make release-check  # Check if ready for release
-```
-
-### VS Code Development
-
-Natilius includes a complete VS Code devcontainer setup:
-
-1. Open the repository in VS Code
-2. Click "Reopen in Container" when prompted
-3. Everything will be automatically configured!
-
-### Testing
-
-Natilius uses BATS (Bash Automated Testing System) for testing:
-
-```bash
-# Run specific test suites
-make test              # Unit tests
-make integration-test  # Integration tests
-make test-config       # Configuration tests
-
-# Coverage analysis
-make coverage
-```
+---
 
 ## Contributing
 
-We welcome contributions! Whether it's bug reports, feature requests, or code contributions, please feel free to contribute.
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-### Development Process
+```bash
+# Development setup
+git clone https://github.com/vincentkoc/natilius.git
+cd natilius
+make dev-setup
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests: `make test-all`
-5. Run linting: `make lint`
-6. Submit a pull request
+# Run tests
+make test
 
-See our [Contributing Guide](CONTRIBUTING.md) for more details.
+# Run linter
+make lint
+```
 
-## License
-
-Natilius is open-source software licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more details.
-
-## Acknowledgments
-
-Natilius stands on the shoulders of giants. We'd like to thank:
-
-- [Homebrew](https://brew.sh/)
-- [Oh My Zsh](https://ohmyz.sh/)
-- And all the amazing open-source projects that make Natilius possible.
+---
 
 ## Support
 
-If you find Natilius useful, please consider starring the repository on GitHub. It helps others discover the project and motivates further development.
+- **Issues**: [GitHub Issues](https://github.com/vincentkoc/natilius/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/vincentkoc/natilius/discussions)
 
-For issues, feature requests, or questions, please use the [GitHub Issues](https://github.com/vincentkoc/natilius/issues) page.
+If Natilius saves you time, consider [starring the repo](https://github.com/vincentkoc/natilius) — it helps others discover the project.
 
-## Roadmap
+---
 
-- [ ] Add support for more development environments and applications
-- [ ] Implement a GUI for easier customization
-- [ ] Create a web-based configuration generator
-- [ ] Add support for Linux distributions
+## License
+
+[GPL-3.0](LICENSE) — Natilius is free and open source.
 
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/vincentkoc">Vincent Koc</a>
+  Made with care by <a href="https://github.com/vincentkoc">Vincent Koc</a>
 </p>

@@ -1,0 +1,249 @@
+---
+title: Team Setup
+description: 'Standardize developer environments across your team.'
+sidebarTitle: 'Team Setup'
+---
+
+Use Natilius to ensure every developer on your team has a consistent environment.
+
+## Why Standardize?
+
+- **Faster onboarding** — New hires are productive in hours, not days
+- **Fewer "works on my machine" issues** — Everyone has the same tools
+- **Security compliance** — Enforce security settings team-wide
+- **Easier support** — Known configuration makes debugging simpler
+
+## Approach
+
+<Steps>
+  <Step title="Create a team profile">
+    Define what your team needs.
+  </Step>
+  <Step title="Store in version control">
+    Commit to a shared repo (dotfiles, internal tools, etc.).
+  </Step>
+  <Step title="Document onboarding">
+    Add setup instructions to your team wiki.
+  </Step>
+  <Step title="Automate (optional)">
+    Use Terraform/Ansible for fleet management.
+  </Step>
+</Steps>
+
+## Creating a Team Profile
+
+Start from a built-in profile and customize:
+
+```bash
+# team-backend.natiliusrc
+
+# Inherit base settings
+source "$HOME/.natiliusrc.base"
+
+ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "system/security"
+    "applications/homebrew"
+    "dev_environments/python"
+    "dev_environments/node"
+    "dev_environments/go"
+    "ide/ide_setup"
+    "system/cleanup"
+)
+
+# Pin versions (team standard)
+PYTHONVER="3.11.0"
+NODEVER="20.10.0"
+GOVER="1.21.0"
+
+# Team tools
+BREWPACKAGES+=(
+    # Internal CLI
+    "mycompany/tap/mycompany-cli"
+
+    # Team standards
+    "pre-commit"
+    "gh"
+    "jq"
+)
+
+BREWCASKS+=(
+    "docker"
+    "slack"
+    "1password"
+)
+
+# IDE settings
+INSTALL_VSCODE=true
+INSTALL_JETBRAINS=false
+```
+
+## Distribution Options
+
+### Option 1: Dotfiles Repo
+
+Store profiles in your team's dotfiles repo:
+
+```
+dotfiles/
+├── natilius/
+│   ├── base.natiliusrc
+│   ├── backend.natiliusrc
+│   ├── frontend.natiliusrc
+│   └── devops.natiliusrc
+└── install.sh
+```
+
+Onboarding script:
+```bash
+#!/bin/bash
+# Clone dotfiles
+git clone git@github.com:mycompany/dotfiles.git ~/.dotfiles
+
+# Install natilius config
+cp ~/.dotfiles/natilius/backend.natiliusrc ~/.natiliusrc
+
+# Run natilius
+curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh | bash
+```
+
+### Option 2: Internal Homebrew Tap
+
+Create a formula that installs your config:
+
+```ruby
+# mycompany-dev-setup.rb
+class MycompanyDevSetup < Formula
+  desc "MyCompany developer environment setup"
+  homepage "https://github.com/mycompany/dev-setup"
+
+  def install
+    # Install natilius config
+    (etc/"natiliusrc").install "team.natiliusrc"
+  end
+
+  def post_install
+    system "ln", "-sf", etc/"natiliusrc", "#{ENV["HOME"]}/.natiliusrc"
+  end
+end
+```
+
+### Option 3: Internal Script
+
+Host an all-in-one setup script:
+
+```bash
+#!/bin/bash
+# https://setup.mycompany.com/mac
+
+echo "Setting up MyCompany developer environment..."
+
+# Install natilius
+curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh | SKIP_RUN=true bash
+
+# Download team config
+curl -fsSL https://setup.mycompany.com/backend.natiliusrc -o ~/.natiliusrc
+
+# Run setup
+~/.natilius/natilius.sh setup
+
+echo "Done! Welcome to MyCompany."
+```
+
+## Onboarding Documentation
+
+Add to your team wiki:
+
+```markdown
+# Mac Setup
+
+1. Open Terminal
+
+2. Run:
+   ```bash
+   curl -fsSL https://setup.mycompany.com/mac | bash
+   ```
+
+3. Enter your password when prompted
+
+4. Grab a coffee ☕ (takes ~15 minutes)
+
+5. Set up 1Password and Slack manually
+
+Questions? Ask in #dev-support
+```
+
+## Handling Variations
+
+### Role-Based Profiles
+
+```bash
+# Onboarding asks for role
+echo "Select your role:"
+echo "1) Backend"
+echo "2) Frontend"
+echo "3) DevOps"
+read -p "> " role
+
+case $role in
+    1) profile="backend" ;;
+    2) profile="frontend" ;;
+    3) profile="devops" ;;
+esac
+
+natilius --profile $profile
+```
+
+### Optional Additions
+
+Let developers add personal tools:
+
+```bash
+# team.natiliusrc
+
+# Core team tools (required)
+BREWPACKAGES=(
+    "git" "jq" "gh"
+)
+
+# Optional tools (developer's choice)
+# Add to ~/.natiliusrc.local
+if [[ -f "$HOME/.natiliusrc.local" ]]; then
+    source "$HOME/.natiliusrc.local"
+fi
+```
+
+## Keeping Configs Updated
+
+### Version Your Configs
+
+```bash
+# In your config
+TEAM_CONFIG_VERSION="2024.01"
+```
+
+### Check for Updates
+
+```bash
+#!/bin/bash
+# Add to team's post-setup script
+
+LATEST=$(curl -s https://setup.mycompany.com/version)
+CURRENT=$(grep TEAM_CONFIG_VERSION ~/.natiliusrc | cut -d'"' -f2)
+
+if [[ "$LATEST" != "$CURRENT" ]]; then
+    echo "New team config available: $LATEST (you have $CURRENT)"
+    echo "Run: curl -fsSL https://setup.mycompany.com/update | bash"
+fi
+```
+
+## Security Considerations
+
+<Warning>
+  Never commit secrets (API keys, tokens) to config files. Use 1Password, Vault, or environment variables.
+</Warning>
+
+- Enable `system/security` module for all team members
+- Require FileVault disk encryption
+- Audit installed packages regularly

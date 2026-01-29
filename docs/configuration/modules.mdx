@@ -1,0 +1,114 @@
+---
+title: Modules
+description: 'Available modules and what they install.'
+sidebarTitle: 'Modules'
+---
+
+Modules are self-contained scripts that handle specific parts of your setup. Enable them in `ENABLED_MODULES` in your config.
+
+## Module Categories
+
+<AccordionGroup>
+  <Accordion title="System Modules" icon="computer">
+    | Module | Description |
+    |--------|-------------|
+    | `system/system_update` | macOS updates, Xcode CLI tools, Rosetta 2 |
+    | `system/directories` | Create custom directories, Time Machine exclusions |
+    | `system/security` | FileVault, Firewall, Gatekeeper hardening |
+    | `system/cleanup` | Clear caches, restart Dock/Finder |
+  </Accordion>
+
+  <Accordion title="Application Modules" icon="grid">
+    | Module | Description |
+    |--------|-------------|
+    | `applications/homebrew` | Homebrew taps, packages, and casks |
+    | `applications/apps` | Mac App Store apps via `mas` |
+    | `applications/espanso` | Text expansion tool |
+  </Accordion>
+
+  <Accordion title="Development Environments" icon="code">
+    | Module | Version Variable |
+    |--------|------------------|
+    | `dev_environments/python` | `PYTHONVER` |
+    | `dev_environments/node` | `NODEVER` |
+    | `dev_environments/ruby` | `RUBYVER` |
+    | `dev_environments/go` | `GOVER` |
+    | `dev_environments/rust` | (stable) |
+    | `dev_environments/java` | `JDKVER` |
+    | `dev_environments/php` | `PHPVER` |
+    | `dev_environments/flutter` | `FLUTTER_CHANNEL` |
+  </Accordion>
+
+  <Accordion title="IDE Modules" icon="window">
+    | Module | Config Flag |
+    |--------|-------------|
+    | `ide/ide_setup` | Orchestrates IDE installs |
+    | `ide/vscode_setup` | `INSTALL_VSCODE` |
+    | `ide/jetbrains_setup` | `INSTALL_JETBRAINS` |
+    | `ide/sublime_setup` | `INSTALL_SUBLIME` |
+    | `ide/zed_setup` | `INSTALL_ZED` |
+  </Accordion>
+
+  <Accordion title="Preferences" icon="sliders">
+    | Module | Description |
+    |--------|-------------|
+    | `preferences/mac_preferences` | Finder, Dock, keyboard settings |
+    | `preferences/system_preferences` | System-level macOS preferences |
+  </Accordion>
+
+  <Accordion title="Other" icon="ellipsis">
+    | Module | Description |
+    |--------|-------------|
+    | `dotfiles` | Dotfile backup/restore via Mackup |
+  </Accordion>
+</AccordionGroup>
+
+## Recommended Module Order
+
+```bash
+ENABLED_MODULES=(
+    # 1. System foundation
+    "system/system_update"
+    "system/directories"
+    "system/security"
+
+    # 2. Package management
+    "applications/homebrew"
+    "applications/apps"
+
+    # 3. Development environments
+    "dev_environments/python"
+    "dev_environments/node"
+
+    # 4. IDEs
+    "ide/ide_setup"
+
+    # 5. Preferences and cleanup
+    "preferences/mac_preferences"
+    "dotfiles"
+    "system/cleanup"
+)
+```
+
+<Warning>
+  Run `system/system_update` first (installs Xcode CLI tools) and `system/cleanup` last.
+</Warning>
+
+## Listing Modules
+
+```bash
+natilius list-modules
+```
+
+## Disabling Modules
+
+Comment out or remove modules you don't need:
+
+```bash
+ENABLED_MODULES=(
+    "system/system_update"
+    "applications/homebrew"
+    # "dev_environments/ruby"  # Disabled
+    "dev_environments/python"
+)
+```

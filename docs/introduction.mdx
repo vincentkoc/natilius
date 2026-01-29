@@ -1,0 +1,133 @@
+---
+title: Introduction
+description: 'Set up your Mac for development in minutes, not hours.'
+---
+
+<img
+  className="block dark:hidden"
+  src="/logo/natilius-light.png"
+  alt="Natilius"
+  width="200"
+/>
+<img
+  className="hidden dark:block"
+  src="/logo/natilius-dark.png"
+  alt="Natilius"
+  width="200"
+/>
+
+## What is Natilius?
+
+Natilius is an automated Mac developer environment setup tool. It installs and configures everything you need for development with a single command.
+
+<CardGroup cols={2}>
+  <Card
+    title="Quick Start"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Get up and running in 5 minutes
+  </Card>
+  <Card
+    title="Configuration"
+    icon="gear"
+    href="/configuration/overview"
+  >
+    Customize what gets installed
+  </Card>
+  <Card
+    title="Profiles"
+    icon="users"
+    href="/configuration/profiles"
+  >
+    Pre-built setups for different roles
+  </Card>
+  <Card
+    title="Automation"
+    icon="robot"
+    href="/guides/automation"
+  >
+    Terraform, Ansible, and CI/CD
+  </Card>
+</CardGroup>
+
+## Why Natilius?
+
+Setting up a new Mac for development is tedious:
+
+- Installing Homebrew and packages
+- Configuring Python, Node.js, Ruby, Go...
+- Setting up IDEs and extensions
+- Tweaking system preferences
+- Hardening security settings
+
+**It takes hours.** Natilius does it in minutes.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh | bash
+natilius setup
+```
+
+## Features
+
+<AccordionGroup>
+  <Accordion title="One Command Setup" icon="terminal">
+    Install 100+ tools, apps, and configurations with `natilius setup`.
+  </Accordion>
+  <Accordion title="Modular Design" icon="cubes">
+    Enable only what you need. Skip what you don't. Every component is optional.
+  </Accordion>
+  <Accordion title="Role-Based Profiles" icon="user-tag">
+    Pre-configured setups for DevOps, Frontend, Backend, or minimal installs.
+  </Accordion>
+  <Accordion title="Idempotent" icon="arrows-rotate">
+    Run it multiple times safely—it only installs what's missing.
+  </Accordion>
+  <Accordion title="Automation Ready" icon="robot">
+    Built for Terraform, Ansible, and CI/CD pipelines.
+  </Accordion>
+  <Accordion title="Security Hardened" icon="shield-check">
+    Configures FileVault, Firewall, Gatekeeper, and privacy settings.
+  </Accordion>
+</AccordionGroup>
+
+## What Gets Installed
+
+<Tabs>
+  <Tab title="Languages">
+    - **Python** — pyenv, pipenv, virtualenv
+    - **Node.js** — nodenv, npm, yarn
+    - **Ruby** — rbenv, bundler
+    - **Go** — goenv
+    - **Rust** — rustup, cargo
+    - **Java** — jenv, Temurin JDK
+    - **PHP** — Composer
+  </Tab>
+  <Tab title="DevOps">
+    - **Containers** — Docker, docker-compose
+    - **Kubernetes** — kubectl, helm, k9s
+    - **IaC** — Terraform, Ansible
+    - **Cloud** — AWS CLI, Azure CLI
+  </Tab>
+  <Tab title="Tools">
+    - **Editors** — VS Code, JetBrains, Sublime
+    - **Terminal** — iTerm2, tmux
+    - **Git** — git, gh CLI, git-lfs
+    - **Utilities** — jq, fzf, bat, htop
+  </Tab>
+  <Tab title="Apps">
+    - **Productivity** — Alfred, 1Password, Notion
+    - **Communication** — Slack, Zoom
+    - **Browsers** — Firefox, Brave
+    - **And 50+ more...**
+  </Tab>
+</Tabs>
+
+## System Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| **macOS** | 13 (Ventura) or later |
+| **Architecture** | Intel or Apple Silicon (M1/M2/M3/M4) |
+| **Disk Space** | ~10GB for full install |
+| **Internet** | Required for initial setup |
