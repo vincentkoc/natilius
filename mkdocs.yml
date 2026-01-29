@@ -16,7 +16,11 @@ plugins:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
@@ -49,6 +53,10 @@ nav:
   - Reference:
       - CLI: reference/cli.md
       - Environment Variables: reference/environment-variables.md
+  - Resources:
+      - FAQ: faq.md
+      - Comparison: comparison.md
+      - Changelog: changelog.md
   - Contributing:
       - Overview: contributing/index.md
       - Development: contributing/development.md

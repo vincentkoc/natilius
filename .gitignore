@@ -17,3 +17,4 @@ logs/
 # User-specific files
 .natiliusrc
 /coverage
+site/

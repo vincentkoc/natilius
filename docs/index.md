@@ -1,6 +1,18 @@
 # Natilius
 
-**Set up your Mac for development in minutes, not hours.**
+![Natilius](assets/artwork.jpg)
+
+<p align="center">
+  <strong>Set up your Mac for development in minutes, not hours.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/v/release/vincentkoc/natilius?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/github/license/vincentkoc/natilius?style=flat-square" alt="License">
+  <img src="https://img.shields.io/github/stars/vincentkoc/natilius?style=flat-square" alt="Stars">
+  <img src="https://img.shields.io/badge/macOS-13%2B-blue?style=flat-square" alt="macOS">
+  <img src="https://img.shields.io/badge/shell-bash-green?style=flat-square" alt="Shell">
+</p>
 
 ---
 
@@ -14,6 +26,28 @@ natilius setup
 ```
 
 That's it. Go grab a coffee while Natilius configures everything.
+
+---
+
+## How It Works
+
+```mermaid
+flowchart LR
+    A[natilius setup] --> B[Load Config]
+    B --> C{Profile?}
+    C -->|Yes| D[Load Profile]
+    C -->|No| E[Use Default]
+    D --> F[Run Modules]
+    E --> F
+    F --> G[System]
+    F --> H[Apps]
+    F --> I[Dev Envs]
+    F --> J[IDEs]
+    G --> K[Done!]
+    H --> K
+    I --> K
+    J --> K
+```
 
 ---
 
@@ -116,6 +150,8 @@ natilius --profile developer  # Full dev environment
 
 ## Next Steps
 
-- [Quick Start Guide](getting-started/quickstart.md)
-- [Configuration Reference](configuration/index.md)
-- [Available Modules](configuration/modules.md)
+- [Quick Start Guide](getting-started/quickstart.md) — Get up and running
+- [Configuration](configuration/index.md) — Customize your setup
+- [Profiles](configuration/profiles.md) — Role-based configurations
+- [FAQ](faq.md) — Common questions
+- [Comparison](comparison.md) — How Natilius compares to alternatives
