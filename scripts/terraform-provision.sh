@@ -8,11 +8,15 @@
 #   ./terraform-provision.sh minimal
 #
 # Environment Variables:
-#   NATILIUS_REPO_URL  - Override the repository URL (default: GitHub main)
 #   NATILIUS_BRANCH    - Branch to use (default: main)
-#   SKIP_SUDO          - Set to 'true' to skip sudo validation (CI/CD)
+#   NONINTERACTIVE     - Set to 'true' for no prompts (default: true)
+#   SKIP_SUDO          - Set to 'true' to skip sudo operations (default: false)
 #   DRY_RUN            - Set to 'true' to run in check mode
 #   QUIET_MODE         - Set to 'true' for minimal output
+#
+# Prerequisites:
+#   - SSH access to the Mac
+#   - For passwordless operation: configure NOPASSWD sudo or set SKIP_SUDO=true
 
 set -euo pipefail
 
@@ -20,16 +24,34 @@ set -euo pipefail
 # Configuration
 # ============================================================================
 PROFILE="${1:-minimal}"
-NATILIUS_REPO_URL="${NATILIUS_REPO_URL:-https://raw.githubusercontent.com/vincentkoc/natilius/main}"
 NATILIUS_BRANCH="${NATILIUS_BRANCH:-main}"
 NATILIUS_HOME="${NATILIUS_HOME:-$HOME/.natilius}"
+
+# Default to non-interactive for automation
+export NONINTERACTIVE="${NONINTERACTIVE:-true}"
+export CI="${CI:-true}"
+
+# Colors
+CYAN='\033[1;36m'
+GREEN='\033[0;32m'
+DIM='\033[2m'
+BOLD='\033[1m'
+NC='\033[0m'
 
 # ============================================================================
 # Logging
 # ============================================================================
 log_info()  { echo "[INFO]  $(date '+%Y-%m-%d %H:%M:%S') $1"; }
 log_ok()    { echo "[OK]    $(date '+%Y-%m-%d %H:%M:%S') $1"; }
+log_warn()  { echo "[WARN]  $(date '+%Y-%m-%d %H:%M:%S') $1"; }
 log_error() { echo "[ERROR] $(date '+%Y-%m-%d %H:%M:%S') $1" >&2; }
+
+show_banner() {
+    echo ""
+    echo -e "  ${CYAN}┃${NC} ${BOLD}🐚 natilius provisioner${NC}"
+    echo -e "  ${CYAN}┃${NC} ${DIM}Mac Developer Environment Setup${NC}"
+    echo ""
+}
 
 # ============================================================================
 # Preflight Checks
@@ -52,15 +74,50 @@ preflight_check() {
     # Check if Xcode CLT is installed (required for git/brew)
     if ! xcode-select -p &> /dev/null; then
         log_info "Installing Xcode Command Line Tools..."
-        xcode-select --install 2>/dev/null || true
-        # Wait for installation
-        until xcode-select -p &> /dev/null; do
-            sleep 5
-        done
+        # Try non-interactive install first
+        touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+        softwareupdate -i -a 2>/dev/null || true
+        rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+
+        # Fallback to interactive if needed
+        if ! xcode-select -p &> /dev/null; then
+            xcode-select --install 2>/dev/null || true
+            log_warn "Xcode CLT installation triggered - may need manual confirmation"
+            # Wait for installation (max 10 minutes)
+            local timeout=600
+            while ! xcode-select -p &> /dev/null && [[ $timeout -gt 0 ]]; do
+                sleep 10
+                timeout=$((timeout - 10))
+            done
+        fi
         log_ok "Xcode CLT installed"
     fi
 
     log_ok "Preflight checks passed"
+}
+
+# ============================================================================
+# Install Homebrew
+# ============================================================================
+install_homebrew() {
+    if command -v brew &> /dev/null; then
+        log_ok "Homebrew already installed"
+        return
+    fi
+
+    log_info "Installing Homebrew..."
+
+    # Non-interactive Homebrew install
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Add to PATH for current session (Apple Silicon)
+    if [[ -f "/opt/homebrew/bin/brew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -f "/usr/local/bin/brew" ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+
+    log_ok "Homebrew installed"
 }
 
 # ============================================================================
@@ -69,14 +126,21 @@ preflight_check() {
 install_natilius() {
     log_info "Installing Natilius..."
 
+    # Ensure git is available
+    if ! command -v git &> /dev/null; then
+        log_info "Installing git via Homebrew..."
+        brew install git
+    fi
+
     # Clone or update repository
-    if [[ -d "$NATILIUS_HOME" ]]; then
+    if [[ -d "$NATILIUS_HOME/.git" ]]; then
         log_info "Updating existing Natilius installation..."
         cd "$NATILIUS_HOME"
         git fetch origin "$NATILIUS_BRANCH"
         git reset --hard "origin/$NATILIUS_BRANCH"
     else
         log_info "Cloning Natilius repository..."
+        rm -rf "$NATILIUS_HOME"
         git clone --branch "$NATILIUS_BRANCH" \
             "https://github.com/vincentkoc/natilius.git" "$NATILIUS_HOME"
     fi
@@ -106,7 +170,8 @@ setup_profile() {
     else
         log_error "Profile not found: $profile_source"
         log_info "Available profiles:"
-        find "$NATILIUS_HOME/profiles/" -name "*.natiliusrc" -print0 2>/dev/null | xargs -0 -n1 basename | sed 's/.natiliusrc$//'
+        # shellcheck disable=SC2011
+        ls "$NATILIUS_HOME/profiles/"*.natiliusrc 2>/dev/null | xargs -I {} basename {} .natiliusrc || true
         exit 1
     fi
 }
@@ -120,7 +185,7 @@ run_natilius() {
     cd "$NATILIUS_HOME"
 
     # Build command with options
-    local cmd="./natilius.sh"
+    local cmd="./natilius.sh setup"
 
     if [[ "${QUIET_MODE:-false}" == "true" ]]; then
         cmd="$cmd --quiet"
@@ -129,6 +194,10 @@ run_natilius() {
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
         cmd="$cmd --check"
     fi
+
+    # Set environment for non-interactive
+    export NONINTERACTIVE=true
+    export SKIP_SUDO="${SKIP_SUDO:-false}"
 
     # Execute
     log_info "Executing: $cmd"
@@ -141,16 +210,21 @@ run_natilius() {
 # Main
 # ============================================================================
 main() {
-    log_info "=== Natilius Terraform Provisioning ==="
+    show_banner
     log_info "Profile: $PROFILE"
-    log_info "Repository: $NATILIUS_REPO_URL"
+    log_info "Branch: $NATILIUS_BRANCH"
+    log_info "Non-interactive: ${NONINTERACTIVE:-true}"
+    log_info "Skip sudo: ${SKIP_SUDO:-false}"
 
     preflight_check
+    install_homebrew
     install_natilius
     setup_profile
     run_natilius
 
-    log_ok "=== Provisioning Complete ==="
+    echo ""
+    echo -e "  ${CYAN}┃${NC} ${GREEN}✓${NC} ${BOLD}Provisioning Complete${NC}"
+    echo ""
 }
 
 main "$@"

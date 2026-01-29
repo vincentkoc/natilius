@@ -32,6 +32,9 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;36m'
 YELLOW='\033[0;33m'
+CYAN='\033[1;36m'
+DIM='\033[2m'
+BOLD='\033[1m'
 NC='\033[0m' # No Color
 
 # ============================================================================
@@ -41,6 +44,13 @@ log_info()    { echo -e "${BLUE}[INFO]${NC} $1"; }
 log_success() { echo -e "${GREEN}[OK]${NC} $1"; }
 log_warning() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error()   { echo -e "${RED}[ERROR]${NC} $1" >&2; }
+
+show_banner() {
+    echo ""
+    echo -e "  ${CYAN}┃${NC} ${BOLD}🐚 natilius installer${NC}"
+    echo -e "  ${CYAN}┃${NC} ${DIM}Mac Developer Environment Setup${NC}"
+    echo ""
+}
 
 command_exists() { command -v "$1" &> /dev/null; }
 
@@ -54,8 +64,7 @@ preflight() {
         exit 1
     fi
 
-    log_info "Starting Natilius installation..."
-    echo ""
+    show_banner
     echo -e "${YELLOW}⚠️  Warning: Use at your own risk, ensure you have a backup${NC}"
     echo ""
 
@@ -73,7 +82,12 @@ install_deps() {
     # Install Homebrew if not present
     if ! command_exists brew; then
         log_info "Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        # Use NONINTERACTIVE for Homebrew if we're in non-interactive mode
+        if [[ "${CI:-false}" == "true" || "${NONINTERACTIVE:-false}" == "true" ]]; then
+            NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        else
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        fi
 
         # Add brew to PATH for Apple Silicon
         if [[ -f "/opt/homebrew/bin/brew" ]]; then
@@ -112,22 +126,41 @@ install_natilius() {
 setup_cli() {
     log_info "Setting up 'natilius' command..."
 
-    # Create bin directory if needed
-    if [[ ! -d "$BIN_DIR" ]]; then
-        sudo mkdir -p "$BIN_DIR"
+    # Use user-local bin if SKIP_SUDO is set
+    if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
+        BIN_DIR="$HOME/.local/bin"
     fi
 
-    # Create wrapper script (more robust than symlink for relative paths)
+    # Create bin directory if needed
+    if [[ ! -d "$BIN_DIR" ]]; then
+        if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
+            mkdir -p "$BIN_DIR"
+        else
+            sudo mkdir -p "$BIN_DIR"
+        fi
+    fi
+
+    # Create wrapper script
     local wrapper="$BIN_DIR/natilius"
 
-    sudo tee "$wrapper" > /dev/null << 'WRAPPER'
+    if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
+        cat > "$wrapper" << 'WRAPPER'
 #!/bin/bash
 # Natilius CLI wrapper
 NATILIUS_HOME="${NATILIUS_HOME:-$HOME/.natilius}"
 exec "$NATILIUS_HOME/natilius.sh" "$@"
 WRAPPER
+        chmod +x "$wrapper"
+    else
+        sudo tee "$wrapper" > /dev/null << 'WRAPPER'
+#!/bin/bash
+# Natilius CLI wrapper
+NATILIUS_HOME="${NATILIUS_HOME:-$HOME/.natilius}"
+exec "$NATILIUS_HOME/natilius.sh" "$@"
+WRAPPER
+        sudo chmod +x "$wrapper"
+    fi
 
-    sudo chmod +x "$wrapper"
     log_success "Command 'natilius' installed to $BIN_DIR"
 }
 
@@ -137,7 +170,20 @@ WRAPPER
 install_completions() {
     log_info "Installing shell completions..."
 
-    # Bash completions
+    # Always install user-local completions
+    mkdir -p "$HOME/.local/share/bash-completion/completions"
+    cp "$NATILIUS_HOME/completions/natilius-completion.bash" "$HOME/.local/share/bash-completion/completions/natilius"
+
+    mkdir -p "$HOME/.zsh/completions"
+    cp "$NATILIUS_HOME/completions/natilius-completion.zsh" "$HOME/.zsh/completions/_natilius"
+
+    # Skip system-wide completions if SKIP_SUDO
+    if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
+        log_success "User completions installed (SKIP_SUDO mode)"
+        return
+    fi
+
+    # Bash completions (system-wide)
     local bash_completion_dir
     if [[ -d "/opt/homebrew/etc/bash_completion.d" ]]; then
         bash_completion_dir="/opt/homebrew/etc/bash_completion.d"
@@ -146,11 +192,10 @@ install_completions() {
     fi
 
     if [[ -n "${bash_completion_dir:-}" ]]; then
-        sudo cp "$NATILIUS_HOME/completions/natilius-completion.bash" "$bash_completion_dir/natilius"
-        log_success "Bash completions installed"
+        sudo cp "$NATILIUS_HOME/completions/natilius-completion.bash" "$bash_completion_dir/natilius" 2>/dev/null || true
     fi
 
-    # Zsh completions
+    # Zsh completions (system-wide)
     local zsh_completion_dir
     if [[ -d "/opt/homebrew/share/zsh/site-functions" ]]; then
         zsh_completion_dir="/opt/homebrew/share/zsh/site-functions"
@@ -159,16 +204,10 @@ install_completions() {
     fi
 
     if [[ -n "${zsh_completion_dir:-}" ]]; then
-        sudo cp "$NATILIUS_HOME/completions/natilius-completion.zsh" "$zsh_completion_dir/_natilius"
-        log_success "Zsh completions installed"
+        sudo cp "$NATILIUS_HOME/completions/natilius-completion.zsh" "$zsh_completion_dir/_natilius" 2>/dev/null || true
     fi
 
-    # User-local completions (fallback)
-    mkdir -p "$HOME/.local/share/bash-completion/completions"
-    cp "$NATILIUS_HOME/completions/natilius-completion.bash" "$HOME/.local/share/bash-completion/completions/natilius"
-
-    mkdir -p "$HOME/.zsh/completions"
-    cp "$NATILIUS_HOME/completions/natilius-completion.zsh" "$HOME/.zsh/completions/_natilius"
+    log_success "Shell completions installed"
 }
 
 # ============================================================================
@@ -190,21 +229,19 @@ setup_config() {
 # ============================================================================
 print_success() {
     echo ""
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  🐚 Natilius installed successfully!${NC}"
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "  ${CYAN}┃${NC} ${GREEN}✓${NC} ${BOLD}Natilius installed successfully!${NC}"
     echo ""
-    echo "  Quick start:"
-    echo "    natilius --help        # Show available commands"
-    echo "    natilius doctor        # Check system readiness"
-    echo "    natilius --check       # Dry run (preview changes)"
-    echo "    natilius setup         # Run full setup"
+    echo -e "  ${BOLD}Quick Start${NC}"
+    echo -e "    ${DIM}natilius --help${NC}        Show available commands"
+    echo -e "    ${DIM}natilius doctor${NC}        Check system readiness"
+    echo -e "    ${DIM}natilius --check${NC}       Dry run (preview changes)"
+    echo -e "    ${DIM}natilius setup${NC}         Run full setup"
     echo ""
-    echo "  Configuration:"
-    echo "    Edit ~/.natiliusrc to customize your setup"
-    echo "    Use profiles: natilius --profile devops"
+    echo -e "  ${BOLD}Configuration${NC}"
+    echo -e "    Edit ${CYAN}~/.natiliusrc${NC} to customize your setup"
+    echo -e "    Use profiles: ${DIM}natilius --profile devops${NC}"
     echo ""
-    echo "  Note: Restart your shell or run 'hash -r' to use 'natilius'"
+    echo -e "  ${DIM}Note: Restart your shell or run 'hash -r' to use 'natilius'${NC}"
     echo ""
 }
 
@@ -220,8 +257,8 @@ main() {
     setup_config
     print_success
 
-    # Optionally run setup immediately
-    if [[ "$SKIP_RUN" != "true" ]]; then
+    # Optionally run setup immediately (skip in non-interactive mode)
+    if [[ "$SKIP_RUN" != "true" && "${CI:-false}" != "true" && "${NONINTERACTIVE:-false}" != "true" ]]; then
         echo ""
         read -r -p "Run natilius setup now? [y/N] " response
         if [[ "$response" =~ ^[Yy]$ ]]; then
