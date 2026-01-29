@@ -60,6 +60,7 @@ flowchart LR
 | **Role-Based Profiles** | Pre-configured for DevOps, Frontend, Backend |
 | **Idempotent** | Safe to run multiple times |
 | **Terraform Ready** | Built for automation and CI/CD |
+| **MDM Aware** | Works with Jamf, JumpCloud, Kandji, Intune |
 | **Security Hardened** | FileVault, Firewall, Gatekeeper |
 
 ---
@@ -124,17 +125,21 @@ flowchart LR
 ### Run
 
 ```bash
-natilius doctor    # Check your system
-natilius --check   # Preview changes
-natilius setup     # Install everything
+natilius init          # Interactive setup wizard
+natilius doctor        # Check your system
+natilius setup --check # Preview changes (dry run)
+natilius setup         # Install everything
 ```
+
+> **Tip:** Install [gum](https://github.com/charmbracelet/gum) for a beautiful interactive experience: `brew install gum`
 
 ### Use Profiles
 
 ```bash
-natilius --profile minimal    # Essentials only
-natilius --profile devops     # K8s, Terraform, cloud tools
-natilius --profile developer  # Full dev environment
+natilius profiles                       # List available profiles
+natilius --profile minimal setup        # Essentials only
+natilius --profile devops setup         # K8s, Terraform, cloud tools
+natilius --profile developer setup      # Full dev environment
 ```
 
 ---
@@ -153,5 +158,6 @@ natilius --profile developer  # Full dev environment
 - [Quick Start Guide](getting-started/quickstart.md) — Get up and running
 - [Configuration](configuration/index.md) — Customize your setup
 - [Profiles](configuration/profiles.md) — Role-based configurations
+- [Enterprise & MDM](enterprise.md) — Jamf, JumpCloud, Intune integration
 - [FAQ](faq.md) — Common questions
 - [Comparison](comparison.md) — How Natilius compares to alternatives

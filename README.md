@@ -58,10 +58,13 @@ brew install vincentkoc/tap/natilius
 ### Then Run
 
 ```bash
-natilius doctor    # Check your system
-natilius --check   # Preview what will be installed
-natilius setup     # Install everything
+natilius init          # Interactive setup wizard
+natilius doctor        # Check your system
+natilius setup --check # Preview changes (dry run)
+natilius setup         # Install everything
 ```
+
+> **Tip:** Install [gum](https://github.com/charmbracelet/gum) for a beautiful interactive experience: `brew install gum`
 
 ---
 
@@ -74,6 +77,7 @@ natilius setup     # Install everything
 | **Role-Based Profiles** | Pre-configured setups for DevOps, Frontend, Backend, or minimal installs |
 | **Idempotent** | Run it multiple times safely—it only installs what's missing |
 | **Terraform Ready** | Built for automation—works with Terraform, Ansible, and CI/CD |
+| **MDM Aware** | Works with Jamf, JumpCloud, Kandji, Intune, and other MDM solutions |
 | **macOS Hardened** | Configures FileVault, Firewall, Gatekeeper, and privacy settings |
 
 ### What Gets Installed
@@ -172,9 +176,11 @@ natilius [command] [options]
 
 | Command | Description |
 |---------|-------------|
-| `setup` | Run the full setup (default) |
+| `init` | Interactive setup wizard (creates ~/.natiliusrc) |
+| `setup` | Run the full setup |
 | `doctor` | Check system readiness and diagnose issues |
-| `list-modules` | Show all available modules |
+| `modules` | Show all available modules |
+| `profiles` | List available configuration profiles |
 | `version` | Show version information |
 | `help` | Show help message |
 
@@ -192,13 +198,13 @@ natilius [command] [options]
 
 ```bash
 # Preview what would be installed
-natilius --check
+natilius setup --check
 
 # Use the DevOps profile
-natilius --profile devops
+natilius --profile devops setup
 
 # Interactive module selection
-natilius --interactive
+natilius --interactive setup
 
 # Quiet mode for automation
 natilius --quiet setup
@@ -263,8 +269,11 @@ Profiles are pre-configured setups for different roles. Use them as-is or as a s
 ### Using Profiles
 
 ```bash
+# List available profiles
+natilius profiles
+
 # Use a profile directly
-natilius --profile devops
+natilius --profile devops setup
 
 # Or copy to customize
 cp ~/.natilius/profiles/devops.natiliusrc ~/.natiliusrc
@@ -297,6 +306,8 @@ Natilius is built for infrastructure-as-code workflows.
 | `NONINTERACTIVE=true` | No prompts at all |
 | `DRY_RUN=true` | Preview mode |
 | `QUIET_MODE=true` | Minimal output |
+| `ENTERPRISE_MODE=true` | Enable MDM-aware behavior |
+| `RESPECT_MDM_POLICIES=true` | Don't override MDM settings |
 
 ### Terraform Example
 
@@ -338,6 +349,7 @@ See [Automation Guide](docs/automation.md) for more examples.
 | [Configuration Reference](docs/configuration.md) | All config options explained |
 | [Module Guide](docs/modules.md) | Available modules and what they do |
 | [Automation Guide](docs/automation.md) | Terraform, Ansible, CI/CD integration |
+| [Enterprise & MDM](docs/enterprise.md) | Jamf, JumpCloud, Intune integration |
 | [Troubleshooting](docs/troubleshooting.md) | Common issues and solutions |
 | [Contributing](CONTRIBUTING.md) | How to contribute |
 | [Quick Reference](QUICK_REFERENCE.md) | Cheat sheet for experienced users |
