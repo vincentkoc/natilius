@@ -30,7 +30,7 @@ NATILIUS_HOME="${NATILIUS_HOME:-$HOME/.natilius}"
 # Default to non-interactive for automation
 export NONINTERACTIVE="${NONINTERACTIVE:-true}"
 export CI="${CI:-true}"
-export SKIP_SUDO="${SKIP_SUDO:-true}"
+export SKIP_SUDO="${SKIP_SUDO:-false}"
 
 # Colors
 CYAN='\033[1;36m'
@@ -251,7 +251,17 @@ main() {
     log_info "Profile: $PROFILE"
     log_info "Branch: $NATILIUS_BRANCH"
     log_info "Non-interactive: ${NONINTERACTIVE:-true}"
-    log_info "Skip sudo: ${SKIP_SUDO:-true}"
+    log_info "Skip sudo: ${SKIP_SUDO:-false}"
+
+    # Get sudo credentials upfront and keep them alive
+    if [[ "${SKIP_SUDO:-false}" != "true" ]]; then
+        log_info "Requesting sudo credentials (will be cached for the entire run)..."
+        sudo -v
+        # Keep sudo alive in background
+        while true; do sudo -n true; sleep 50; kill -0 "$$" || exit; done 2>/dev/null &
+        SUDO_KEEPALIVE_PID=$!
+        trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null' EXIT
+    fi
 
     preflight_check
     install_homebrew
