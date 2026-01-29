@@ -182,16 +182,47 @@ Each step is customizable and can be enabled or disabled as needed.
 
 ## Installation
 
-To install Natilius, follow these steps:
+### Option 1: Homebrew (Recommended)
 
-1. Open Terminal on your Mac.
-2. Run the following command to download and install Natilius:
+```bash
+# Install via Homebrew tap
+brew install vincentkoc/tap/natilius
 
-   ```
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
-   ```
+# Or use the tap explicitly
+brew tap vincentkoc/tap
+brew install natilius
+```
 
-3. Follow the on-screen prompts to complete the installation.
+### Option 2: One-Line Installer
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
+```
+
+This will:
+- Clone Natilius to `~/.natilius`
+- Install the `natilius` command to `/usr/local/bin`
+- Set up shell completions (bash/zsh)
+- Create a default `~/.natiliusrc` config
+
+### Option 3: Manual Installation
+
+```bash
+git clone https://github.com/vincentkoc/natilius.git ~/.natilius
+~/.natilius/install.sh
+```
+
+### Uninstalling
+
+```bash
+# If installed via Homebrew
+brew uninstall natilius
+
+# If installed via script
+~/.natilius/uninstall.sh
+# Or:
+curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/uninstall.sh | bash
+```
 
 ## Quick Start
 
