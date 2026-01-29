@@ -234,7 +234,7 @@ run_natilius() {
 
     # Set environment for non-interactive
     export NONINTERACTIVE=true
-    export SKIP_SUDO="${SKIP_SUDO:-true}"
+    export SKIP_SUDO="${SKIP_SUDO:-false}"
 
     # Execute
     log_info "Executing: $cmd"
