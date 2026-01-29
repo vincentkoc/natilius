@@ -49,6 +49,7 @@ nav:
       - Automation: guides/automation.md
       - Terraform: guides/terraform.md
       - Team Setup: guides/team-setup.md
+      - Enterprise & MDM: enterprise.md
       - Troubleshooting: guides/troubleshooting.md
   - Reference:
       - CLI: reference/cli.md
