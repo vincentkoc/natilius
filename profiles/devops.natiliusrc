@@ -1,0 +1,113 @@
+# Natilius DevOps Profile
+# Kubernetes, Terraform, cloud infrastructure tools
+# Use: natilius --profile devops
+
+# Source base configuration
+# shellcheck source=/dev/null
+[[ -f "$HOME/.natiliusrc.base" ]] && source "$HOME/.natiliusrc.base"
+
+# ============================================================================
+# ENABLED MODULES
+# ============================================================================
+ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "system/security"
+    "applications/homebrew"
+    "applications/apps"
+    "dev_environments/python"
+    "dev_environments/go"
+    "ide/ide_setup"
+    "system/cleanup"
+)
+
+# ============================================================================
+# VERSION MANAGERS
+# ============================================================================
+PYTHONVER="3.11.0"
+GOVER="1.21.0"
+
+# ============================================================================
+# IDE CONFIGURATION
+# ============================================================================
+INSTALL_VSCODE=true
+INSTALL_CURSOR=false
+INSTALL_JETBRAINS=false
+INSTALL_SUBLIME=false
+INSTALL_ZED=false
+
+# ============================================================================
+# ADDITIONAL HOMEBREW TAPS
+# ============================================================================
+BREWTAPS+=(
+    "warrensbox/tap"
+    "derailed/popeye"
+)
+
+# ============================================================================
+# DEVOPS PACKAGES
+# ============================================================================
+BREWPACKAGES+=(
+    # Cloud CLIs
+    "awscli"
+    "azure-cli"
+
+    # Kubernetes
+    "kubectl"
+    "kubernetes-cli"
+    "kubectx"
+    "helm"
+    "minikube"
+    "derailed/popeye/popeye"
+    "k9s"
+
+    # Infrastructure as Code
+    "terraform"
+    "terraformer"
+    "tflint"
+    "tfsec"
+    "warrensbox/tap/tfswitch"
+    "ansible"
+
+    # Containers
+    "docker-compose"
+    "ctop"
+
+    # Networking & Debug
+    "nmap"
+    "httpie"
+    "mosh"
+    "telnet"
+
+    # YAML/JSON
+    "yamllint"
+    "yq"
+
+    # Misc
+    "pre-commit"
+)
+
+# ============================================================================
+# DEVOPS CASKS
+# ============================================================================
+BREWCASKS+=(
+    "docker"
+    "lens"
+    "aws-vault"
+)
+
+# ============================================================================
+# PYTHON PACKAGES (DevOps focus)
+# ============================================================================
+GLOBAL_PYTHON_PACKAGES=(
+    "pip"
+    "virtualenv"
+    "setuptools"
+    "wheel"
+    "ansible"
+    "boto3"
+    "awscli"
+    "pre-commit"
+    "PyYAML"
+    "jinja2"
+)

@@ -45,6 +45,107 @@ Natilius is highly customizable. Edit the `.natiliusrc` file in your home direct
 - Configure macOS preferences
 - And much more!
 
+## Profiles
+
+Natilius supports role-based profiles for different use cases. Pre-built profiles are in the `profiles/` directory:
+
+| Profile | Use Case |
+|---------|----------|
+| `minimal` | Quick onboarding - essentials only |
+| `devops` | Kubernetes, Terraform, cloud infrastructure |
+| `developer` | Full dev environment with multiple languages |
+| `base` | Common foundation (sourced by other profiles) |
+
+### Using Profiles
+
+```bash
+# Use a specific profile
+natilius --profile devops
+
+# Or copy profile to config location
+cp profiles/devops.natiliusrc ~/.natiliusrc
+natilius
+```
+
+### Profile Inheritance
+
+Profiles can inherit from a base configuration:
+
+```bash
+# In your custom profile (~/.natiliusrc.myteam)
+source ~/.natiliusrc.base
+ENABLED_MODULES+=("dev_environments/python")
+BREWPACKAGES+=("custom-tool")
+```
+
+## Automation & Terraform
+
+Natilius is designed for infrastructure-as-code workflows and can be integrated with Terraform, Ansible, or other provisioning tools.
+
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `SKIP_SUDO` | Skip sudo validation (for CI/CD) |
+| `DRY_RUN` | Run without making changes |
+| `QUIET_MODE` | Minimal output |
+| `SKIP_UPDATE_CHECK` | Skip version checking |
+
+### Terraform Integration
+
+Use the included provisioning script for Terraform:
+
+```hcl
+resource "null_resource" "mac_setup" {
+  connection {
+    type        = "ssh"
+    host        = var.mac_host
+    user        = var.mac_user
+    private_key = file(var.ssh_key_path)
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | bash -s devops"
+    ]
+  }
+}
+```
+
+Or use the script directly:
+
+```bash
+# Download and run with a profile
+curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | bash -s devops
+
+# Or clone and run locally
+./scripts/terraform-provision.sh minimal
+```
+
+### CI/CD Usage
+
+```bash
+# Non-interactive setup for pipelines
+SKIP_SUDO=true natilius --quiet --check  # Dry run
+SKIP_SUDO=true natilius --quiet          # Actual run
+```
+
+### Dotfiles Integration
+
+Natilius works well alongside your existing dotfiles:
+
+1. Natilius handles tool installation
+2. Your dotfiles repo handles configuration
+3. Mackup (included) syncs app preferences
+
+```bash
+# Recommended flow
+natilius --profile devops                    # Install tools
+git clone git@github.com:you/dotfiles ~/.dotfiles  # Clone config
+~/.dotfiles/install.sh                       # Apply config
+mackup restore                               # Restore app prefs
+```
+
 ## What Gets Installed?
 
 Natilius can set up a complete development environment, including:

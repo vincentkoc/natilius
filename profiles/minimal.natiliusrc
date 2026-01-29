@@ -1,0 +1,32 @@
+# Natilius Minimal Profile
+# Quick onboarding - essential tools only
+# Use: natilius --profile minimal
+
+# Source base configuration
+# shellcheck source=/dev/null
+[[ -f "$HOME/.natiliusrc.base" ]] && source "$HOME/.natiliusrc.base"
+
+# ============================================================================
+# ENABLED MODULES (Minimal Set)
+# ============================================================================
+ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "applications/homebrew"
+    "system/cleanup"
+)
+
+# ============================================================================
+# IDE CONFIGURATION
+# ============================================================================
+INSTALL_VSCODE=true
+INSTALL_CURSOR=false
+INSTALL_JETBRAINS=false
+INSTALL_SUBLIME=false
+INSTALL_ZED=false
+
+# ============================================================================
+# OVERRIDES (Keep it lean)
+# ============================================================================
+# Use base BREWPACKAGES and BREWCASKS - no additions
+# This profile is intentionally minimal for fast provisioning

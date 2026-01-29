@@ -1,0 +1,144 @@
+# Natilius Developer Profile
+# Full development environment with multiple languages
+# Use: natilius --profile developer
+
+# Source base configuration
+# shellcheck source=/dev/null
+[[ -f "$HOME/.natiliusrc.base" ]] && source "$HOME/.natiliusrc.base"
+
+# ============================================================================
+# ENABLED MODULES
+# ============================================================================
+ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "system/security"
+    "preferences/mac_preferences"
+    "applications/homebrew"
+    "applications/apps"
+    "dev_environments/python"
+    "dev_environments/node"
+    "dev_environments/go"
+    "dev_environments/rust"
+    "ide/ide_setup"
+    "dotfiles"
+    "system/cleanup"
+)
+
+# ============================================================================
+# LANGUAGE VERSIONS
+# ============================================================================
+PYTHONVER="3.11.0"
+NODEVER="20.10.0"
+GOVER="1.21.0"
+RUBYVER="3.2.0"
+
+# ============================================================================
+# IDE CONFIGURATION
+# ============================================================================
+INSTALL_VSCODE=true
+INSTALL_CURSOR=false
+INSTALL_JETBRAINS=true
+INSTALL_SUBLIME=false
+INSTALL_ZED=false
+
+# ============================================================================
+# ADDITIONAL DIRECTORIES
+# ============================================================================
+DIRS+=(
+    "~/.mackup"
+    "~/Projects"
+)
+
+DIRSTOEXCLUDEFROMTIMEMACHINE+=(
+    "~/.mackup"
+    "~/Projects"
+    "~/.npm"
+    "~/.cargo"
+)
+
+# ============================================================================
+# DEVELOPER PACKAGES
+# ============================================================================
+BREWPACKAGES+=(
+    # Version Managers
+    "pyenv"
+    "pyenv-virtualenv"
+    "pipenv"
+    "nodenv"
+    "rbenv"
+    "rustup-init"
+
+    # Build Tools
+    "make"
+    "cmake"
+    "gradle"
+
+    # Code Quality
+    "pre-commit"
+    "shellcheck"
+
+    # Database
+    "sqlite"
+    "postgresql"
+    "redis"
+
+    # Networking
+    "httpie"
+    "curl"
+    "wget"
+
+    # Misc Dev Tools
+    "tig"
+    "diff-so-fancy"
+    "tokei"
+    "hexyl"
+    "glow"
+)
+
+# ============================================================================
+# DEVELOPER CASKS
+# ============================================================================
+BREWCASKS+=(
+    "docker"
+    "github"
+    "gpg-suite"
+    "keybase"
+    "postman"
+    "tableplus"
+    "figma"
+)
+
+# ============================================================================
+# NODE PACKAGES
+# ============================================================================
+GLOBAL_NODE_PACKAGES=(
+    "eslint"
+    "prettier"
+    "typescript"
+    "ts-node"
+    "yarn"
+    "pnpm"
+)
+
+# ============================================================================
+# PYTHON PACKAGES
+# ============================================================================
+GLOBAL_PYTHON_PACKAGES=(
+    "pip"
+    "virtualenv"
+    "setuptools"
+    "wheel"
+    "numpy"
+    "pandas"
+    "requests"
+    "flask"
+    "fastapi"
+    "pytest"
+    "black"
+    "flake8"
+    "isort"
+    "mypy"
+    "pre-commit"
+    "PyYAML"
+)

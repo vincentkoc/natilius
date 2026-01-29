@@ -1,4 +1,21 @@
 # Natilius Configuration
+#
+# This file controls which modules run and what gets installed.
+# Copy to ~/.natiliusrc before running natilius.
+#
+# PROFILE INHERITANCE:
+# For role-based setups, you can source a base config:
+#   source ~/.natiliusrc.base
+#   ENABLED_MODULES+=("dev_environments/python")  # Add to base modules
+#
+# See profiles/ directory for ready-to-use templates:
+#   - minimal.natiliusrc   - Quick onboarding, essentials only
+#   - devops.natiliusrc    - Kubernetes, Terraform, cloud tools
+#   - developer.natiliusrc - Full dev environment with multiple languages
+#
+# Usage with profiles:
+#   natilius --profile devops
+#   natilius --profile minimal
 
 # Enabled modules
 # "system/system_update"

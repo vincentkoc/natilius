@@ -1,0 +1,117 @@
+# Natilius Base Profile
+# Common configuration shared across all profiles
+# Other profiles can source this: source ~/.natiliusrc.base
+
+# ============================================================================
+# CORE SETTINGS
+# ============================================================================
+COUNTRYCODE="us"
+SKIP_UPDATE_CHECK=false
+
+# ============================================================================
+# DIRECTORIES
+# ============================================================================
+DIRS=(
+    "~/.config"
+    "~/GIT"
+)
+
+DIRSTOEXCLUDEFROMTIMEMACHINE=(
+    "~/GIT"
+    "~/.gnupg"
+    "~/.ssh"
+    "~/.config"
+)
+
+# ============================================================================
+# HOMEBREW TAPS (Essential)
+# ============================================================================
+BREWTAPS=(
+    "homebrew/cask"
+    "github/gh"
+)
+
+# ============================================================================
+# HOMEBREW PACKAGES (Core Tools)
+# ============================================================================
+BREWPACKAGES=(
+    # Version Control
+    "git"
+    "gh"
+    "git-lfs"
+
+    # Shell Essentials
+    "coreutils"
+    "curl"
+    "wget"
+    "jq"
+    "fzf"
+    "bat"
+    "eza"
+    "fd"
+    "tree"
+    "htop"
+    "procs"
+    "zoxide"
+
+    # Security
+    "gpg"
+    "pinentry-mac"
+    "openssh"
+    "openssl"
+    "ca-certificates"
+    "ykman"
+
+    # Utilities
+    "mackup"
+    "mas"
+    "trash"
+    "watch"
+    "tmux"
+    "neovim"
+    "tealdeer"
+
+    # Fonts (essential)
+    "font-fira-code"
+    "font-fira-code-nerd-font"
+    "font-meslo-lg-nerd-font"
+)
+
+# ============================================================================
+# HOMEBREW CASKS (Core Apps)
+# ============================================================================
+BREWCASKS=(
+    # Security
+    "1password"
+    "1password-cli"
+
+    # Terminal & Development
+    "iterm2"
+    "visual-studio-code"
+
+    # Productivity
+    "alfred"
+    "alt-tab"
+    "the-unarchiver"
+
+    # Communication
+    "slack"
+    "zoom"
+)
+
+# ============================================================================
+# MAC APP STORE (Core)
+# ============================================================================
+APPSTORE=(
+    "441258766"   # Magnet (window management)
+    "937984704"   # Amphetamine (prevent sleep)
+)
+
+# ============================================================================
+# APPS TO RESTART AFTER SETUP
+# ============================================================================
+KILLAPPS=(
+    "Dock"
+    "Finder"
+    "SystemUIServer"
+)
