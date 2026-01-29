@@ -1,4 +1,5 @@
 # Natilius DevOps Profile
+# Description: Kubernetes, Terraform, cloud CLIs
 # Kubernetes, Terraform, cloud infrastructure tools
 # Use: natilius --profile devops
 

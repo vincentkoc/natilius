@@ -1,4 +1,5 @@
 # Natilius Minimal Profile
+# Description: Essential tools only (git, brew, shell)
 # Quick onboarding - essential tools only
 # Use: natilius --profile minimal
 

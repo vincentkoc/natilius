@@ -1,4 +1,5 @@
 # Natilius Base Profile
+# Description: Shared base configuration for all profiles
 # Common configuration shared across all profiles
 # Other profiles can source this: source ~/.natiliusrc.base
 

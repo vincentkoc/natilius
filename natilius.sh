@@ -95,6 +95,7 @@ COMMANDS:
     setup           Run the full setup process (default)
     doctor          Run system diagnostics and checks
     list-modules    List all available modules
+    profiles        List available configuration profiles
     version         Show version information
     help            Show this help message
 
@@ -112,6 +113,8 @@ EXAMPLES:
     natilius --check            # Dry run to see what would be done
     natilius doctor             # Run system diagnostics
     natilius list-modules       # Show available modules
+    natilius profiles           # List available profiles
+    natilius -p devops setup    # Run setup with devops profile
     natilius -v setup           # Run setup with verbose output
 
 For more information, visit: https://github.com/vincentkoc/natilius
@@ -128,6 +131,9 @@ while [[ "$#" -gt 0 ]]; do
             ;;
         list-modules)
             COMMAND="list-modules"
+            ;;
+        profiles)
+            COMMAND="profiles"
             ;;
         version|--version|-V)
             SHOW_VERSION=true
@@ -187,6 +193,46 @@ show_version() {
     echo "Natilius version $NATILIUS_VERSION"
     echo "Copyright (C) 2023 Vincent Koc (@vincent_koc)"
     echo "License: GPLv3+"
+}
+
+# Function to list available profiles
+list_profiles() {
+    echo "Available Natilius Profiles:"
+    echo ""
+
+    # Check for profile files in profiles directory
+    if [ -d "$NATILIUS_DIR/profiles" ]; then
+        for profile in "$NATILIUS_DIR"/profiles/*.natiliusrc; do
+            if [ -f "$profile" ]; then
+                profile_name=$(basename "$profile" .natiliusrc)
+                # Extract description from profile if available
+                description=$(grep -m1 "^# Description:" "$profile" 2>/dev/null | sed 's/^# Description: //' || echo "")
+                if [ -n "$description" ]; then
+                    printf "  %-12s %s\n" "$profile_name" "- $description"
+                else
+                    printf "  %-12s\n" "$profile_name"
+                fi
+            fi
+        done
+    fi
+
+    # Check for user profiles in home directory
+    echo ""
+    echo "User Profiles (~/.natiliusrc.*):"
+    local found_user_profiles=false
+    for profile in "$HOME"/.natiliusrc.*; do
+        if [ -f "$profile" ]; then
+            profile_name=$(basename "$profile" | sed 's/^\.natiliusrc\.//')
+            printf "  %-12s\n" "$profile_name"
+            found_user_profiles=true
+        fi
+    done
+    if [ "$found_user_profiles" = false ]; then
+        echo "  (none)"
+    fi
+
+    echo ""
+    echo "Usage: natilius --profile <name> setup"
 }
 
 # Function to list modules
@@ -376,6 +422,11 @@ fi
 
 if [ "$COMMAND" = "list-modules" ]; then
     list_modules
+    exit 0
+fi
+
+if [ "$COMMAND" = "profiles" ]; then
+    list_profiles
     exit 0
 fi
 
