@@ -1,42 +1,63 @@
-.PHONY: all precommit test lint install-deps integration-test test-config test-all clean help dev-setup coverage check-version release-check format docs docs-serve docs-build docs-deploy docs-deps
+.PHONY: all precommit test lint install-deps integration-test test-config test-all clean help dev-setup coverage check-version release-check format docs docs-serve docs-build docs-deploy docs-deps install uninstall banner
+
+# Colors
+CYAN := \033[1;36m
+GREEN := \033[1;32m
+DIM := \033[2m
+BOLD := \033[1m
+RESET := \033[0m
+
+# Banner function
+define show_banner
+	@echo ""
+	@echo "  $(CYAN)┃$(RESET) $(BOLD)🐚 natilius$(RESET)"
+	@echo "  $(CYAN)┃$(RESET) $(DIM)$(1)$(RESET)"
+	@echo ""
+endef
 
 # Default target
 all: precommit
 
+# Show banner
+banner:
+	$(call show_banner,Mac Developer Environment Setup)
+
 # Help target
 help:
-	@echo "Natilius Development Commands:"
+	$(call show_banner,Mac Developer Environment Setup)
+	@echo "  $(BOLD)Testing$(RESET)"
+	@echo "    test              Run unit tests"
+	@echo "    test-cli          Run CLI feature tests"
+	@echo "    test-modules      Run module tests"
+	@echo "    integration-test  Run integration tests"
+	@echo "    test-config       Run config validator tests"
+	@echo "    test-all          Run all tests + precommit hooks"
+	@echo "    coverage          Generate test coverage report"
 	@echo ""
-	@echo "Testing:"
-	@echo "  test              Run unit tests"
-	@echo "  test-cli          Run CLI feature tests"
-	@echo "  test-modules      Run module tests"
-	@echo "  integration-test  Run integration tests"
-	@echo "  test-config       Run config validator tests"
-	@echo "  test-all          Run all tests + precommit hooks"
-	@echo "  coverage          Generate test coverage report"
+	@echo "  $(BOLD)Code Quality$(RESET)"
+	@echo "    lint              Run shellcheck linting"
+	@echo "    format            Format shell scripts"
+	@echo "    precommit         Run pre-commit hooks"
 	@echo ""
-	@echo "Code Quality:"
-	@echo "  lint              Run shellcheck linting"
-	@echo "  format            Format shell scripts"
-	@echo "  precommit         Run pre-commit hooks"
+	@echo "  $(BOLD)Development$(RESET)"
+	@echo "    install-deps      Install development dependencies"
+	@echo "    dev-setup         Setup development environment"
+	@echo "    check-version     Check version consistency"
+	@echo "    release-check     Check if ready for release"
 	@echo ""
-	@echo "Development:"
-	@echo "  install-deps      Install development dependencies"
-	@echo "  dev-setup         Setup development environment"
-	@echo "  check-version     Check version consistency"
-	@echo "  release-check     Check if ready for release"
+	@echo "  $(BOLD)Documentation$(RESET)"
+	@echo "    docs              Serve docs locally"
+	@echo "    docs-build        Build documentation site"
+	@echo "    docs-deploy       Deploy docs to GitHub Pages"
 	@echo ""
-	@echo "Documentation:"
-	@echo "  docs              Serve docs locally (alias for docs-serve)"
-	@echo "  docs-serve        Serve docs locally at http://127.0.0.1:8000"
-	@echo "  docs-build        Build documentation site"
-	@echo "  docs-deploy       Deploy docs to GitHub Pages"
-	@echo "  docs-deps         Install documentation dependencies"
+	@echo "  $(BOLD)Install$(RESET)"
+	@echo "    install           Install natilius locally"
+	@echo "    uninstall         Remove local installation"
 	@echo ""
-	@echo "Utility:"
-	@echo "  clean             Clean up temporary files"
-	@echo "  help              Show this help message"
+	@echo "  $(BOLD)Utility$(RESET)"
+	@echo "    clean             Clean up temporary files"
+	@echo "    help              Show this help message"
+	@echo ""
 
 # Install dependencies
 install-deps:
@@ -215,3 +236,33 @@ docs-deploy: docs-deps
 	@echo "🚀 Deploying docs to GitHub Pages..."
 	@mkdocs gh-deploy --force
 	@echo "✅ Docs deployed!"
+
+# Install natilius locally (for development/testing)
+install:
+	$(call show_banner,Installing locally...)
+	@chmod +x natilius.sh
+	@echo "  $(DIM)Admin password required for /usr/local/bin$(RESET)"
+	@sudo rm -f /usr/local/bin/natilius
+	@sudo ln -sf "$(PWD)/natilius.sh" /usr/local/bin/natilius
+	@echo ""
+	@echo "  $(GREEN)✓$(RESET) Symlinked to /usr/local/bin/natilius"
+	@echo ""
+	@echo "  $(DIM)Run 'natilius --help' to get started$(RESET)"
+	@echo ""
+
+# Uninstall local natilius
+uninstall:
+	$(call show_banner,Uninstalling...)
+	@if [ -L /usr/local/bin/natilius ]; then \
+		read -p "  Remove /usr/local/bin/natilius? [y/N] " confirm && \
+		if [ "$$confirm" = "y" ] || [ "$$confirm" = "Y" ]; then \
+			sudo rm -f /usr/local/bin/natilius; \
+			echo ""; \
+			echo "  $(GREEN)✓$(RESET) Removed from /usr/local/bin"; \
+		else \
+			echo "  $(DIM)Cancelled$(RESET)"; \
+		fi; \
+	else \
+		echo "  $(DIM)Not installed$(RESET)"; \
+	fi
+	@echo ""

@@ -30,7 +30,8 @@
 @test "natilius version shows version information" {
     run ./natilius.sh version
     [ "$status" -eq 0 ]
-    [[ "$output" == *"Natilius version"* ]]
+    [[ "$output" == *"natilius"* ]]
+    [[ "$output" == *"v"*"."* ]]
 }
 
 @test "natilius doctor runs system diagnostics" {
