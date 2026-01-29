@@ -30,6 +30,7 @@ NATILIUS_HOME="${NATILIUS_HOME:-$HOME/.natilius}"
 # Default to non-interactive for automation
 export NONINTERACTIVE="${NONINTERACTIVE:-true}"
 export CI="${CI:-true}"
+export SKIP_SUDO="${SKIP_SUDO:-true}"
 
 # Colors
 CYAN='\033[1;36m'
@@ -197,7 +198,7 @@ run_natilius() {
 
     # Set environment for non-interactive
     export NONINTERACTIVE=true
-    export SKIP_SUDO="${SKIP_SUDO:-false}"
+    export SKIP_SUDO="${SKIP_SUDO:-true}"
 
     # Execute
     log_info "Executing: $cmd"
@@ -214,7 +215,7 @@ main() {
     log_info "Profile: $PROFILE"
     log_info "Branch: $NATILIUS_BRANCH"
     log_info "Non-interactive: ${NONINTERACTIVE:-true}"
-    log_info "Skip sudo: ${SKIP_SUDO:-false}"
+    log_info "Skip sudo: ${SKIP_SUDO:-true}"
 
     preflight_check
     install_homebrew
