@@ -8,8 +8,8 @@
 class Natilius < Formula
   desc "Automated one-click Mac developer environment setup"
   homepage "https://github.com/vincentkoc/natilius"
-  url "https://github.com/vincentkoc/natilius/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "REPLACE_WITH_ACTUAL_SHA256_AFTER_RELEASE"
+  url "https://github.com/vincentkoc/natilius/archive/refs/tags/v1.3.0.tar.gz"
+  sha256 "5cfaf91d3d83526150953039445868a12c46bb0662557b02ad26ef1a043ee8f4"
   license "GPL-3.0-or-later"
   head "https://github.com/vincentkoc/natilius.git", branch: "main"
 
