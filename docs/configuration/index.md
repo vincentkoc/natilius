@@ -1,8 +1,4 @@
----
-title: Configuration Overview
-description: 'How to configure Natilius for your needs.'
-sidebarTitle: 'Overview'
----
+# Configuration
 
 Natilius is configured via `~/.natiliusrc`—a bash script that sets variables controlling what gets installed.
 
@@ -16,23 +12,20 @@ Natilius is configured via `~/.natiliusrc`—a bash script that sets variables c
 
 ## Creating Your Config
 
-<Steps>
-  <Step title="Copy the example">
-    ```bash
-    cp ~/.natilius/.natiliusrc.example ~/.natiliusrc
-    ```
-  </Step>
-  <Step title="Or start from a profile">
-    ```bash
-    cp ~/.natilius/profiles/devops.natiliusrc ~/.natiliusrc
-    ```
-  </Step>
-  <Step title="Edit to customize">
-    ```bash
-    nano ~/.natiliusrc
-    ```
-  </Step>
-</Steps>
+1. **Copy the example:**
+   ```bash
+   cp ~/.natilius/.natiliusrc.example ~/.natiliusrc
+   ```
+
+2. **Or start from a profile:**
+   ```bash
+   cp ~/.natilius/profiles/devops.natiliusrc ~/.natiliusrc
+   ```
+
+3. **Edit to customize:**
+   ```bash
+   nano ~/.natiliusrc
+   ```
 
 ## Key Sections
 
@@ -50,7 +43,7 @@ ENABLED_MODULES=(
 )
 ```
 
-See [Modules](/configuration/modules) for the full list.
+See [Modules](modules.md) for the full list.
 
 ### Language Versions
 
@@ -65,8 +58,6 @@ JDKVER="21"
 ```
 
 ### IDE Selection
-
-Choose your editors:
 
 ```bash
 INSTALL_VSCODE=true
@@ -95,7 +86,7 @@ BREWCASKS=(
 )
 ```
 
-See [Variables Reference](/configuration/variables) for all options.
+See [Variables Reference](variables.md) for all options.
 
 ## Using Profiles
 
@@ -107,7 +98,7 @@ natilius --profile devops
 
 This loads `~/.natiliusrc.devops` instead of `~/.natiliusrc`.
 
-See [Profiles](/configuration/profiles) for details.
+See [Profiles](profiles.md) for details.
 
 ## Validating Config
 

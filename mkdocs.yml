@@ -1,0 +1,64 @@
+---
+site_name: Natilius
+site_url: https://vincentkoc.github.io/natilius
+site_description: Set up your Mac for development in minutes, not hours.
+site_author: Vincent Koc
+repo_url: https://github.com/vincentkoc/natilius
+repo_name: vincentkoc/natilius
+edit_uri: edit/main/docs/
+
+theme:
+  name: shadcn
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: false
+  - footnotes
+  - codehilite
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Quick Start: getting-started/quickstart.md
+      - Installation: getting-started/installation.md
+  - Configuration:
+      - Overview: configuration/index.md
+      - Modules: configuration/modules.md
+      - Profiles: configuration/profiles.md
+      - Variables: configuration/variables.md
+  - Guides:
+      - Automation: guides/automation.md
+      - Terraform: guides/terraform.md
+      - Team Setup: guides/team-setup.md
+      - Troubleshooting: guides/troubleshooting.md
+  - Reference:
+      - CLI: reference/cli.md
+      - Environment Variables: reference/environment-variables.md
+  - Contributing:
+      - Overview: contributing/index.md
+      - Development: contributing/development.md
+      - Creating Modules: contributing/creating-modules.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vincentkoc/natilius
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/vincent_koc
+
+copyright: Copyright &copy; 2024 Vincent Koc

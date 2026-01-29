@@ -1,7 +1,6 @@
----
-title: Installation
-description: 'Detailed installation instructions for Natilius.'
----
+# Installation
+
+Detailed installation instructions for Natilius.
 
 ## Installation Methods
 
@@ -20,6 +19,7 @@ This is the cleanest method—Homebrew manages updates and uninstallation.
 ```
 
 The installer:
+
 - Clones Natilius to `~/.natilius`
 - Adds `natilius` command to `/usr/local/bin`
 - Installs shell completions (bash/zsh)
@@ -48,54 +48,46 @@ natilius doctor
 
 ## Uninstallation
 
-<Tabs>
-  <Tab title="Homebrew">
+=== "Homebrew"
+
     ```bash
     brew uninstall natilius
     ```
-  </Tab>
-  <Tab title="Script Install">
+
+=== "Script Install"
+
     ```bash
     ~/.natilius/uninstall.sh
     ```
 
     Or remotely:
+
     ```bash
     curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/uninstall.sh | bash
     ```
-  </Tab>
-</Tabs>
 
-<Note>
-  Uninstalling Natilius does **not** remove software it installed (Homebrew packages, apps, etc.). It only removes Natilius itself.
-</Note>
+!!! note
+    Uninstalling Natilius does **not** remove software it installed (Homebrew packages, apps, etc.). It only removes Natilius itself.
 
 ## Updating
 
-<Tabs>
-  <Tab title="Homebrew">
+=== "Homebrew"
+
     ```bash
     brew upgrade natilius
     ```
-  </Tab>
-  <Tab title="Script Install">
-    ```bash
-    cd ~/.natilius
-    git pull
-    ```
 
-    Or re-run the installer:
+=== "Script Install"
+
     ```bash
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
+    cd ~/.natilius && git pull
     ```
-  </Tab>
-</Tabs>
 
 ## Troubleshooting Installation
 
 ### "Command not found: natilius"
 
-The command isn't in your PATH. Try:
+The command isn't in your PATH:
 
 ```bash
 # Restart your shell
@@ -110,7 +102,6 @@ export PATH="/usr/local/bin:$PATH"
 The installer can't write to `/usr/local/bin`:
 
 ```bash
-# Fix permissions
 sudo chown -R $(whoami) /usr/local/bin
 ```
 
@@ -125,13 +116,3 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # Reload
 source ~/.zshrc
 ```
-
-## Next Steps
-
-<Card
-  title="Quick Start"
-  icon="rocket"
-  href="/quickstart"
->
-  Run your first setup
-</Card>

@@ -1,4 +1,4 @@
-.PHONY: all precommit test lint install-deps integration-test test-config test-all clean help dev-setup coverage check-version release-check format
+.PHONY: all precommit test lint install-deps integration-test test-config test-all clean help dev-setup coverage check-version release-check format docs docs-serve docs-build docs-deploy docs-deps
 
 # Default target
 all: precommit
@@ -26,6 +26,13 @@ help:
 	@echo "  dev-setup         Setup development environment"
 	@echo "  check-version     Check version consistency"
 	@echo "  release-check     Check if ready for release"
+	@echo ""
+	@echo "Documentation:"
+	@echo "  docs              Serve docs locally (alias for docs-serve)"
+	@echo "  docs-serve        Serve docs locally at http://127.0.0.1:8000"
+	@echo "  docs-build        Build documentation site"
+	@echo "  docs-deploy       Deploy docs to GitHub Pages"
+	@echo "  docs-deps         Install documentation dependencies"
 	@echo ""
 	@echo "Utility:"
 	@echo "  clean             Clean up temporary files"
@@ -179,6 +186,32 @@ clean:
 	@rm -rf .pre-commit-cache
 	@rm -rf logs/*.log
 	@rm -rf coverage/
+	@rm -rf site/
 	@rm -rf *.tar.gz
 	@rm -rf *.sha256
 	@echo "✅ Cleanup complete!"
+
+# Documentation dependencies
+docs-deps:
+	@echo "📚 Installing documentation dependencies..."
+	@pip install mkdocs mkdocs-shadcn pymdown-extensions
+
+# Serve docs locally
+docs-serve: docs-deps
+	@echo "📖 Serving docs at http://127.0.0.1:8000..."
+	@mkdocs serve
+
+# Alias for docs-serve
+docs: docs-serve
+
+# Build docs
+docs-build: docs-deps
+	@echo "🔨 Building documentation..."
+	@mkdocs build
+	@echo "✅ Docs built to site/"
+
+# Deploy docs to GitHub Pages
+docs-deploy: docs-deps
+	@echo "🚀 Deploying docs to GitHub Pages..."
+	@mkdocs gh-deploy --force
+	@echo "✅ Docs deployed!"
