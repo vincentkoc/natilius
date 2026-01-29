@@ -1,50 +1,39 @@
 #compdef natilius
-# shellcheck shell=bash disable=SC2148,SC2034,SC2296,SC2206,SC2012
-
-# Zsh completion for natilius
 
 _natilius() {
-    local context state state_descr line
-    local -a commands options
+    local -a cmds opts profiles
 
-    commands=(
-        'init:Interactive setup wizard (creates ~/.natiliusrc)'
-        'setup:Run the full setup process'
-        'doctor:Run system diagnostics and checks'
-        'modules:List all available modules'
-        'profiles:List available configuration profiles'
-        'version:Show version information'
-        'help:Show help message'
-    )
+    cmds=(init setup doctor modules profiles version help)
+    opts=(-v --verbose -q --quiet -i --interactive -c --check --dry-run -p --profile -h --help --version)
 
-    options=(
-        '(-v --verbose)'{-v,--verbose}'[Enable verbose output]'
-        '(-q --quiet)'{-q,--quiet}'[Suppress non-error output]'
-        '(-i --interactive)'{-i,--interactive}'[Run in interactive mode]'
-        '(-c --check --dry-run)'{-c,--check,--dry-run}'[Run in check/dry-run mode]'
-        '(-p --profile)'{-p,--profile}'[Use a specific configuration profile]:profile:_natilius_profiles'
-        '(-h --help)'{-h,--help}'[Show help message]'
-        '--version[Show version information]'
-    )
-
-    _arguments -C \
-        '1: :_describe "command" commands' \
-        '*: :_describe "option" options'
-}
-
-_natilius_profiles() {
-    local -a profiles builtin_profiles user_profiles
-
-    # Built-in profiles from ~/.natilius/profiles/
-    if [[ -d "${HOME}/.natilius/profiles" ]]; then
-        builtin_profiles=(${(f)"$(ls ${HOME}/.natilius/profiles/*.natiliusrc 2>/dev/null | xargs -I {} basename {} .natiliusrc)"})
+    # Get built-in profiles from NATILIUS_HOME
+    local profile_dir="${NATILIUS_HOME:-$HOME/.natilius}/profiles"
+    if [[ -d "$profile_dir" ]]; then
+        profiles+=(${(f)"$(ls "$profile_dir"/*.natiliusrc 2>/dev/null | xargs -I {} basename {} .natiliusrc)"})
     fi
 
-    # User profiles from home directory
-    user_profiles=(${(f)"$(ls ~/.natiliusrc.* 2>/dev/null | sed 's/.*\.natiliusrc\.//' | grep -v example)"})
+    # Check Homebrew cellar location
+    local brew_profiles="/opt/homebrew/Cellar/natilius/*/libexec/profiles"
+    for dir in $~brew_profiles(N/); do
+        profiles+=(${(f)"$(ls "$dir"/*.natiliusrc 2>/dev/null | xargs -I {} basename {} .natiliusrc)"})
+    done
 
-    profiles=($builtin_profiles $user_profiles)
-    _describe 'profiles' profiles
+    # Get user profiles from ~/.natiliusrc.*
+    local user_profiles
+    user_profiles=(${(f)"$(ls ~/.natiliusrc.* 2>/dev/null | sed 's/.*\.natiliusrc\.//' | grep -v example)"})
+    profiles+=("${user_profiles[@]}")
+
+    # Remove duplicates
+    profiles=(${(u)profiles})
+
+    case "$words[2]" in
+        -p|--profile)
+            compadd "${profiles[@]}"
+            ;;
+        *)
+            compadd "${cmds[@]}" "${opts[@]}"
+            ;;
+    esac
 }
 
 _natilius "$@"

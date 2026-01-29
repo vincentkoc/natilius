@@ -2,52 +2,47 @@
 # Bash completion for natilius
 
 _natilius_completion() {
-    local cur prev opts commands
+    local cur prev
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    # Available commands
-    commands="init setup doctor modules profiles version help"
+    local commands="init setup doctor modules profiles version help"
+    local options="-v --verbose -q --quiet -i --interactive -c --check --dry-run -p --profile -h --help --version"
 
-    # Available options
-    opts="--verbose --quiet --interactive --check --dry-run --profile --help --version"
+    # Get built-in profiles from NATILIUS_HOME
+    local profile_dir="${NATILIUS_HOME:-$HOME/.natilius}/profiles"
+    local profiles=""
+    if [[ -d "$profile_dir" ]]; then
+        profiles=$(ls "$profile_dir"/*.natiliusrc 2>/dev/null | xargs -I {} basename {} .natiliusrc)
+    fi
 
-    # Available modules (simplified list) - reserved for future use
-    # modules="system/system_update system/security system/directories system/cleanup
-    #          dev_environments/python dev_environments/node dev_environments/ruby
-    #          dev_environments/rust dev_environments/go dev_environments/java
-    #          dev_environments/php dev_environments/flutter
-    #          applications/homebrew applications/apps applications/espanso
-    #          ide/ide_setup preferences/mac_preferences preferences/system_preferences
-    #          dotfiles"
+    # Check Homebrew cellar location
+    for dir in /opt/homebrew/Cellar/natilius/*/libexec/profiles; do
+        if [[ -d "$dir" ]]; then
+            local brew_profiles
+            brew_profiles=$(ls "$dir"/*.natiliusrc 2>/dev/null | xargs -I {} basename {} .natiliusrc)
+            profiles="$profiles $brew_profiles"
+        fi
+    done
 
-    case $prev in
-        --profile|-p)
-            # Complete with built-in profiles and user profiles
-            local profiles builtin_profiles user_profiles
-            # Built-in profiles from ~/.natilius/profiles/ or install location
-            if [ -d "${HOME}/.natilius/profiles" ]; then
-                builtin_profiles=$(find "${HOME}/.natilius/profiles" -name "*.natiliusrc" 2>/dev/null | xargs -I {} basename {} .natiliusrc)
-            fi
-            # User profiles from home directory
-            user_profiles=$(find ~ -maxdepth 1 -name ".natiliusrc.*" 2>/dev/null | sed 's/.*\.natiliusrc\.//' | grep -v example)
-            profiles="$builtin_profiles $user_profiles"
-            mapfile -t COMPREPLY < <(compgen -W "$profiles" -- "$cur")
+    # Get user profiles from ~/.natiliusrc.*
+    local user_profiles
+    user_profiles=$(ls ~/.natiliusrc.* 2>/dev/null | sed 's/.*\.natiliusrc\.//' | grep -v example)
+    profiles="$profiles $user_profiles"
+
+    # Remove duplicates
+    profiles=$(echo "$profiles" | tr ' ' '\n' | sort -u | tr '\n' ' ')
+
+    case "$prev" in
+        -p|--profile)
+            COMPREPLY=($(compgen -W "$profiles" -- "$cur"))
             return 0
             ;;
     esac
 
-    # If we're completing the first argument (command)
-    if [[ $COMP_CWORD -eq 1 ]]; then
-        mapfile -t COMPREPLY < <(compgen -W "$commands $opts" -- "$cur")
-        return 0
-    fi
-
-    # Complete with remaining options
-    mapfile -t COMPREPLY < <(compgen -W "$opts" -- "$cur")
+    COMPREPLY=($(compgen -W "$commands $options" -- "$cur"))
     return 0
 }
 
-# Register the completion function
 complete -F _natilius_completion natilius
