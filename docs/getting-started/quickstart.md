@@ -4,24 +4,24 @@ Get your Mac set up for development in 5 minutes.
 
 ## Install Natilius
 
-=== "One-liner"
+/// tab | Homebrew
+```bash
+brew install vincentkoc/tap/natilius
+```
+///
 
-    ```bash
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
-    ```
+/// tab | Script
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
+```
+///
 
-=== "Homebrew"
-
-    ```bash
-    brew install vincentkoc/tap/natilius
-    ```
-
-=== "Manual"
-
-    ```bash
-    git clone https://github.com/vincentkoc/natilius.git ~/.natilius
-    cd ~/.natilius && ./install.sh
-    ```
+/// tab | Manual
+```bash
+git clone https://github.com/vincentkoc/natilius.git ~/.natilius
+cd ~/.natilius && make install
+```
+///
 
 ## Run Setup
 

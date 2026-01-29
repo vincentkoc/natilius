@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/natilius_image.png" alt="Natilius" width="120"/>
+  <img src="docs/assets/artwork-icon.png" alt="Natilius" width="100"/>
 </p>
 
 <h1 align="center">Natilius</h1>
@@ -22,13 +22,9 @@
   <a href="https://github.com/vincentkoc/natilius/discussions">Community</a>
 </p>
 
----
-
 <p align="center">
   <img src="docs/assets/demo.gif" alt="Natilius Demo" width="700"/>
 </p>
-
----
 
 ## Install
 
@@ -36,7 +32,7 @@
 brew install vincentkoc/tap/natilius
 ```
 
-Then run the interactive setup:
+Then run:
 
 ```bash
 natilius init      # Choose your profile
@@ -44,23 +40,27 @@ natilius setup     # Install everything
 ```
 
 <details>
-<summary><strong>Alternative: Install via script</strong></summary>
+<summary>Alternative: Install via script</summary>
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
 ```
-
 </details>
 
----
+<details>
+<summary>Alternative: Install from source</summary>
+
+```bash
+git clone https://github.com/vincentkoc/natilius.git ~/.natilius
+cd ~/.natilius && make install
+```
+</details>
 
 ## Why Natilius?
 
-New Mac? New job? You know the drill — Homebrew, Xcode CLI tools, Python, Node, Docker, VS Code, a dozen preferences tweaks... it takes hours. Every. Single. Time.
+New Mac? New job? You know the drill — Homebrew, Xcode CLI tools, Python, Node, Docker, VS Code, a dozen preference tweaks... it takes hours.
 
-**Natilius handles all of it.** One command installs your entire development environment. It's idempotent (safe to run repeatedly), respects MDM policies, and works for solo devs or entire teams.
-
----
+**Natilius handles all of it.** One command installs your entire dev environment. It's idempotent (safe to run repeatedly), respects MDM policies, and works for solo devs or entire teams.
 
 ## What You Get
 
@@ -71,9 +71,7 @@ New Mac? New job? You know the drill — Homebrew, Xcode CLI tools, Python, Node
 - 🔒 **Security** — FileVault, Firewall, Gatekeeper, privacy settings
 - ⚙️ **Profiles** — Minimal, DevOps, Developer, or build your own
 
----
-
-## Quick Commands
+## Commands
 
 ```bash
 natilius init                    # Interactive setup wizard
@@ -83,31 +81,17 @@ natilius doctor                  # Check system status
 natilius --profile devops setup  # Use a specific profile
 ```
 
----
-
 ## Documentation
 
-Everything else lives in the docs — profiles, configuration, modules, Terraform integration, enterprise/MDM setup, and more.
+Profiles, configuration, modules, Terraform integration, enterprise/MDM setup, and more.
 
-**📖 [Read the full documentation →](https://vincentkoc.github.io/natilius)**
-
----
+**📖 [Read the docs →](https://vincentkoc.github.io/natilius)**
 
 ## Contributing
 
-Contributions welcome! Check out [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-```bash
-git clone https://github.com/vincentkoc/natilius.git
-cd natilius && make dev-setup
-make test
-```
-
-**Found a bug?** [Open an issue](https://github.com/vincentkoc/natilius/issues)
-**Have a question?** [Start a discussion](https://github.com/vincentkoc/natilius/discussions)
-**Like it?** [Give us a star ⭐](https://github.com/vincentkoc/natilius)
-
----
+**Found a bug?** [Open an issue](https://github.com/vincentkoc/natilius/issues) · **Questions?** [Start a discussion](https://github.com/vincentkoc/natilius/discussions) · **Like it?** [Star us ⭐](https://github.com/vincentkoc/natilius)
 
 <p align="center">
   <sub>Made with care by <a href="https://github.com/vincentkoc">Vincent Koc</a> · <a href="LICENSE">GPL-3.0</a></sub>

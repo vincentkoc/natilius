@@ -8,17 +8,17 @@ How Natilius compares to other Mac setup tools.
 
 | Feature | Natilius | thoughtbot/laptop | mac-setup | strap |
 |---------|----------|-------------------|-----------|-------|
-| One-command install | Yes | Yes | Yes | Yes |
-| Modular design | Yes | No | Partial | No |
-| Profile support | Yes | No | No | No |
-| Idempotent | Yes | Yes | Partial | Yes |
-| Dry-run mode | Yes | No | No | No |
-| Terraform ready | Yes | No | No | No |
-| Active maintenance | Yes | Yes | Limited | Yes |
-| Security hardening | Yes | No | No | No |
-| Custom config file | Yes | Limited | Yes | Yes |
-| IDE setup | Yes | No | Partial | No |
-| macOS preferences | Yes | No | Yes | No |
+| One-command install | **Yes** | **Yes** | **Yes** | **Yes** |
+| Modular design | **Yes** | No | Partial | No |
+| Profile support | **Yes** | No | No | No |
+| Idempotent | **Yes** | **Yes** | Partial | **Yes** |
+| Dry-run mode | **Yes** | No | No | No |
+| Terraform ready | **Yes** | No | No | No |
+| Active maintenance | **Yes** | **Yes** | Limited | **Yes** |
+| Security hardening | **Yes** | No | No | No |
+| Custom config file | **Yes** | Limited | **Yes** | **Yes** |
+| IDE setup | **Yes** | No | Partial | No |
+| macOS preferences | **Yes** | No | **Yes** | No |
 
 ---
 

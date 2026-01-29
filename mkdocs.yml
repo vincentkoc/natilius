@@ -9,31 +9,27 @@ edit_uri: edit/main/docs/
 
 theme:
   name: shadcn
+  icon: assets/artwork-icon.png
+  favicon: assets/favicon.ico
+  pygments_style:
+    light: shadcn-light
+    dark: github-dark
 
 plugins:
   - search
 
 markdown_extensions:
   - admonition
-  - pymdownx.details
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.inlinehilite
+  - pymdownx.blocks.details
+  - codehilite
   - pymdownx.snippets
-  - pymdownx.tabbed:
-      alternate_style: true
+  - pymdownx.blocks.tab
   - tables
   - attr_list
   - md_in_html
   - toc:
       permalink: false
   - footnotes
-  - codehilite
 
 nav:
   - Home: index.md
@@ -57,11 +53,16 @@ nav:
   - Resources:
       - FAQ: faq.md
       - Comparison: comparison.md
-      - Changelog: changelog.md
   - Contributing:
       - Overview: contributing/index.md
       - Development: contributing/development.md
       - Creating Modules: contributing/creating-modules.md
+
+extra_css:
+  - assets/css/extra.css
+
+extra_javascript:
+  - assets/js/tabs.js
 
 extra:
   social:
