@@ -111,11 +111,47 @@ install_homebrew() {
     # Non-interactive Homebrew install
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    # Add to PATH for current session (Apple Silicon)
+    # Add to PATH for current session and persist to shell config
+    local brew_path=""
     if [[ -f "/opt/homebrew/bin/brew" ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+        brew_path="/opt/homebrew/bin/brew"
     elif [[ -f "/usr/local/bin/brew" ]]; then
-        eval "$(/usr/local/bin/brew shellenv)"
+        brew_path="/usr/local/bin/brew"
+    fi
+
+    if [[ -n "$brew_path" ]]; then
+        # Add to current session
+        eval "$($brew_path shellenv)"
+
+        # Persist to zsh config
+        local shellenv_cmd="eval \"\$($brew_path shellenv)\""
+        if [[ -f "$HOME/.zprofile" ]]; then
+            if ! grep -q "brew shellenv" "$HOME/.zprofile" 2>/dev/null; then
+                {
+                    echo ""
+                    echo "# Homebrew"
+                    echo "$shellenv_cmd"
+                } >> "$HOME/.zprofile"
+            fi
+        else
+            {
+                echo "# Homebrew"
+                echo "$shellenv_cmd"
+            } > "$HOME/.zprofile"
+        fi
+
+        # Persist to bash config
+        if [[ -f "$HOME/.bash_profile" ]] || [[ -f "$HOME/.bashrc" ]]; then
+            local bash_config="$HOME/.bash_profile"
+            [[ ! -f "$bash_config" ]] && bash_config="$HOME/.bashrc"
+            if ! grep -q "brew shellenv" "$bash_config" 2>/dev/null; then
+                {
+                    echo ""
+                    echo "# Homebrew"
+                    echo "$shellenv_cmd"
+                } >> "$bash_config"
+            fi
+        fi
     fi
 
     log_ok "Homebrew installed"
