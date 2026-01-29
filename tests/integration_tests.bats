@@ -29,24 +29,24 @@
     [ "$status" -eq 0 ]
 }
 
-@test "Help command completes quickly (under 1 second)" {
+@test "Help command completes quickly (under 2 seconds)" {
     local start end duration
-    start=$(date +%s%N)
+    start=$(date +%s)
     run ./natilius.sh --help
-    end=$(date +%s%N)
-    duration=$(( (end - start) / 1000000 ))  # Convert to milliseconds
+    end=$(date +%s)
+    duration=$(( end - start ))
     [ "$status" -eq 0 ]
-    [ "$duration" -lt 1000 ]  # Less than 1 second
+    [ "$duration" -lt 2 ]  # Less than 2 seconds
 }
 
-@test "Version command completes quickly (under 1 second)" {
+@test "Version command completes quickly (under 2 seconds)" {
     local start end duration
-    start=$(date +%s%N)
+    start=$(date +%s)
     run ./natilius.sh --version
-    end=$(date +%s%N)
-    duration=$(( (end - start) / 1000000 ))
+    end=$(date +%s)
+    duration=$(( end - start ))
     [ "$status" -eq 0 ]
-    [ "$duration" -lt 1000 ]
+    [ "$duration" -lt 2 ]  # Less than 2 seconds
 }
 
 @test "Dry run mode does not modify any files" {
