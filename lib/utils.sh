@@ -187,11 +187,14 @@ check_reboot_required() {
 }
 
 keep_sudo_alive() {
-    while true; do
-        sudo -n true
-        sleep 30
-        kill -0 "$$" 2>/dev/null || exit
-    done 2>/dev/null &
+    (
+        set +e  # Never let sudo refresh failures kill the keep-alive loop
+        while true; do
+            sudo -n -v >/dev/null 2>&1
+            sleep 30
+            kill -0 "$PPID" 2>/dev/null || exit
+        done
+    ) 2>/dev/null &
     SUDO_KEEP_ALIVE_PID=$!
 }
 
