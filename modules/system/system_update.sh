@@ -21,6 +21,12 @@
 
 log_info "Checking and installing system updates..."
 
+# Skip updates in non-interactive mode unless explicitly allowed.
+if [[ "${NONINTERACTIVE:-false}" == "true" && "${ALLOW_SYSTEM_UPDATES:-false}" != "true" ]]; then
+    log_warning "Skipping system updates in non-interactive mode."
+    return 0
+fi
+
 # Install Xcode Command Line Tools
 if ! xcode-select -p &> /dev/null; then
     log_info "Xcode Command Line Tools not found. Installing..."
@@ -78,12 +84,16 @@ fi
 
 # Check if a reboot is required
 if check_reboot_required; then
-    read -p "Do you want to restart now? (y/n) " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        log_info "Restarting the system..."
-        sudo shutdown -r now
+    if [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
+        log_warning "Reboot required. Please restart manually to complete updates."
     else
-        log_warning "Please remember to restart your system to complete the update process."
+        read -p "Do you want to restart now? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            log_info "Restarting the system..."
+            sudo shutdown -r now
+        else
+            log_warning "Please remember to restart your system to complete the update process."
+        fi
     fi
 fi

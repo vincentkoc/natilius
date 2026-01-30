@@ -945,6 +945,16 @@ echo
 # Skip sudo validation if SKIP_SUDO is true (for CI environments)
 if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
     log_info "Skipping sudo validation ${DIM}(SKIP_SUDO=true)${RESET}"
+elif [[ "${NONINTERACTIVE:-false}" == "true" && "${NATILIUS_SUDO_VALIDATED:-false}" == "true" ]]; then
+    if sudo -n true 2>/dev/null; then
+        log_success "Sudo privileges validated ${DIM}(cached)${RESET}"
+        keep_sudo_alive
+    else
+        log_error "Sudo credentials not available in non-interactive mode."
+        echo -e "  ${DIM}Please run with an interactive terminal to authorize sudo once.${RESET}"
+        echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
+        exit 1
+    fi
 else
     # Attempt to get sudo privileges
     # Check if we already have passwordless sudo

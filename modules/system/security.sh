@@ -66,15 +66,19 @@ else
 fi
 
 # Enable FileVault encryption
-if ! fdesetup status 2>/dev/null | grep -q "FileVault is On."; then
-    log_info "Enabling FileVault (this may require a reboot)..."
-    if sudo fdesetup enable -user "$USER" 2>/dev/null; then
-        log_success "FileVault enabled"
-    else
-        log_warning "Could not enable FileVault (may require manual setup or MDM)"
-    fi
+if [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
+    log_warning "Skipping FileVault enable in non-interactive mode."
 else
-    log_success "FileVault is already enabled"
+    if ! fdesetup status 2>/dev/null | grep -q "FileVault is On."; then
+        log_info "Enabling FileVault (this may require a reboot)..."
+        if sudo fdesetup enable -user "$USER" 2>/dev/null; then
+            log_success "FileVault enabled"
+        else
+            log_warning "Could not enable FileVault (may require manual setup or MDM)"
+        fi
+    else
+        log_success "FileVault is already enabled"
+    fi
 fi
 
 ############################

@@ -270,6 +270,7 @@ main() {
             echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
             exit 1
         fi
+        export NATILIUS_SUDO_VALIDATED=true
         # Keep sudo alive in background
         start_sudo_keepalive 2>/dev/null &
         SUDO_KEEPALIVE_PID=$!
