@@ -61,7 +61,7 @@ done
 echo -e | tee -a "$LOGFILE"
 log_info "Installing Homebrew packages..."
 for package in "${BREWPACKAGES[@]}"; do
-    if brew list --formula | grep -qx "$package"; then
+    if brew list --formula "$package" >/dev/null 2>&1; then
         log_info "Package already installed [$package]. Skipping."
     else
         log_info "Installing package [$package]..."
@@ -75,7 +75,7 @@ done
 echo -e | tee -a "$LOGFILE"
 log_info "Installing Homebrew casks..."
 for cask in "${BREWCASKS[@]}"; do
-    if brew list --cask | grep -qx "$cask"; then
+    if brew list --cask "$cask" >/dev/null 2>&1; then
         log_info "Cask already installed [$cask]. Skipping."
     else
         log_info "Installing cask [$cask]..."
@@ -85,5 +85,4 @@ for cask in "${BREWCASKS[@]}"; do
     sleep 2
 done
 
-log_info "Running post-install cleanup..."
-brew cleanup | tee -a "$LOGFILE"
+log_info "Skipping Homebrew cleanup here (handled by system cleanup)."
