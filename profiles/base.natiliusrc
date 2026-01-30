@@ -39,7 +39,6 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
 # HOMEBREW TAPS (Essential)
 # ============================================================================
 BREWTAPS=(
-    "homebrew/cask"
     "github/gh"
 )
 

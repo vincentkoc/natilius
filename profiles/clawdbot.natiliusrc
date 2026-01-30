@@ -84,7 +84,6 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
 # HOMEBREW TAPS
 # ============================================================================
 BREWTAPS=(
-    "homebrew/cask"
     "github/gh"
 )
 

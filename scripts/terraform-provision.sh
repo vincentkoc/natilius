@@ -75,16 +75,18 @@ setup_nopasswd_whitelist() {
     SUDOERS_FILE="/etc/sudoers.d/natilius-terraform-${ts}"
 
     log_info "Configuring temporary sudo NOPASSWD whitelist for user: $user"
+    # Clean up any stale natilius terraform sudoers files to avoid alias collisions.
+    sudo /bin/rm -f /etc/sudoers.d/natilius-terraform-* 2>/dev/null || true
     sudo /usr/bin/tee "$SUDOERS_FILE" >/dev/null <<'EOF'
 # Managed by natilius terraform-provision.sh (temporary)
 Defaults:__USER__ !authenticate
-Cmnd_Alias NATILIUS_CMDS = \
+Cmnd_Alias NATILIUS_CMDS___TS__ = \
     /usr/sbin/chown, /bin/mkdir, /usr/bin/tee, /bin/chmod, \
     /usr/sbin/softwareupdate, /usr/sbin/networksetup, /usr/sbin/pmset, \
     /usr/sbin/spctl, /usr/bin/pkill, /usr/libexec/ApplicationFirewall/socketfilterfw, \
     /usr/sbin/fdesetup, /usr/bin/defaults, /usr/sbin/sysadminctl, \
     /usr/sbin/shutdown, /usr/sbin/tmutil, /usr/bin/find, /bin/rm
-__USER__ ALL=(ALL) NOPASSWD: NATILIUS_CMDS
+__USER__ ALL=(ALL) NOPASSWD: NATILIUS_CMDS___TS__
 EOF
 
     sudo /bin/chmod 0440 "$SUDOERS_FILE"
@@ -95,8 +97,8 @@ EOF
         exit 1
     }
 
-    # Replace placeholder with actual user
-    sudo /usr/bin/sed -i '' "s/__USER__/${user}/g" "$SUDOERS_FILE"
+    # Replace placeholder with actual user and unique alias suffix
+    sudo /usr/bin/sed -i '' "s/__USER__/${user}/g; s/__TS__/${ts}/g" "$SUDOERS_FILE"
     log_ok "Temporary sudo whitelist enabled (${SUDOERS_FILE})"
 }
 
