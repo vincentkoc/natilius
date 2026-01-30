@@ -353,6 +353,7 @@ main() {
         else
             if [ -t 0 ]; then
                 log_warn "Sudo ticket missing after Homebrew; refreshing credentials..."
+                # shellcheck disable=SC2024  # stdin redirect is intentional for sudo prompt
                 if ! sudo -v < /dev/tty; then
                     log_error "Failed to refresh sudo credentials after Homebrew."
                     exit 1
