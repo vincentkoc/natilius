@@ -240,9 +240,9 @@ run_natilius() {
     log_info "Executing: $cmd"
     if command -v script >/dev/null 2>&1; then
         if [[ "${SKIP_SUDO:-false}" != "true" ]]; then
-            script -q /dev/null /bin/sh -c "sudo -v; $cmd"
+            script -q /dev/null /bin/sh -c "sudo -v; $cmd" < /dev/tty
         else
-            script -q /dev/null /bin/sh -c "$cmd"
+            script -q /dev/null /bin/sh -c "$cmd" < /dev/tty
         fi
     elif [ -r /dev/tty ]; then
         eval "$cmd" < /dev/tty
@@ -263,35 +263,10 @@ main() {
     log_info "Non-interactive: ${NONINTERACTIVE:-true}"
     log_info "Skip sudo: ${SKIP_SUDO:-false}"
 
-    # Get sudo credentials upfront for Homebrew and keep them alive
-    if [[ "${SKIP_SUDO:-false}" != "true" ]]; then
-        log_info "Requesting sudo credentials (will be cached for the entire run)..."
-        if ! sudo -v; then
-            log_error "Failed to obtain sudo credentials."
-            echo -e "  ${DIM}Ensure you have sudo access and try again.${RESET}"
-            echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
-            exit 1
-        fi
-    fi
-
     preflight_check
     install_homebrew
     install_natilius
     setup_profile
-
-    # Get sudo credentials right before Natilius (Homebrew may have reset them)
-    if [[ "${SKIP_SUDO:-false}" != "true" ]]; then
-        if ! sudo -n true 2>/dev/null; then
-            log_info "Requesting sudo credentials for Natilius (will be cached for the rest of the run)..."
-            if ! sudo -v; then
-                log_error "Failed to obtain sudo credentials."
-                echo -e "  ${DIM}Ensure you have sudo access and try again.${RESET}"
-                echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
-                exit 1
-            fi
-        fi
-        export NATILIUS_SUDO_VALIDATED=true
-    fi
 
     run_natilius
 
