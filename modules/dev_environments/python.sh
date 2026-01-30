@@ -43,6 +43,12 @@ else
     eval "$(pyenv virtualenv-init -)"
 fi
 
+# If no desired version is configured, skip setup cleanly.
+if [[ -z "${PYTHONVER:-}" ]]; then
+    log_warning "PYTHONVER is not set. Skipping Python setup."
+    return 0
+fi
+
 # Check if desired Python version is installed
 CURRENTVER=$(get_current_version pyenv)
 INSTALLED=false
