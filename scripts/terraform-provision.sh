@@ -253,14 +253,6 @@ main() {
     log_info "Non-interactive: ${NONINTERACTIVE:-true}"
     log_info "Skip sudo: ${SKIP_SUDO:-false}"
 
-    start_sudo_keepalive() {
-        while true; do
-            sudo -n -v >/dev/null 2>&1
-            sleep 50
-            kill -0 "$PPID" 2>/dev/null || exit
-        done
-    }
-
     # Get sudo credentials upfront for Homebrew and keep them alive
     if [[ "${SKIP_SUDO:-false}" != "true" ]]; then
         log_info "Requesting sudo credentials (will be cached for the entire run)..."
@@ -270,9 +262,6 @@ main() {
             echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
             exit 1
         fi
-        start_sudo_keepalive 2>/dev/null &
-        SUDO_KEEPALIVE_PID=$!
-        trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null' EXIT
     fi
 
     preflight_check
