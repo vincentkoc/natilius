@@ -211,13 +211,13 @@ stop_sudo_keep_alive() {
 }
 
 refresh_sudo() {
-    if ! sudo -n true 2>/dev/null; then
+    if ! command sudo -n true 2>/dev/null; then
         if [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
             log_warning "Sudo privileges expired in non-interactive mode. Skipping prompt."
             return 1
         fi
         log_warning "Sudo privileges expired. Requesting password again..."
-        if ! sudo -v; then
+        if ! command sudo -v; then
             log_error "Failed to refresh sudo privileges. Some operations may fail."
             return 1
         fi

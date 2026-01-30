@@ -190,11 +190,6 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-# In non-interactive mode, force sudo to be non-interactive everywhere.
-if [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
-    sudo() { command sudo -n "$@"; }
-fi
-
 # If no command specified, show help (safe default)
 if [ -z "$COMMAND" ] && [ "$SHOW_VERSION" = false ]; then
     show_help
@@ -951,10 +946,7 @@ echo
 if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
     log_info "Skipping sudo validation ${DIM}(SKIP_SUDO=true)${RESET}"
 elif [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
-    if [[ "${NATILIUS_SUDO_VALIDATED:-false}" == "true" ]]; then
-        log_info "Using cached sudo credentials ${DIM}(non-interactive)${RESET}"
-        keep_sudo_alive
-    elif command sudo -n true 2>/dev/null; then
+    if command sudo -n true 2>/dev/null; then
         log_success "Sudo privileges validated ${DIM}(non-interactive)${RESET}"
         keep_sudo_alive
     else
