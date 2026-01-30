@@ -124,7 +124,7 @@ install_homebrew() {
 
     # Homebrew install: allow sudo prompt when a TTY is available
     if [ -t 0 ] && [[ "${SKIP_SUDO:-false}" != "true" ]]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        env -u NONINTERACTIVE -u CI /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     else
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
