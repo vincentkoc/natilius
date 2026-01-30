@@ -943,7 +943,11 @@ export LOGFILE
 rotate_logs
 
 # Check for updates (silent by default, warnings only)
-check_for_updates
+if [[ -n "$MODULE_OVERRIDE" ]]; then
+    log_info "Skipping update check for single-module run"
+else
+    check_for_updates
+fi
 
 echo ""
 
