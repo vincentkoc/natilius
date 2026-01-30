@@ -950,10 +950,22 @@ elif [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
         log_success "Sudo privileges validated ${DIM}(non-interactive)${RESET}"
         keep_sudo_alive
     else
-        log_error "Sudo credentials not available in non-interactive mode."
-        echo -e "  ${DIM}Run once in an interactive terminal to authorize sudo.${RESET}"
-        echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
-        exit 1
+        if [ -t 0 ]; then
+            log_info "Requesting sudo credentials ${DIM}(non-interactive)${RESET}"
+            if command sudo -v; then
+                log_success "Sudo privileges validated"
+                keep_sudo_alive
+            else
+                log_error "Failed to validate sudo credentials."
+                echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
+                exit 1
+            fi
+        else
+            log_error "Sudo credentials not available in non-interactive mode."
+            echo -e "  ${DIM}Run once in an interactive terminal to authorize sudo.${RESET}"
+            echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
+            exit 1
+        fi
     fi
 else
     # Attempt to get sudo privileges
