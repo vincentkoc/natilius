@@ -951,7 +951,10 @@ echo
 if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
     log_info "Skipping sudo validation ${DIM}(SKIP_SUDO=true)${RESET}"
 elif [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
-    if sudo -n true 2>/dev/null; then
+    if [[ "${NATILIUS_SUDO_VALIDATED:-false}" == "true" ]]; then
+        log_info "Using cached sudo credentials ${DIM}(non-interactive)${RESET}"
+        keep_sudo_alive
+    elif command sudo -n true 2>/dev/null; then
         log_success "Sudo privileges validated ${DIM}(non-interactive)${RESET}"
         keep_sudo_alive
     else
