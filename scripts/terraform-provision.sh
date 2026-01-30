@@ -109,7 +109,8 @@ cleanup_nopasswd_whitelist() {
 }
 
 # If stdin isn't a TTY, re-run inside a PTY so sudo timestamps work reliably.
-if [[ -z "${NATILIUS_IN_PTY:-}" && ! -t 0 && -r /dev/tty && -n "$(command -v script 2>/dev/null)" ]]; then
+# When SET_NOPASSWD=true, we should avoid PTY re-exec entirely (no prompts needed).
+if [[ "${SET_NOPASSWD:-false}" != "true" && -z "${NATILIUS_IN_PTY:-}" && ! -t 0 && -r /dev/tty && -n "$(command -v script 2>/dev/null)" ]]; then
     log_info "PTY bootstrap: stdin is not a TTY; re-executing inside script PTY"
     log_info "PTY bootstrap: /dev/tty=$(stat -f '%Sp %z %Sm %N' /dev/tty 2>/dev/null || echo 'unknown')"
     log_info "PTY bootstrap: tty=$(tty 2>/dev/null || echo 'none')"
@@ -174,8 +175,10 @@ install_homebrew() {
 
     log_info "Installing Homebrew..."
 
-    # Homebrew install: allow sudo prompt when a TTY is available
-    if [ -t 0 ] && [[ "${SKIP_SUDO:-false}" != "true" ]]; then
+    # Homebrew install: allow sudo prompt when a TTY is available (unless NOPASSWD is enabled)
+    if [[ "${SET_NOPASSWD:-false}" == "true" ]]; then
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    elif [ -t 0 ] && [[ "${SKIP_SUDO:-false}" != "true" ]]; then
         env -u NONINTERACTIVE -u CI /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     else
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
