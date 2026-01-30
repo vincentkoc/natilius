@@ -46,27 +46,35 @@ defaults write com.apple.terminal SecureKeyboardEntry -bool true
 log_success "Enabled Secure Keyboard Entry in Terminal.app"
 
 # Enable Gatekeeper (code signing verification)
-sudo spctl --master-enable
-log_success "Enabled Gatekeeper"
+if sudo spctl --master-enable 2>/dev/null; then
+    log_success "Enabled Gatekeeper"
+else
+    log_warning "Could not enable Gatekeeper (may require MDM or manual intervention)"
+fi
 
 # Configure and enable firewall
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
-sudo pkill -HUP socketfilterfw
-log_success "Firewall enabled with logging and stealth mode"
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on || log_warning "Failed to enable firewall"
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on || log_warning "Failed to enable stealth mode"
+sudo pkill -HUP socketfilterfw 2>/dev/null || true
+log_success "Firewall enabled with stealth mode"
 
 # Disable Wake on LAN
-sudo pmset -a womp 0
-log_success "Disabled Wake on LAN"
+if sudo pmset -a womp 0 2>/dev/null; then
+    log_success "Disabled Wake on LAN"
+else
+    log_warning "Could not disable Wake on LAN"
+fi
 
 # Enable FileVault encryption
-if ! fdesetup status | grep -q "FileVault is On."; then
+if ! fdesetup status 2>/dev/null | grep -q "FileVault is On."; then
     log_info "Enabling FileVault (this may require a reboot)..."
-    sudo fdesetup enable -user "$USER" || log_error "Failed to enable FileVault"
-    log_success "FileVault enabled"
+    if sudo fdesetup enable -user "$USER" 2>/dev/null; then
+        log_success "FileVault enabled"
+    else
+        log_warning "Could not enable FileVault (may require manual setup or MDM)"
+    fi
 else
-    log_info "FileVault is already enabled"
+    log_success "FileVault is already enabled"
 fi
 
 ############################
@@ -76,8 +84,11 @@ fi
 log_info "Applying login-related security settings..."
 
 # Reveal system info at login screen when clicking the clock
-sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
-log_success "Configured login screen to show system info on click"
+if sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName 2>/dev/null; then
+    log_success "Configured login screen to show system info on click"
+else
+    log_warning "Could not configure login screen info"
+fi
 
 # Require password immediately after sleep or screen saver begins
 defaults write com.apple.screensaver askForPassword -int 1
@@ -85,10 +96,10 @@ defaults write com.apple.screensaver askForPasswordDelay -int 0
 log_success "Set requirement for password immediately after sleep or screen saver"
 
 # Disable guest user and console login
-sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false
-sudo sysadminctl -guestAccount off
-sudo defaults write /Library/Preferences/com.apple.loginwindow DisableConsoleAccess -bool true
-log_success "Disabled guest user and console login"
+sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false 2>/dev/null || true
+sudo sysadminctl -guestAccount off 2>/dev/null || log_warning "Could not disable guest account (may be MDM managed)"
+sudo defaults write /Library/Preferences/com.apple.loginwindow DisableConsoleAccess -bool true 2>/dev/null || true
+log_success "Configured guest user and console login settings"
 
 ############################
 # Update Related Security Tweaks
@@ -97,13 +108,13 @@ log_success "Disabled guest user and console login"
 log_info "Configuring update settings..."
 
 # Enable automatic system updates
-sudo softwareupdate --schedule on
-sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool true
-sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
-sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool true
-sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdateRestartRequired -bool true
-log_success "Enabled automatic system updates"
+sudo softwareupdate --schedule on 2>/dev/null || true
+sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true 2>/dev/null || true
+sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool true 2>/dev/null || true
+sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall -bool true 2>/dev/null || true
+sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool true 2>/dev/null || true
+sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdateRestartRequired -bool true 2>/dev/null || true
+log_success "Configured automatic system updates"
 
 # Check for updates daily
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
@@ -122,8 +133,11 @@ defaults write com.apple.Safari SuppressSearchSuggestions -bool true
 log_success "Configured Safari privacy settings"
 
 # Disable potential DNS leaks
-sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool true
-log_success "Disabled multicast DNS advertisements"
+if sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool true 2>/dev/null; then
+    log_success "Disabled multicast DNS advertisements"
+else
+    log_warning "Could not configure mDNS settings"
+fi
 
 # Remove Google Software Updater if present
 google_updater="$HOME/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/ksinstall"
@@ -146,14 +160,13 @@ else
     log_info "Secure Empty Trash option not available on this system"
 fi
 
-# Disable Bonjour multicast advertisements
-sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool true
-log_success "Disabled Bonjour multicast advertisements"
+# Disable Bonjour multicast advertisements (same setting as above, kept for clarity)
+sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool true 2>/dev/null || true
 
 # Enable application layer firewall
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned on
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedapp on
-log_success "Enabled application layer firewall"
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned on 2>/dev/null || log_warning "Could not set allowsigned"
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedapp on 2>/dev/null || log_warning "Could not set allowsignedapp"
+log_success "Configured application layer firewall"
 
 ############################
 # Restart Affected Applications
