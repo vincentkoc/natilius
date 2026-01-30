@@ -21,6 +21,8 @@
 
 log_info "Setting up Python environment..."
 
+PYTHON_AUTOSET="${NATILIUS_PYTHON_AUTOSET:-true}"
+
 # Check if pyenv is installed; if not, install it
 if ! command -v pyenv &> /dev/null; then
     log_info "pyenv not found. Installing pyenv..."
@@ -55,16 +57,28 @@ done <<< "$(pyenv versions --bare)"
 if [ "$INSTALLED" = true ]; then
     log_success "Python [$PYTHONVER] is already installed."
     log_info "Skipping installation of Python."
-    python --version | tee -a "$LOGFILE"
-    which python | tee -a "$LOGFILE"
+    if [[ "$PYTHON_AUTOSET" == "true" ]]; then
+        pyenv global "$PYTHONVER"
+        pyenv local "$PYTHONVER"
+    fi
+    pyenv rehash
+    PYTHON_BIN="$(pyenv which python 2>/dev/null || true)"
+    if [[ -n "$PYTHON_BIN" ]]; then
+        "$PYTHON_BIN" --version | tee -a "$LOGFILE"
+        echo "$PYTHON_BIN" | tee -a "$LOGFILE"
+    else
+        log_warning "Python executable not found in pyenv shims. Skipping version output."
+    fi
 else
     log_warning "Python [$PYTHONVER] is not installed. Found [$CURRENTVER]."
     log_info "Installing Python..."
     pyenv install "$PYTHONVER" | tee -a "$LOGFILE"
 
     # Set PYTHONVER as the local and global Python version
-    pyenv global "$PYTHONVER"
-    pyenv local "$PYTHONVER"
+    if [[ "$PYTHON_AUTOSET" == "true" ]]; then
+        pyenv global "$PYTHONVER"
+        pyenv local "$PYTHONVER"
+    fi
 
     # Show the active Python version
     python --version | tee -a "$LOGFILE"
