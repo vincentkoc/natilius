@@ -116,7 +116,7 @@ if [[ -z "${NATILIUS_IN_PTY:-}" && ! -t 0 && -r /dev/tty && -n "$(command -v scr
     log_info "PTY bootstrap: script=$(command -v script 2>/dev/null || echo 'missing')"
     log_info "PTY bootstrap: script_ver=$(script -V 2>/dev/null || echo 'unknown')"
     export NATILIUS_IN_PTY=1
-    script -q /dev/null /bin/sh -c "tmp=\$(mktemp /tmp/natilius.XXXXXX.sh) && curl -fsSL \"$SCRIPT_URL\" > \"\$tmp\" && SCRIPT_URL=\"$SCRIPT_URL\" NATILIUS_IN_PTY=1 bash \"\$tmp\" \"$PROFILE\"; rc=\$?; rm -f \"\$tmp\"; exit \$rc" < /dev/tty
+    script -q /dev/null /bin/sh -c "tmp=\$(mktemp -t natilius.XXXXXX.sh) && curl -fsSL \"$SCRIPT_URL\" > \"\$tmp\" && SCRIPT_URL=\"$SCRIPT_URL\" NATILIUS_IN_PTY=1 bash \"\$tmp\" \"$PROFILE\"; rc=\$?; rm -f \"\$tmp\"; exit \$rc" < /dev/tty
     exit $?
 fi
 
