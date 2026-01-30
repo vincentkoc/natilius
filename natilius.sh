@@ -654,7 +654,7 @@ run_doctor() {
         echo -e "    ${RED}✗${RESET} Network: ${DIM}(no connection)${RESET}"
     fi
 
-    if [[ -n "${SKIP_SUDO}" ]]; then
+    if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
         echo -e "    ${YELLOW}⚠${RESET} Sudo: Skipped"
     elif sudo -n true 2>/dev/null; then
         echo -e "    ${GREEN}✓${RESET} Sudo: Available"
@@ -942,9 +942,9 @@ echo ""
 
 echo
 
-# Skip sudo validation if SKIP_SUDO is set (for CI environments)
-if [[ -n "${SKIP_SUDO}" ]]; then
-    log_info "Skipping sudo validation ${DIM}(SKIP_SUDO is set)${RESET}"
+# Skip sudo validation if SKIP_SUDO is true (for CI environments)
+if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
+    log_info "Skipping sudo validation ${DIM}(SKIP_SUDO=true)${RESET}"
 else
     # Attempt to get sudo privileges
     # Check if we already have passwordless sudo
