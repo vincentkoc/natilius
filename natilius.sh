@@ -958,10 +958,30 @@ elif [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
         log_success "Sudo privileges validated ${DIM}(non-interactive)${RESET}"
         keep_sudo_alive
     else
-        log_error "Sudo credentials not available in non-interactive mode."
-        echo -e "  ${DIM}Run once in an interactive terminal to authorize sudo.${RESET}"
-        echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
-        exit 1
+        # If we still have a TTY, allow one-time refresh even in non-interactive mode.
+        if [ -r /dev/tty ]; then
+            log_info "Requesting sudo credentials ${DIM}(non-interactive)${RESET}"
+            if (set +e; trap - ERR; command sudo -v < /dev/tty); then
+                if command sudo -n true 2>/dev/null; then
+                    log_success "Sudo privileges validated"
+                    keep_sudo_alive
+                else
+                    log_error "Sudo credentials not available in non-interactive mode."
+                    echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
+                    exit 1
+                fi
+            else
+                log_error "Sudo credentials not available in non-interactive mode."
+                echo -e "  ${DIM}Run once in an interactive terminal to authorize sudo.${RESET}"
+                echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
+                exit 1
+            fi
+        else
+            log_error "Sudo credentials not available in non-interactive mode."
+            echo -e "  ${DIM}Run once in an interactive terminal to authorize sudo.${RESET}"
+            echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
+            exit 1
+        fi
     fi
 else
     # Attempt to get sudo privileges
