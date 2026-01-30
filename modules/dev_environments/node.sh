@@ -31,6 +31,37 @@ export PATH="$HOME/.nodenv/bin:$PATH"
 export PATH="$HOME/.nodenv/shims:$PATH"
 eval "$(nodenv init -)"
 
+# Resolve major-only versions (e.g., "24") to latest available patch.
+resolve_node_version() {
+    if [[ "$NODEVER" =~ ^[0-9]+$ ]]; then
+        local major="$NODEVER"
+        local resolved=""
+        resolved=$(nodenv install -l 2>/dev/null | tr -d ' ' | grep -E "^${major}\\.[0-9]+\\.[0-9]+$" | tail -n 1)
+        if [[ -z "$resolved" ]]; then
+            log_warning "Node.js [$major] not found in node-build list. Updating node-build..."
+            brew upgrade node-build >/dev/null 2>&1 || true
+            resolved=$(nodenv install -l 2>/dev/null | tr -d ' ' | grep -E "^${major}\\.[0-9]+\\.[0-9]+$" | tail -n 1)
+        fi
+        if [[ -n "$resolved" ]]; then
+            log_info "Resolved Node.js [$major] -> [$resolved]"
+            NODEVER="$resolved"
+        else
+            log_warning "Could not resolve Node.js major [$major]. Will try as-is."
+        fi
+    fi
+}
+
+install_node_version() {
+    local version="$1"
+    set +e
+    nodenv install "$version" 2>&1 | tee -a "$LOGFILE"
+    local rc=${PIPESTATUS[0]}
+    set -e
+    return "$rc"
+}
+
+resolve_node_version
+
 # Check if desired Node.js version is installed
 CURRENTVER=$(get_current_version nodenv)
 INSTALLED=false
@@ -50,7 +81,11 @@ if [ "$INSTALLED" = true ]; then
 else
     log_warning "Node.js [$NODEVER] is not installed. Found [$CURRENTVER]."
     log_info "Installing Node.js..."
-    nodenv install "$NODEVER" | tee -a "$LOGFILE"
+    if ! install_node_version "$NODEVER"; then
+        log_error "Failed to install Node.js [$NODEVER]."
+        log_error "Try: brew upgrade node-build"
+        exit 1
+    fi
 
     # Set NODEVER as the local and global Node.js version
     nodenv global "$NODEVER"

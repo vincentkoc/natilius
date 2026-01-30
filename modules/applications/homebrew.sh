@@ -48,8 +48,12 @@ restart_system_preferences
 echo -e | tee -a "$LOGFILE"
 log_info "Tapping Homebrew repositories..."
 for tap in "${BREWTAPS[@]}"; do
-    log_info "Tapping repository [$tap]..."
-    retry_network_operation brew tap "$tap" | tee -a "$LOGFILE" || true
+    if brew tap | grep -qx "$tap"; then
+        log_info "Tap already added [$tap]. Skipping."
+    else
+        log_info "Tapping repository [$tap]..."
+        retry_network_operation brew tap "$tap" | tee -a "$LOGFILE" || true
+    fi
     sleep 1
 done
 
@@ -57,8 +61,12 @@ done
 echo -e | tee -a "$LOGFILE"
 log_info "Installing Homebrew packages..."
 for package in "${BREWPACKAGES[@]}"; do
-    log_info "Installing package [$package]..."
-    retry_network_operation brew install "$package" | tee -a "$LOGFILE" || true
+    if brew list --formula | grep -qx "$package"; then
+        log_info "Package already installed [$package]. Skipping."
+    else
+        log_info "Installing package [$package]..."
+        retry_network_operation brew install "$package" | tee -a "$LOGFILE" || true
+    fi
     echo -e
     sleep 2
 done
@@ -67,8 +75,12 @@ done
 echo -e | tee -a "$LOGFILE"
 log_info "Installing Homebrew casks..."
 for cask in "${BREWCASKS[@]}"; do
-    log_info "Installing cask [$cask]..."
-    retry_network_operation brew install --appdir="/Applications" --cask "$cask" | tee -a "$LOGFILE" || true
+    if brew list --cask | grep -qx "$cask"; then
+        log_info "Cask already installed [$cask]. Skipping."
+    else
+        log_info "Installing cask [$cask]..."
+        retry_network_operation brew install --appdir="/Applications" --cask "$cask" | tee -a "$LOGFILE" || true
+    fi
     echo -e
     sleep 2
 done
