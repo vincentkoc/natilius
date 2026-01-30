@@ -239,7 +239,7 @@ run_natilius() {
     # Execute (force a PTY when available so sudo timestamps can be reused)
     log_info "Executing: $cmd"
     if command -v script >/dev/null 2>&1; then
-        script -q /dev/null -c "$cmd"
+        script -q /dev/null /bin/sh -c "$cmd"
     elif [ -r /dev/tty ]; then
         eval "$cmd" < /dev/tty
     else
