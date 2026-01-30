@@ -90,6 +90,7 @@ VERBOSE_MODE=false
 QUIET_MODE=false
 SHOW_VERSION=false
 COMMAND=""
+MODULE_OVERRIDE=""
 
 # Function to show help
 show_help() {
@@ -114,6 +115,7 @@ OPTIONS:
     -i, --interactive   Run in interactive mode
     -c, --check         Run in check/dry-run mode (no changes)
     -p, --profile NAME  Use a specific configuration profile
+    --module NAME       Run a single module (e.g., applications/homebrew)
     --dry-run           Same as --check
     -h, --help          Show this help message
 
@@ -124,6 +126,7 @@ EXAMPLES:
     natilius doctor             # Run system diagnostics
     natilius profiles           # List available profiles
     natilius -p devops setup    # Run setup with devops profile
+    natilius setup --module system/system_update  # Run a single module
 
 ENVIRONMENT VARIABLES:
     Override config values with NATILIUS_ prefix:
@@ -180,6 +183,10 @@ while [[ "$#" -gt 0 ]]; do
             ;;
         --dry-run|--test|--check|-c)
             DRY_RUN=true
+            ;;
+        --module)
+            shift
+            MODULE_OVERRIDE="$1"
             ;;
         *)
             echo -e "\033[1;31m✗\033[0m Unknown parameter: $1"
@@ -1008,8 +1015,10 @@ else
     fi
 fi
 
-# Interactive Mode
-if [ "$INTERACTIVE_MODE" = true ]; then
+# Module selection
+if [[ -n "$MODULE_OVERRIDE" ]]; then
+    SELECTED_MODULES=("$MODULE_OVERRIDE")
+elif [ "$INTERACTIVE_MODE" = true ]; then
     log_info "Interactive mode enabled. Please select which modules to run."
     # List available modules
     AVAILABLE_MODULES=()
@@ -1058,6 +1067,9 @@ for module in "${SELECTED_MODULES[@]}"; do
     else
         log_warning "Module not found: $module"
         log_info "Searched in: $MODULE_PATH"
+        if [[ -n "$MODULE_OVERRIDE" ]]; then
+            exit 1
+        fi
     fi
 done
 log_info "Finished running all selected modules."

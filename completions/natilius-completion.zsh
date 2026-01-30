@@ -4,7 +4,7 @@ _natilius() {
     local -a cmds opts profiles
 
     cmds=(init setup doctor modules profiles version help)
-    opts=(-v --verbose -q --quiet -i --interactive -c --check --dry-run -p --profile -h --help --version)
+    opts=(-v --verbose -q --quiet -i --interactive -c --check --dry-run -p --profile --module -h --help --version)
 
     # Get built-in profiles from NATILIUS_HOME
     local profile_dir="${NATILIUS_HOME:-$HOME/.natilius}/profiles"
@@ -29,6 +29,11 @@ _natilius() {
     case "$words[2]" in
         -p|--profile)
             compadd "${profiles[@]}"
+            ;;
+        --module)
+            local modules
+            modules=(${(f)"$(find "${NATILIUS_HOME:-$HOME/.natilius}/modules" -name "*.sh" 2>/dev/null | sed 's#.*modules/##;s#\.sh$##')"})
+            compadd "${modules[@]}"
             ;;
         *)
             compadd "${cmds[@]}" "${opts[@]}"

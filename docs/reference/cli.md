@@ -23,6 +23,7 @@ natilius [command] [options]
 | `-p, --profile NAME` | Use a specific profile |
 | `-c, --check` | Dry run (preview changes) |
 | `-i, --interactive` | Interactive mode |
+| `--module NAME` | Run a single module |
 | `-v, --verbose` | Detailed output |
 | `-q, --quiet` | Suppress non-error output |
 
@@ -46,6 +47,9 @@ natilius --quiet setup
 
 # Combine options
 natilius -v --profile developer --check
+
+# Run a single module
+natilius setup --module applications/homebrew
 ```
 
 ## Exit Codes

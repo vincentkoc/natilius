@@ -67,7 +67,6 @@ for package in "${BREWPACKAGES[@]}"; do
         log_info "Installing package [$package]..."
         retry_network_operation brew install "$package" | tee -a "$LOGFILE" || true
     fi
-    echo -e
     sleep 2
 done
 
@@ -81,7 +80,6 @@ for cask in "${BREWCASKS[@]}"; do
         log_info "Installing cask [$cask]..."
         retry_network_operation brew install --appdir="/Applications" --cask "$cask" | tee -a "$LOGFILE" || true
     fi
-    echo -e
     sleep 2
 done
 

@@ -8,7 +8,7 @@ _natilius_completion() {
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
     local commands="init setup doctor modules profiles version help"
-    local options="-v --verbose -q --quiet -i --interactive -c --check --dry-run -p --profile -h --help --version"
+    local options="-v --verbose -q --quiet -i --interactive -c --check --dry-run -p --profile --module -h --help --version"
 
     # Get built-in profiles from NATILIUS_HOME
     local profile_dir="${NATILIUS_HOME:-$HOME/.natilius}/profiles"
@@ -37,6 +37,12 @@ _natilius_completion() {
     case "$prev" in
         -p|--profile)
             COMPREPLY=($(compgen -W "$profiles" -- "$cur"))
+            return 0
+            ;;
+        --module)
+            local modules
+            modules=$(find "${NATILIUS_HOME:-$HOME/.natilius}/modules" -name "*.sh" 2>/dev/null | sed "s#.*modules/##;s#\.sh\$##")
+            COMPREPLY=($(compgen -W "$modules" -- "$cur"))
             return 0
             ;;
     esac

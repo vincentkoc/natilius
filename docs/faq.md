@@ -122,7 +122,7 @@ RUBYVER="3.3"
 
 1. Run with verbose mode: `natilius --verbose`
 2. Check logs: `ls -la ~/.natilius/logs/`
-3. Run just that module in isolation
+3. Run just that module in isolation: `natilius setup --module <module/path>`
 4. [Open an issue](https://github.com/vincentkoc/natilius/issues)
 
 ### How do I reset everything?
