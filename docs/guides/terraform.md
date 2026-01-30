@@ -12,6 +12,7 @@ For fully automated (passwordless) provisioning:
    # On target Mac, add to /etc/sudoers.d/natilius
    %admin ALL=(ALL) NOPASSWD: /usr/sbin/softwareupdate, /usr/bin/xcode-select
    ```
+   Or let the provisioner create a temporary whitelist with `SET_NOPASSWD=true`.
    Or use `SKIP_SUDO=true` to skip operations requiring sudo.
 
 3. **Xcode Command Line Tools** - The provisioner attempts automatic installation, but may require manual confirmation on first run.
@@ -22,7 +23,7 @@ For fully automated (passwordless) provisioning:
 resource "null_resource" "mac_setup" {
   provisioner "remote-exec" {
     inline = [
-      "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | bash -s devops"
+      "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | SET_NOPASSWD=true bash -s devops"
     ]
   }
 }
@@ -38,6 +39,8 @@ Control provisioning behavior with environment variables:
 | `NONINTERACTIVE` | `true` | Skip all prompts (auto-set) |
 | `CI` | `true` | CI mode (auto-set) |
 | `SKIP_SUDO` | `false` | Skip sudo operations |
+| `SET_NOPASSWD` | `false` | Create a temporary sudoers whitelist for this run |
+| `SKIP_SYSTEM_UPDATES` | `true` (when NONINTERACTIVE) | Skip macOS system updates to avoid volume-owner prompts |
 | `DRY_RUN` | `false` | Preview changes without applying |
 | `QUIET_MODE` | `false` | Minimal output |
 
@@ -71,7 +74,7 @@ resource "null_resource" "mac_setup" {
 
   provisioner "remote-exec" {
     inline = [
-      "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | bash -s ${var.profile}"
+      "curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh | SET_NOPASSWD=true bash -s ${var.profile}"
     ]
   }
 }
@@ -204,8 +207,15 @@ The provisioner attempts silent Xcode CLT installation. If it hangs:
 ### Homebrew Requires Password
 Homebrew installation may prompt for password on first run. Solutions:
 - Pre-install Homebrew before Terraform
-- Configure passwordless sudo for Homebrew
+- Configure passwordless sudo for Homebrew, or use `SET_NOPASSWD=true`
 - Use `SKIP_SUDO=true` (limited functionality)
+
+### macOS System Updates Prompt for Password
+System updates require a volume-owner password and cannot be bypassed by sudoers.
+By default, system updates are skipped in non-interactive runs. To enable:
+```
+SKIP_SYSTEM_UPDATES=false
+```
 
 ### Timeout Issues
 Increase the connection timeout for slow networks or large profiles:
