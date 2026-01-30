@@ -991,6 +991,10 @@ elif [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
         fi
     fi
 else
+    if [[ -n "$MODULE_OVERRIDE" ]]; then
+        log_info "Skipping sudo validation for single-module run"
+        # Avoid prompting; module may handle sudo if needed.
+    else
     # Attempt to get sudo privileges
     # Check if we already have passwordless sudo
     if sudo -n true 2>/dev/null; then
@@ -1012,6 +1016,7 @@ else
             echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
             exit 1
         fi
+    fi
     fi
 fi
 
