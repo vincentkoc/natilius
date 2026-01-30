@@ -285,6 +285,15 @@ main() {
     install_natilius
     setup_profile
 
+    if [[ "${SKIP_SUDO:-false}" != "true" ]]; then
+        if sudo -n true >/dev/null 2>&1; then
+            log_info "Sudo ticket available after Homebrew."
+        else
+            log_warn "Sudo ticket missing after Homebrew; refreshing credentials..."
+            sudo -v
+        fi
+    fi
+
     run_natilius
 
     echo ""
