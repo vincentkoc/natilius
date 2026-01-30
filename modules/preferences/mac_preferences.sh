@@ -23,8 +23,23 @@ log_info "Applying macOS preferences and tweaks..."
 
 # Function to set defaults with error handling
 set_default() {
-    if ! defaults write "$1" "$2" "$3"; then
-        log_error "Failed to set default: $1 $2"
+    local domain="$1"
+    local key="$2"
+    shift 2
+    if ! defaults write "$domain" "$key" "$@"; then
+        log_error "Failed to set default: $domain $key"
+    fi
+}
+
+plistbuddy_set() {
+    local plist="$1"
+    local path="$2"
+    local type="$3"
+    local value="$4"
+    if ! /usr/libexec/PlistBuddy -c "Set $path $value" "$plist" 2>/dev/null; then
+        /usr/libexec/PlistBuddy -c "Add $path $type $value" "$plist" 2>/dev/null || {
+            log_error "Failed to set plist value: $plist $path"
+        }
     fi
 }
 
@@ -103,9 +118,12 @@ set_default com.apple.desktopservices DSDontWriteUSBStores -bool true
 log_success "Prevented creation of .DS_Store files on network or USB volumes"
 
 # Enable snap-to-grid for icons
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+plistbuddy_set "$HOME/Library/Preferences/com.apple.finder.plist" \
+    ":DesktopViewSettings:IconViewSettings:arrangeBy" string "grid"
+plistbuddy_set "$HOME/Library/Preferences/com.apple.finder.plist" \
+    ":FK_StandardViewSettings:IconViewSettings:arrangeBy" string "grid"
+plistbuddy_set "$HOME/Library/Preferences/com.apple.finder.plist" \
+    ":StandardViewSettings:IconViewSettings:arrangeBy" string "grid"
 log_success "Enabled snap-to-grid for icons"
 
 # Allow text selection in Quick Look

@@ -21,9 +21,9 @@
 
 log_info "Checking and installing system updates..."
 
-# Skip updates in non-interactive mode unless explicitly allowed.
-if [[ "${NONINTERACTIVE:-false}" == "true" && "${ALLOW_SYSTEM_UPDATES:-false}" != "true" ]]; then
-    log_warning "Skipping system updates in non-interactive mode."
+# Skip updates in non-interactive mode only when explicitly requested.
+if [[ "${NONINTERACTIVE:-false}" == "true" && "${SKIP_SYSTEM_UPDATES:-false}" == "true" ]]; then
+    log_warning "Skipping system updates in non-interactive mode (SKIP_SYSTEM_UPDATES=true)."
     return 0
 fi
 
