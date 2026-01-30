@@ -33,6 +33,9 @@ export NONINTERACTIVE="${NONINTERACTIVE:-true}"
 export CI="${CI:-true}"
 export SKIP_SUDO="${SKIP_SUDO:-false}"
 export NATILIUS_DEBUG="${NATILIUS_DEBUG:-false}"
+export SET_NOPASSWD="${SET_NOPASSWD:-false}"
+
+SUDOERS_FILE=""
 
 # Colors
 CYAN='\033[1;36m'
@@ -54,6 +57,55 @@ show_banner() {
     echo -e "  ${CYAN}┃${NC} ${BOLD}🐚 natilius provisioner${NC}"
     echo -e "  ${CYAN}┃${NC} ${DIM}Mac Developer Environment Setup${NC}"
     echo ""
+}
+
+setup_nopasswd_whitelist() {
+    if [[ "${SET_NOPASSWD:-false}" != "true" ]]; then
+        return
+    fi
+
+    if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
+        log_warn "SET_NOPASSWD=true but SKIP_SUDO=true; skipping sudoers setup."
+        return
+    fi
+
+    local user="${SUDOERS_USER:-$(id -un)}"
+    local ts
+    ts="$(date +%s)"
+    SUDOERS_FILE="/etc/sudoers.d/natilius-terraform-${ts}"
+
+    log_info "Configuring temporary sudo NOPASSWD whitelist for user: $user"
+    sudo /usr/bin/tee "$SUDOERS_FILE" >/dev/null <<'EOF'
+# Managed by natilius terraform-provision.sh (temporary)
+Defaults:__USER__ !authenticate
+Cmnd_Alias NATILIUS_CMDS = \
+    /usr/sbin/chown, /bin/mkdir, /usr/bin/tee, /bin/chmod, \
+    /usr/sbin/softwareupdate, /usr/sbin/networksetup, /usr/sbin/pmset, \
+    /usr/sbin/spctl, /usr/bin/pkill, /usr/libexec/ApplicationFirewall/socketfilterfw, \
+    /usr/sbin/fdesetup, /usr/bin/defaults, /usr/sbin/sysadminctl, \
+    /usr/sbin/shutdown, /usr/sbin/tmutil, /usr/bin/find, /bin/rm
+__USER__ ALL=(ALL) NOPASSWD: NATILIUS_CMDS
+EOF
+
+    sudo /bin/chmod 0440 "$SUDOERS_FILE"
+    sudo /usr/sbin/visudo -cf "$SUDOERS_FILE" >/dev/null || {
+        log_error "Sudoers whitelist validation failed; removing $SUDOERS_FILE"
+        sudo /bin/rm -f "$SUDOERS_FILE"
+        SUDOERS_FILE=""
+        exit 1
+    }
+
+    # Replace placeholder with actual user
+    sudo /usr/bin/sed -i '' "s/__USER__/${user}/g" "$SUDOERS_FILE"
+    log_ok "Temporary sudo whitelist enabled (${SUDOERS_FILE})"
+}
+
+cleanup_nopasswd_whitelist() {
+    if [[ -n "$SUDOERS_FILE" ]]; then
+        sudo /bin/rm -f "$SUDOERS_FILE" 2>/dev/null || true
+        log_ok "Removed temporary sudo whitelist (${SUDOERS_FILE})"
+        SUDOERS_FILE=""
+    fi
 }
 
 # If stdin isn't a TTY, re-run inside a PTY so sudo timestamps work reliably.
@@ -281,6 +333,7 @@ main() {
     log_info "Skip sudo: ${SKIP_SUDO:-false}"
 
     preflight_check
+    setup_nopasswd_whitelist
     install_homebrew
     install_natilius
     setup_profile
@@ -312,6 +365,12 @@ main() {
     echo ""
     echo -e "  ${CYAN}┃${NC} ${GREEN}✓${NC} ${BOLD}Provisioning Complete${NC}"
     echo ""
+
+    if [[ -n "$SUDOERS_FILE" ]]; then
+        echo -e "  ${DIM}To remove the sudo whitelist manually:${NC}"
+        echo -e "  ${DIM}  sudo rm -f $SUDOERS_FILE${NC}"
+    fi
 }
 
+trap cleanup_nopasswd_whitelist EXIT
 main "$@"

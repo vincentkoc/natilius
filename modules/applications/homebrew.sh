@@ -21,6 +21,10 @@
 
 log_info "Setting up Homebrew..."
 
+# Suppress Homebrew hints and per-install cleanup (we run cleanup later).
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+export HOMEBREW_NO_ENV_HINTS=1
+
 # Ensure Homebrew is installed
 if ! command -v brew &> /dev/null; then
     log_info "Homebrew not found. Installing..."
