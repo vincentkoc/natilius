@@ -60,27 +60,37 @@ done
 # Homebrew Packages
 echo -e | tee -a "$LOGFILE"
 log_info "Installing Homebrew packages..."
+installed_formulas="$(brew list --formula 2>/dev/null || true)"
+missing_formulas=()
 for package in "${BREWPACKAGES[@]}"; do
-    if brew list --formula "$package" >/dev/null 2>&1; then
-        log_info "Package already installed [$package]. Skipping."
-    else
-        log_info "Installing package [$package]..."
-        retry_network_operation brew install "$package" | tee -a "$LOGFILE" || true
+    if printf '%s\n' "$installed_formulas" | grep -qx "$package"; then
+        continue
     fi
-    sleep 2
+    missing_formulas+=("$package")
 done
+if [ "${#missing_formulas[@]}" -eq 0 ]; then
+    log_info "All Homebrew packages already installed. Skipping."
+else
+    log_info "Installing ${#missing_formulas[@]} Homebrew packages..."
+    retry_network_operation brew install "${missing_formulas[@]}" | tee -a "$LOGFILE" || true
+fi
 
 # Homebrew Casks
 echo -e | tee -a "$LOGFILE"
 log_info "Installing Homebrew casks..."
+installed_casks="$(brew list --cask 2>/dev/null || true)"
+missing_casks=()
 for cask in "${BREWCASKS[@]}"; do
-    if brew list --cask "$cask" >/dev/null 2>&1; then
-        log_info "Cask already installed [$cask]. Skipping."
-    else
-        log_info "Installing cask [$cask]..."
-        retry_network_operation brew install --appdir="/Applications" --cask "$cask" | tee -a "$LOGFILE" || true
+    if printf '%s\n' "$installed_casks" | grep -qx "$cask"; then
+        continue
     fi
-    sleep 2
+    missing_casks+=("$cask")
 done
+if [ "${#missing_casks[@]}" -eq 0 ]; then
+    log_info "All Homebrew casks already installed. Skipping."
+else
+    log_info "Installing ${#missing_casks[@]} Homebrew casks..."
+    retry_network_operation brew install --appdir="/Applications" --cask "${missing_casks[@]}" | tee -a "$LOGFILE" || true
+fi
 
 log_info "Skipping Homebrew cleanup here (handled by system cleanup)."
