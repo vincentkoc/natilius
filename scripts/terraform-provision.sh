@@ -236,9 +236,11 @@ run_natilius() {
     export NONINTERACTIVE=true
     export SKIP_SUDO="${SKIP_SUDO:-false}"
 
-    # Execute (attach a TTY when available so sudo can validate non-interactively)
+    # Execute (force a PTY when available so sudo timestamps can be reused)
     log_info "Executing: $cmd"
-    if [ -r /dev/tty ]; then
+    if command -v script >/dev/null 2>&1; then
+        script -q /dev/null -c "$cmd"
+    elif [ -r /dev/tty ]; then
         eval "$cmd" < /dev/tty
     else
         eval "$cmd"
