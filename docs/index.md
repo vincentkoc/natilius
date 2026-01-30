@@ -67,7 +67,7 @@ New Mac? New job? You know the drill — Homebrew, Xcode CLI tools, Python, Node
 - **DevOps** — Docker, Kubernetes, Terraform, cloud CLIs
 - **IDEs** — VS Code, Cursor, JetBrains, Sublime, Zed
 - **Security** — FileVault, Firewall, Gatekeeper, privacy settings
-- **Profiles** — Minimal, DevOps, Developer, or build your own
+- **Profiles** — Minimal, DevOps, Developer, Clawdbot, or build your own
 
 ## Commands
 
@@ -92,5 +92,7 @@ natilius setup → Load Config → Profile? → Run Modules → Done!
 - [Quick Start Guide](getting-started/quickstart.md) — Detailed setup walkthrough
 - [Configuration](configuration/index.md) — Customize your setup
 - [Profiles](configuration/profiles.md) — Role-based configurations
+- [Terraform Provisioning](guides/terraform.md) — Remote Mac automation
+- [Clawdbot/AI Agents](guides/clawdbot.md) — moltbot setup with Mackup restore
 - [Enterprise & MDM](enterprise.md) — Jamf, JumpCloud, Intune integration
 - [FAQ](faq.md) — Common questions

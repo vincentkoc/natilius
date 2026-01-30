@@ -189,8 +189,9 @@ resource "null_resource" "mac_preview" {
 | `minimal` | Essential tools only (git, brew, basic CLI) |
 | `developer` | Full development environment |
 | `devops` | Kubernetes, Terraform, cloud CLIs |
+| `clawdbot` | AI agent machines (moltbot, Node.js 24, Chrome) |
 
-See [Profiles](../configuration/profiles.md) for details.
+See [Profiles](../configuration/profiles.md) for details, or the [Clawdbot Guide](./clawdbot.md) for AI agent provisioning.
 
 ## Troubleshooting
 

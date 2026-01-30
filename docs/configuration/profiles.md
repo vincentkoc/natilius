@@ -9,6 +9,9 @@ Profiles are pre-built configurations for common use cases.
 | `minimal` | Quick onboarding | Git, Homebrew, VS Code, essential CLI tools |
 | `devops` | Platform/SRE engineers | Kubernetes, Terraform, Docker, cloud CLIs, Python, Go |
 | `developer` | Full-stack developers | Multiple languages, IDEs, databases, all dev tools |
+| `clawdbot` | AI agent machines | Node.js 24, moltbot, Chrome, 1Password, Tailscale |
+
+See [Clawdbot Guide](../guides/clawdbot.md) for detailed setup instructions for AI agent provisioning.
 
 ## Using Profiles
 
