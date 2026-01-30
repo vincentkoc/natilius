@@ -122,8 +122,12 @@ install_homebrew() {
 
     log_info "Installing Homebrew..."
 
-    # Non-interactive Homebrew install
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    # Homebrew install: allow sudo prompt when a TTY is available
+    if [ -t 0 ] && [[ "${SKIP_SUDO:-false}" != "true" ]]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    else
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
 
     # Add to PATH for current session and persist to shell config
     local brew_path=""
