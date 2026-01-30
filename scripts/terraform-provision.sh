@@ -34,18 +34,6 @@ export CI="${CI:-true}"
 export SKIP_SUDO="${SKIP_SUDO:-false}"
 export NATILIUS_DEBUG="${NATILIUS_DEBUG:-false}"
 
-# If stdin isn't a TTY, re-run inside a PTY so sudo timestamps work reliably.
-if [[ -z "${NATILIUS_IN_PTY:-}" && ! -t 0 && -r /dev/tty && -n "$(command -v script 2>/dev/null)" ]]; then
-    log_info "PTY bootstrap: stdin is not a TTY; re-executing inside script PTY"
-    log_info "PTY bootstrap: /dev/tty=$(stat -f '%Sp %z %Sm %N' /dev/tty 2>/dev/null || echo 'unknown')"
-    log_info "PTY bootstrap: tty=$(tty 2>/dev/null || echo 'none')"
-    log_info "PTY bootstrap: script=$(command -v script 2>/dev/null || echo 'missing')"
-    log_info "PTY bootstrap: script_ver=$(script -V 2>/dev/null || echo 'unknown')"
-    export NATILIUS_IN_PTY=1
-    script -q /dev/null /bin/sh -c "curl -fsSL \"$SCRIPT_URL\" | bash -s \"$PROFILE\"" < /dev/tty
-    exit $?
-fi
-
 # Colors
 CYAN='\033[1;36m'
 GREEN='\033[0;32m'
@@ -67,6 +55,18 @@ show_banner() {
     echo -e "  ${CYAN}┃${NC} ${DIM}Mac Developer Environment Setup${NC}"
     echo ""
 }
+
+# If stdin isn't a TTY, re-run inside a PTY so sudo timestamps work reliably.
+if [[ -z "${NATILIUS_IN_PTY:-}" && ! -t 0 && -r /dev/tty && -n "$(command -v script 2>/dev/null)" ]]; then
+    log_info "PTY bootstrap: stdin is not a TTY; re-executing inside script PTY"
+    log_info "PTY bootstrap: /dev/tty=$(stat -f '%Sp %z %Sm %N' /dev/tty 2>/dev/null || echo 'unknown')"
+    log_info "PTY bootstrap: tty=$(tty 2>/dev/null || echo 'none')"
+    log_info "PTY bootstrap: script=$(command -v script 2>/dev/null || echo 'missing')"
+    log_info "PTY bootstrap: script_ver=$(script -V 2>/dev/null || echo 'unknown')"
+    export NATILIUS_IN_PTY=1
+    script -q /dev/null /bin/sh -c "curl -fsSL \"$SCRIPT_URL\" | bash -s \"$PROFILE\"" < /dev/tty
+    exit $?
+fi
 
 # ============================================================================
 # Preflight Checks
