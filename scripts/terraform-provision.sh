@@ -236,9 +236,13 @@ run_natilius() {
     export NONINTERACTIVE=true
     export SKIP_SUDO="${SKIP_SUDO:-false}"
 
-    # Execute
+    # Execute (attach a TTY when available so sudo can validate non-interactively)
     log_info "Executing: $cmd"
-    eval "$cmd"
+    if [ -r /dev/tty ]; then
+        eval "$cmd" < /dev/tty
+    else
+        eval "$cmd"
+    fi
 
     log_ok "Natilius setup complete"
 }
