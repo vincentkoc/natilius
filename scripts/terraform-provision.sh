@@ -314,6 +314,10 @@ run_natilius() {
     # Set environment for non-interactive
     export NONINTERACTIVE=true
     export SKIP_SUDO="${SKIP_SUDO:-false}"
+    # In automation, skip system updates unless explicitly enabled.
+    if [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
+        export SKIP_SYSTEM_UPDATES="${SKIP_SYSTEM_UPDATES:-true}"
+    fi
 
     # Execute
     log_info "Executing: $cmd"
