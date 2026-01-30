@@ -86,6 +86,8 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
 # ============================================================================
 BREWTAPS=(
     "github/gh"
+    "steipete/tap"
+    "yakitrak/yakitrak"
 )
 
 # ============================================================================
@@ -118,6 +120,9 @@ BREWPACKAGES=(
     "peco"
     "tealdeer"
     "zsh-completions"
+    "imsg"
+    "obsidian-cli"
+    "peekaboo"
 
     # Editors & Terminal
     "vim"
@@ -239,6 +244,7 @@ GLOBAL_PYTHON_PACKAGES=(
     "numpy"
     "pandas"
     "pre-commit"
+    "openai-whisper"
 )
 
 # ============================================================================

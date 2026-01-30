@@ -9,6 +9,7 @@ Complete reference for all `~/.natiliusrc` configuration variables.
 | `ENABLED_MODULES` | array | `()` | Modules to run |
 | `COUNTRYCODE` | string | `"us"` | Country code |
 | `SKIP_UPDATE_CHECK` | bool | `false` | Skip version check |
+| `NATILIUS_INSTALL_OHMYZSH` | bool | `true` | Install Oh My Zsh in dotfiles module |
 
 ## Language Versions
 

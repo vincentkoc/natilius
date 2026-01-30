@@ -52,6 +52,21 @@ ensure_brew_path() {
     return 1
 }
 
+# Optional Oh My Zsh install (for dotfiles that expect it)
+if [[ "${NATILIUS_INSTALL_OHMYZSH:-true}" == "true" ]]; then
+    if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
+        log_info "Oh My Zsh not found. Installing..."
+        if retry_network_operation GIT_SSH_COMMAND= git -c url."https://github.com/".insteadOf=git@github.com: \
+            clone https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"; then
+            log_success "Oh My Zsh installed"
+        else
+            log_warning "Failed to clone Oh My Zsh repo"
+        fi
+    else
+        log_info "Oh My Zsh already installed. Skipping."
+    fi
+fi
+
 # Optional dotfiles repo/bootstrap
 DOTFILES_DIR="${NATILIUS_DOTFILES_DIR:-$HOME/Library/Mobile Documents/com~apple~CloudDocs/dotfiles}"
 DOTFILES_REPO="${NATILIUS_DOTFILES_REPO:-https://github.com/vincentkoc/dotfiles}"
@@ -72,8 +87,13 @@ if [[ -n "$DOTFILES_REPO" ]]; then
         log_info "Running dotfiles post-pull command..."
         (cd "$DOTFILES_DIR" && /bin/bash -c "$DOTFILES_POST_PULL_CMD")
         log_success "Dotfiles post-pull command finished"
+    elif [[ -x "$DOTFILES_DIR/install.sh" ]]; then
+        log_info "Running dotfiles install.sh..."
+        (cd "$DOTFILES_DIR" && /bin/bash "./install.sh")
+        log_success "Dotfiles install.sh finished"
     fi
 fi
+
 
 # Install Mackup if not installed
 if ! command -v mackup &> /dev/null; then
@@ -90,6 +110,9 @@ if [ ! -f "$HOME/.mackup.cfg" ]; then
 [storage]
 engine = icloud
 directory = dotfiles
+
+[sync]
+symlink = true
 EOF
     log_success "Created .mackup.cfg"
 fi

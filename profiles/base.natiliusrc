@@ -11,6 +11,7 @@
 COUNTRYCODE="us"
 SKIP_UPDATE_CHECK=false
 PYTHONVER="3.13.0"
+NATILIUS_INSTALL_OHMYZSH=true
 
 # ============================================================================
 # DIRECTORIES

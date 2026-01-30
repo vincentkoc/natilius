@@ -52,6 +52,7 @@ NODEVER="22.20.0"
 GOVER="1.20.0"
 PHPVER="8.1.0"
 FLUTTER_CHANNEL="stable"
+NATILIUS_INSTALL_OHMYZSH=true
 
 # Set to true to skip update checks
 SKIP_UPDATE_CHECK=false
