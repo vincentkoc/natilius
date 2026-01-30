@@ -946,6 +946,14 @@ echo
 if [[ "${SKIP_SUDO:-false}" == "true" ]]; then
     log_info "Skipping sudo validation ${DIM}(SKIP_SUDO=true)${RESET}"
 elif [[ "${NONINTERACTIVE:-false}" == "true" ]]; then
+    if [[ "${NATILIUS_DEBUG:-false}" == "true" ]]; then
+        log_info "Debug: tty=$(tty 2>/dev/null || echo 'none')"
+        log_info "Debug: stdin_is_tty=$([ -t 0 ] && echo yes || echo no)"
+        log_info "Debug: stdout_is_tty=$([ -t 1 ] && echo yes || echo no)"
+        log_info "Debug: sudo_n=$(command sudo -n true >/dev/null 2>&1 && echo ok || echo fail)"
+        log_info "Debug: user=$(whoami) uid=$(id -u) euid=$(id -u)"
+        log_info "Debug: sudo_tickets=$(sudo -l -n 2>/dev/null | head -n 1)"
+    fi
     if (set +e; trap - ERR; command sudo -n true 2>/dev/null); then
         log_success "Sudo privileges validated ${DIM}(non-interactive)${RESET}"
         keep_sudo_alive

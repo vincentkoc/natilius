@@ -26,11 +26,25 @@ set -euo pipefail
 PROFILE="${1:-minimal}"
 NATILIUS_BRANCH="${NATILIUS_BRANCH:-main}"
 NATILIUS_HOME="${NATILIUS_HOME:-$HOME/.natilius}"
+SCRIPT_URL="${SCRIPT_URL:-https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/terraform-provision.sh}"
 
 # Default to non-interactive for automation
 export NONINTERACTIVE="${NONINTERACTIVE:-true}"
 export CI="${CI:-true}"
 export SKIP_SUDO="${SKIP_SUDO:-false}"
+export NATILIUS_DEBUG="${NATILIUS_DEBUG:-false}"
+
+# If stdin isn't a TTY, re-run inside a PTY so sudo timestamps work reliably.
+if [[ -z "${NATILIUS_IN_PTY:-}" && ! -t 0 && -r /dev/tty && -n "$(command -v script 2>/dev/null)" ]]; then
+    log_info "PTY bootstrap: stdin is not a TTY; re-executing inside script PTY"
+    log_info "PTY bootstrap: /dev/tty=$(stat -f '%Sp %z %Sm %N' /dev/tty 2>/dev/null || echo 'unknown')"
+    log_info "PTY bootstrap: tty=$(tty 2>/dev/null || echo 'none')"
+    log_info "PTY bootstrap: script=$(command -v script 2>/dev/null || echo 'missing')"
+    log_info "PTY bootstrap: script_ver=$(script -V 2>/dev/null || echo 'unknown')"
+    export NATILIUS_IN_PTY=1
+    script -q /dev/null /bin/sh -c "curl -fsSL \"$SCRIPT_URL\" | bash -s \"$PROFILE\"" < /dev/tty
+    exit $?
+fi
 
 # Colors
 CYAN='\033[1;36m'
@@ -218,6 +232,12 @@ setup_profile() {
 # ============================================================================
 run_natilius() {
     log_info "Running Natilius setup..."
+    if [[ "${NATILIUS_DEBUG:-false}" == "true" ]]; then
+        log_info "Debug: tty=$(tty 2>/dev/null || echo 'none')"
+        log_info "Debug: stdin_is_tty=$([ -t 0 ] && echo yes || echo no)"
+        log_info "Debug: stdout_is_tty=$([ -t 1 ] && echo yes || echo no)"
+        log_info "Debug: sudo_n=$(sudo -n true >/dev/null 2>&1 && echo ok || echo fail)"
+    fi
 
     cd "$NATILIUS_HOME"
 
@@ -236,19 +256,12 @@ run_natilius() {
     export NONINTERACTIVE=true
     export SKIP_SUDO="${SKIP_SUDO:-false}"
 
-    # Execute (force a PTY when available so sudo timestamps can be reused)
+    # Execute
     log_info "Executing: $cmd"
-    if command -v script >/dev/null 2>&1; then
-        if [[ "${SKIP_SUDO:-false}" != "true" ]]; then
-            script -q /dev/null /bin/sh -c "sudo -v; $cmd" < /dev/tty
-        else
-            script -q /dev/null /bin/sh -c "$cmd" < /dev/tty
-        fi
-    elif [ -r /dev/tty ]; then
-        eval "$cmd" < /dev/tty
-    else
-        eval "$cmd"
+    if [[ "${NATILIUS_DEBUG:-false}" == "true" ]]; then
+        log_info "Debug: env NONINTERACTIVE=$NONINTERACTIVE SKIP_SUDO=$SKIP_SUDO CI=$CI NATILIUS_IN_PTY=${NATILIUS_IN_PTY:-}"
     fi
+    eval "$cmd"
 
     log_ok "Natilius setup complete"
 }
