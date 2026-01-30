@@ -261,14 +261,21 @@ main() {
         done
     }
 
-    # Get sudo credentials upfront and keep them alive
+    preflight_check
+    install_homebrew
+    install_natilius
+    setup_profile
+
+    # Get sudo credentials right before Natilius (Homebrew may have reset them)
     if [[ "${SKIP_SUDO:-false}" != "true" ]]; then
-        log_info "Requesting sudo credentials (will be cached for the entire run)..."
-        if ! sudo -v; then
-            log_error "Failed to obtain sudo credentials."
-            echo -e "  ${DIM}Ensure you have sudo access and try again.${RESET}"
-            echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
-            exit 1
+        if ! sudo -n true 2>/dev/null; then
+            log_info "Requesting sudo credentials for Natilius (will be cached for the rest of the run)..."
+            if ! sudo -v; then
+                log_error "Failed to obtain sudo credentials."
+                echo -e "  ${DIM}Ensure you have sudo access and try again.${RESET}"
+                echo -e "  ${DIM}For unattended use, set SKIP_SUDO=true or configure NOPASSWD.${RESET}"
+                exit 1
+            fi
         fi
         export NATILIUS_SUDO_VALIDATED=true
         # Keep sudo alive in background
@@ -277,10 +284,6 @@ main() {
         trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null' EXIT
     fi
 
-    preflight_check
-    install_homebrew
-    install_natilius
-    setup_profile
     run_natilius
 
     echo ""
