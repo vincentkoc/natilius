@@ -289,8 +289,21 @@ main() {
         if sudo -n true >/dev/null 2>&1; then
             log_info "Sudo ticket available after Homebrew."
         else
-            log_warn "Sudo ticket missing after Homebrew; refreshing credentials..."
-            sudo -v
+            if [ -t 0 ]; then
+                log_warn "Sudo ticket missing after Homebrew; refreshing credentials..."
+                if ! sudo -v < /dev/tty; then
+                    log_error "Failed to refresh sudo credentials after Homebrew."
+                    exit 1
+                fi
+                if sudo -n true >/dev/null 2>&1; then
+                    log_info "Sudo ticket refreshed after Homebrew."
+                else
+                    log_error "Sudo ticket still unavailable after refresh."
+                    exit 1
+                fi
+            else
+                log_warn "Sudo ticket missing after Homebrew and no TTY available to refresh."
+            fi
         fi
     fi
 
