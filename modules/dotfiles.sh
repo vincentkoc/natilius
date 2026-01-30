@@ -21,6 +21,37 @@
 
 log_info "Setting up dotfiles..."
 
+# Ensure Homebrew is on PATH for this session (needed when running module alone).
+ensure_brew_path() {
+    if command -v brew >/dev/null 2>&1; then
+        return 0
+    fi
+
+    local brew_path=""
+    if [[ -x "/opt/homebrew/bin/brew" ]]; then
+        brew_path="/opt/homebrew/bin/brew"
+    elif [[ -x "/usr/local/bin/brew" ]]; then
+        brew_path="/usr/local/bin/brew"
+    fi
+
+    if [[ -n "$brew_path" ]]; then
+        eval "$("$brew_path" shellenv)"
+        if [[ -f "$HOME/.zprofile" ]]; then
+            if ! grep -q "brew shellenv" "$HOME/.zprofile" 2>/dev/null; then
+                echo "" >> "$HOME/.zprofile"
+                echo "# Homebrew" >> "$HOME/.zprofile"
+                echo "eval \"\$($brew_path shellenv)\"" >> "$HOME/.zprofile"
+            fi
+        else
+            echo "# Homebrew" > "$HOME/.zprofile"
+            echo "eval \"\$($brew_path shellenv)\"" >> "$HOME/.zprofile"
+        fi
+        return 0
+    fi
+
+    return 1
+}
+
 # Optional dotfiles repo/bootstrap
 DOTFILES_DIR="${NATILIUS_DOTFILES_DIR:-$HOME/Library/Mobile Documents/com~apple~CloudDocs/dotfiles}"
 DOTFILES_REPO="${NATILIUS_DOTFILES_REPO:-https://github.com/vincentkoc/dotfiles}"
@@ -46,6 +77,10 @@ fi
 
 # Install Mackup if not installed
 if ! command -v mackup &> /dev/null; then
+    if ! ensure_brew_path; then
+        log_error "Homebrew not found in PATH and could not be detected. Install Homebrew first."
+        return 1
+    fi
     brew install mackup
 fi
 
