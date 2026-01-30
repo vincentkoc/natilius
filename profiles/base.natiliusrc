@@ -17,6 +17,7 @@ SKIP_UPDATE_CHECK=false
 DIRS=(
     "~/.config"
     "~/GIT"
+    "~/Library/Mobile Documents/com~apple~CloudDocs/dotfiles"
 )
 
 DIRSTOEXCLUDEFROMTIMEMACHINE=(

@@ -59,6 +59,7 @@ DIRS=(
     "~/.config"
     "~/.config/moltbot"
     "~/GIT"
+    "~/Library/Mobile Documents/com~apple~CloudDocs/dotfiles"
 )
 
 DIRSTOEXCLUDEFROMTIMEMACHINE=(

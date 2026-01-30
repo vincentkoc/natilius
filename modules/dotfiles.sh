@@ -21,6 +21,29 @@
 
 log_info "Setting up dotfiles..."
 
+# Optional dotfiles repo/bootstrap
+DOTFILES_DIR="${NATILIUS_DOTFILES_DIR:-$HOME/Library/Mobile Documents/com~apple~CloudDocs/dotfiles}"
+DOTFILES_REPO="${NATILIUS_DOTFILES_REPO:-https://github.com/vincentkoc/dotfiles}"
+DOTFILES_POST_PULL_CMD="${NATILIUS_DOTFILES_POST_PULL_CMD:-}"
+
+# If a dotfiles repo is configured, clone it only when the location is empty.
+if [[ -n "$DOTFILES_REPO" ]]; then
+    if [[ -d "$DOTFILES_DIR" ]] && find "$DOTFILES_DIR" -mindepth 1 -maxdepth 1 2>/dev/null | read -r _; then
+        log_info "Dotfiles location not empty [$DOTFILES_DIR]. Skipping repo clone."
+    else
+        log_info "Dotfiles location empty. Cloning repo [$DOTFILES_REPO] -> [$DOTFILES_DIR]..."
+        rm -rf "$DOTFILES_DIR"
+        git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+        log_success "Dotfiles repo cloned"
+    fi
+
+    if [[ -n "$DOTFILES_POST_PULL_CMD" ]]; then
+        log_info "Running dotfiles post-pull command..."
+        (cd "$DOTFILES_DIR" && /bin/bash -c "$DOTFILES_POST_PULL_CMD")
+        log_success "Dotfiles post-pull command finished"
+    fi
+fi
+
 # Install Mackup if not installed
 if ! command -v mackup &> /dev/null; then
     brew install mackup

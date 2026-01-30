@@ -80,6 +80,7 @@ DIRS=(
     "~/.mackup"
     "~/.config"
     "~/GIT"
+    "~/Library/Mobile Documents/com~apple~CloudDocs/dotfiles"
 )
 
 # Time Machine exclusions
