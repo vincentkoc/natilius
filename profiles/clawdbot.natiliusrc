@@ -75,7 +75,6 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
     "~/.cursor"
     "~/.factory"
     "~/.ollama"
-    "~/.npm"
     "~/.cargo"
     "~/.local/share/pnpm"
     "~/GIT"
@@ -187,11 +186,15 @@ BREWPACKAGES=(
     "vhs"
     "xz"
     "zlib"
+    "himalaya"
+    "gemini-cli"
 
 
     # Fonts (essential)
     "font-fira-code"
     "font-fira-code-nerd-font"
+    "font-hack-nerd-font"
+    "font-jetbrains-mono-nerd-font"
     "font-meslo-lg-nerd-font"
 )
 

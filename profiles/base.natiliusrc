@@ -101,6 +101,8 @@ BREWPACKAGES=(
     # Fonts (essential)
     "font-fira-code"
     "font-fira-code-nerd-font"
+    "font-hack-nerd-font"
+    "font-jetbrains-mono-nerd-font"
     "font-meslo-lg-nerd-font"
 )
 
