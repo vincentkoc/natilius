@@ -185,7 +185,6 @@ BREWPACKAGES=(
     "mosh"
     "httpie"
     "gping"
-    "speedtest-cli"
     "telnet"
     "lynx"
     "croc"
