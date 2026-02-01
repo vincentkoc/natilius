@@ -58,6 +58,21 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on || log_
 sudo pkill -HUP socketfilterfw 2>/dev/null || true
 log_success "Firewall enabled with stealth mode"
 
+# Allow Screen Sharing / Remote Management through the firewall
+screen_sharing_apps=(
+    "/System/Library/CoreServices/RemoteManagement/ARDAgent.app"
+    "/System/Library/CoreServices/RemoteManagement/RemoteManagement.app"
+)
+for app in "${screen_sharing_apps[@]}"; do
+    if [[ -e "$app" ]]; then
+        sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add "$app" 2>/dev/null || log_warning "Failed to add firewall rule for: $app"
+        sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp "$app" 2>/dev/null || log_warning "Failed to unblock firewall rule for: $app"
+        log_success "Allowed Screen Sharing for: $app"
+    else
+        log_warning "Screen Sharing app not found: $app"
+    fi
+done
+
 # Disable Wake on LAN
 if sudo pmset -a womp 0 2>/dev/null; then
     log_success "Disabled Wake on LAN"
