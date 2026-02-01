@@ -40,7 +40,8 @@ USE_MOLE_CLEANUP=true
 # NODE.JS CONFIGURATION
 # ============================================================================
 # moltbot requires Node.js >= 22
-NODEVER="24"
+NODEVER="24.13.0"
+NPMVER="11.8.0"
 
 # ============================================================================
 # IDE CONFIGURATION (Minimal)

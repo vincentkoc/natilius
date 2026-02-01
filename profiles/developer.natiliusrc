@@ -32,7 +32,8 @@ ENABLED_MODULES=(
 # LANGUAGE VERSIONS
 # ============================================================================
 PYTHONVER="3.11.0"
-NODEVER="20.10.0"
+NODEVER="24.13.0"
+NPMVER="11.8.0"
 GOVER="1.21.0"
 RUBYVER="3.2.0"
 

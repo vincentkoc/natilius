@@ -117,3 +117,17 @@ else
 
     log_success "Node.js environment setup complete"
 fi
+
+# Ensure npm matches desired version when specified
+if [[ -n "${NPMVER:-}" ]]; then
+    CURRENT_NPM="$(npm -v 2>/dev/null || true)"
+    if [[ "$CURRENT_NPM" != "$NPMVER" ]]; then
+        log_warning "npm [$NPMVER] is not installed. Found [$CURRENT_NPM]."
+        npm i -g "npm@${NPMVER}" | tee -a "$LOGFILE"
+        npm -v | tee -a "$LOGFILE"
+        log_success "Updated npm to [$NPMVER]"
+    else
+        log_success "npm [$NPMVER] is already installed."
+    fi
+    npm config set fund false --global | tee -a "$LOGFILE"
+fi
