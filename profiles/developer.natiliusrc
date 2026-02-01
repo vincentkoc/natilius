@@ -75,6 +75,17 @@ BREWPACKAGES+=(
     "rbenv"
     "rustup-init"
 
+    # Shell Enhancements
+    "direnv"
+    "ripgrep"
+    "btop"
+    "lazygit"
+    "reattach-to-user-namespace"
+    "zsh-syntax-highlighting"
+    "tree-sitter"
+    "zsh-completions"
+    "zoxide"
+
     # Build Tools
     "make"
     "cmake"

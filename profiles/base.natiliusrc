@@ -54,6 +54,7 @@ BREWPACKAGES=(
     "gh"
     "git-lfs"
     "git-xet"
+    "lazygit"
 
     # Shell Essentials
     "coreutils"
@@ -65,10 +66,14 @@ BREWPACKAGES=(
     "eza"
     "fd"
     "ripgrep"
+    "direnv"
     "tree"
     "htop"
+    "btop"
     "procs"
     "zoxide"
+    "zsh-syntax-highlighting"
+    "tree-sitter"
 
     # Media & Preview
     "ffmpeg"

@@ -98,6 +98,7 @@ BREWPACKAGES=(
     "gh"
     "git-lfs"
     "git-xet"
+    "lazygit"
     "diff-so-fancy"
 
     # Shell Essentials
@@ -111,14 +112,20 @@ BREWPACKAGES=(
     "eza"
     "fd"
     "ripgrep"
+    "direnv"
     "ack"
     "tree"
     "htop"
+    "btop"
     "procs"
     "zoxide"
     "peco"
     "tealdeer"
     "zsh-completions"
+    "zsh-syntax-highlighting"
+    "tree-sitter"
+
+    # Clawdbot Includes
     "imsg"
     "obsidian-cli"
     "peekaboo"
