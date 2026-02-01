@@ -201,7 +201,7 @@ BREWPACKAGES=(
     "derailed/popeye/popeye"
 
     # Infrastructure as Code
-    "terraform"
+    "opentofu"
     "terraformer"
     "tflint"
     "tfsec"

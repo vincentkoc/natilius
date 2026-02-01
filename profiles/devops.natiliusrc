@@ -65,7 +65,7 @@ BREWPACKAGES+=(
     "k9s"
 
     # Infrastructure as Code
-    "terraform"
+    "opentofu"
     "terraformer"
     "tflint"
     "tfsec"
