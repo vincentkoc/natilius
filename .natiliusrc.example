@@ -1,50 +1,57 @@
 #!/bin/bash
 # shellcheck disable=SC2034,SC2088,SC2148
-# Natilius Configuration
+# Natilius Example Configuration (Full)
 #
-# This file controls which modules run and what gets installed.
 # Copy to ~/.natiliusrc before running natilius.
-#
-# PROFILE INHERITANCE:
-# For role-based setups, you can source a base config:
-#   source ~/.natiliusrc.base
-#   ENABLED_MODULES+=("dev_environments/python")  # Add to base modules
-#
-# See profiles/ directory for ready-to-use templates:
-#   - minimal.natiliusrc   - Quick onboarding, essentials only
-#   - devops.natiliusrc    - Kubernetes, Terraform, cloud tools
-#   - developer.natiliusrc - Full dev environment with multiple languages
-#
-# Usage with profiles:
-#   natilius --profile devops
-#   natilius --profile minimal
+# This is a full-featured example mirroring the base style but enabling all modules.
 
-# Enabled modules
-# "system/system_update"
-# "system/directories"
-# "system/security"
-# "preferences/mac_preferences"
-# "preferences/system_preferences"
-# "applications/homebrew"
-# "applications/apps"
-# "applications/espanso"
-# "dev_environments/java"
-# "dev_environments/ruby"
-# "dev_environments/python"
-# "dev_environments/node"
-# "dev_environments/rust"
-# "dev_environments/go"
-# "dev_environments/php"
-# "dev_environments/flutter"
-# "ide/ide_setup"
-# "dotfiles"
-# "system/cleanup"
+# ============================================================================
+# CORE SETTINGS
+# ============================================================================
+COUNTRYCODE="us"
+SKIP_UPDATE_CHECK=false
+NATILIUS_INSTALL_OHMYZSH=true
+
+# ============================================================================
+# ENABLED MODULES (Full)
+# ============================================================================
 ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "system/security"
+    "preferences/mac_preferences"
+    "preferences/system_preferences"
+    "applications/homebrew"
+    "applications/apps"
+    "applications/espanso"
+    "dev_environments/java"
+    "dev_environments/ruby"
+    "dev_environments/python"
+    "dev_environments/node"
+    "dev_environments/rust"
+    "dev_environments/go"
+    "dev_environments/php"
+    "dev_environments/flutter"
+    "ide/ide_setup"
+    "dotfiles"
     "system/cleanup"
 )
 
-# Custom variables
-COUNTRYCODE="us"
+# ============================================================================
+# ENTERPRISE / MDM SETTINGS
+# ============================================================================
+ENTERPRISE_MODE=false
+RESPECT_MDM_POLICIES=true
+JAMF_RECON_ON_COMPLETE=false
+
+# ============================================================================
+# CLEANUP SETTINGS
+# ============================================================================
+USE_MOLE_CLEANUP=true
+
+# ============================================================================
+# LANGUAGE VERSIONS
+# ============================================================================
 JDKVER="20"
 PYTHONVER="3.13.0"
 RUBYVER="3.4.2"
@@ -52,31 +59,19 @@ NODEVER="22.20.0"
 GOVER="1.20.0"
 PHPVER="8.1.0"
 FLUTTER_CHANNEL="stable"
-NATILIUS_INSTALL_OHMYZSH=true
 
-# Set to true to skip update checks
-SKIP_UPDATE_CHECK=false
-
-# Use Mole for deep cleanup (more thorough than built-in)
-# See: https://github.com/tw93/Mole
-USE_MOLE_CLEANUP=false
-
-# IDE Configuration
+# ============================================================================
+# IDE CONFIGURATION
+# ============================================================================
 INSTALL_VSCODE=true
 INSTALL_CURSOR=false
 INSTALL_JETBRAINS=true
 INSTALL_SUBLIME=false
 INSTALL_ZED=false
 
-# Enterprise/MDM Configuration
-# Set to true if your organization uses Jamf
-ENTERPRISE_MODE=false
-# Skip installations that conflict with MDM policies
-RESPECT_MDM_POLICIES=true
-# Run Jamf recon after setup completes
-JAMF_RECON_ON_COMPLETE=false
-
-# Directories to create
+# ============================================================================
+# DIRECTORIES
+# ============================================================================
 DIRS=(
     "~/.mackup"
     "~/.config"
@@ -84,7 +79,6 @@ DIRS=(
     "~/Library/Mobile Documents/com~apple~CloudDocs/dotfiles"
 )
 
-# Time Machine exclusions
 DIRSTOEXCLUDEFROMTIMEMACHINE=(
     "~/.mackup"
     "~/GIT"
@@ -108,7 +102,9 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
     "~/go"
 )
 
-# Homebrew Taps
+# ============================================================================
+# HOMEBREW TAPS
+# ============================================================================
 BREWTAPS=(
     "homebrew/cask"
     "adoptopenjdk/openjdk"
@@ -120,11 +116,11 @@ BREWTAPS=(
     "derailed/popeye"
 )
 
-# Homebrew Packages
+# ============================================================================
+# HOMEBREW PACKAGES
+# ============================================================================
 BREWPACKAGES=(
-    # -------------------------------------------------------------------------
     # Version Control
-    # -------------------------------------------------------------------------
     "git"
     "gh"
     "git-lfs"
@@ -132,9 +128,7 @@ BREWPACKAGES=(
     "tig"
     "diff-so-fancy"
 
-    # -------------------------------------------------------------------------
     # Shell Essentials
-    # -------------------------------------------------------------------------
     "coreutils"
     "curl"
     "wget"
@@ -154,17 +148,13 @@ BREWPACKAGES=(
     "tealdeer"
     "zsh-completions"
 
-    # -------------------------------------------------------------------------
     # Editors & Terminal
-    # -------------------------------------------------------------------------
     "vim"
     "neovim"
     "tmux"
     "reattach-to-user-namespace"
 
-    # -------------------------------------------------------------------------
     # Security & Encryption
-    # -------------------------------------------------------------------------
     "gpg"
     "pinentry"
     "pinentry-mac"
@@ -176,9 +166,7 @@ BREWPACKAGES=(
     "ykman"
     "nmap"
 
-    # -------------------------------------------------------------------------
     # Media & Preview
-    # -------------------------------------------------------------------------
     "ffmpeg"
     "imagemagick"
     "poppler"
@@ -187,9 +175,7 @@ BREWPACKAGES=(
     "yt-dlp"
     "hexyl"
 
-    # -------------------------------------------------------------------------
     # Networking & Remote
-    # -------------------------------------------------------------------------
     "mosh"
     "httpie"
     "gping"
@@ -198,9 +184,7 @@ BREWPACKAGES=(
     "lynx"
     "croc"
 
-    # -------------------------------------------------------------------------
     # Containers & Kubernetes
-    # -------------------------------------------------------------------------
     "docker-compose"
     "kubectl"
     "kubernetes-cli"
@@ -210,23 +194,17 @@ BREWPACKAGES=(
     "ctop"
     "derailed/popeye/popeye"
 
-    # -------------------------------------------------------------------------
     # Infrastructure as Code
-    # -------------------------------------------------------------------------
     "terraform"
     "terraformer"
     "tflint"
     "tfsec"
     "warrensbox/tap/tfswitch"
 
-    # -------------------------------------------------------------------------
     # Cloud CLIs
-    # -------------------------------------------------------------------------
     "awscli"
 
-    # -------------------------------------------------------------------------
     # Language Version Managers
-    # -------------------------------------------------------------------------
     "nodenv"
     "node"
     "npm"
@@ -240,9 +218,7 @@ BREWPACKAGES=(
     "go"
     "rustup-init"
 
-    # -------------------------------------------------------------------------
     # Build Tools & Code Quality
-    # -------------------------------------------------------------------------
     "make"
     "gradle"
     "pre-commit"
@@ -250,16 +226,12 @@ BREWPACKAGES=(
     "tokei"
     "icdiff"
 
-    # -------------------------------------------------------------------------
     # Databases
-    # -------------------------------------------------------------------------
     "sqlite"
     "sqlite3"
     "readline"
 
-    # -------------------------------------------------------------------------
     # Utilities
-    # -------------------------------------------------------------------------
     "mackup"
     "mas"
     "trash"
@@ -271,96 +243,78 @@ BREWPACKAGES=(
     "xz"
     "zlib"
 
-    # -------------------------------------------------------------------------
     # Fonts
-    # -------------------------------------------------------------------------
-    "font-source-sans-pro"
-    "font-ubuntu"
-    "font-roboto"
     "font-fira-code"
     "font-fira-code-nerd-font"
     "font-fira-mono-nerd-font"
+    "font-hack-nerd-font"
+    "font-jetbrains-mono-nerd-font"
     "font-meslo-lg-nerd-font"
+    "font-roboto"
+    "font-source-sans-pro"
+    "font-ubuntu"
 )
 
-# Homebrew Casks
+# ============================================================================
+# HOMEBREW CASKS
+# ============================================================================
 BREWCASKS=(
-    # -------------------------------------------------------------------------
     # Security & Privacy
-    # -------------------------------------------------------------------------
     "1password"
     "1password-cli"
     "gpg-suite"
     "keybase"
-    "muzzle"            # Silence notifications during screen sharing
+    "muzzle"
 
-    # -------------------------------------------------------------------------
     # Browsers
-    # -------------------------------------------------------------------------
     "google-chrome"
     "brave-browser"
     "firefox"
 
-    # -------------------------------------------------------------------------
     # Productivity & System
-    # -------------------------------------------------------------------------
-    "raycast"           # Alternative: "alfred"
+    "raycast"
     "alfred"
     "alt-tab"
     "bartender"
     "cheatsheet"
     "keyboard-maestro"
-    "monitorcontrol"    # Alternative: "betterdisplay"
-    "stats"             # System monitor in menubar
-    "onyx"              # System maintenance
+    "monitorcontrol"
+    "stats"
+    "onyx"
 
-    # -------------------------------------------------------------------------
     # Terminal & Development
-    # -------------------------------------------------------------------------
     "iterm2"
-    "itermai"           # iTerm2 AI Plugin
+    "itermai"
     "docker"
     "visual-studio-code"
     "sublime-text"
     "sublime-merge"
     "xquartz"
 
-    # -------------------------------------------------------------------------
     # Git Clients (choose one)
-    # -------------------------------------------------------------------------
-    "github"            # Alternatives: "tower", "fork", "gitkraken"
+    "github"
 
-    # -------------------------------------------------------------------------
     # Database Tools (choose one)
-    # -------------------------------------------------------------------------
-    "tableplus"         # Alternatives: "dbeaver-community", "mysqlworkbench"
+    "tableplus"
     "mysqlworkbench"
 
-    # -------------------------------------------------------------------------
     # API & Network Debug
-    # -------------------------------------------------------------------------
-    "charles"           # HTTP proxy/debugging
-    "tailscale-app"     # Mesh VPN (includes CLI)
-    "tripmode"          # Control app network access
+    "charles"
+    "tailscale-app"
+    "tripmode"
 
-    # -------------------------------------------------------------------------
     # File Management & Transfer
-    # -------------------------------------------------------------------------
     "transmit"
     "the-unarchiver"
     "dropbox"
 
-    # -------------------------------------------------------------------------
     # Image & Video
-    # -------------------------------------------------------------------------
     "balenaetcher"
     "imageoptim"
-    "kap"               # Screen recording
-    "keycastr"          # Show keystrokes on screen
+    "kap"
+    "keycastr"
 
-    # -------------------------------------------------------------------------
     # Communication
-    # -------------------------------------------------------------------------
     "slack"
     "zoom"
     "discord"
@@ -368,51 +322,39 @@ BREWCASKS=(
     "loom"
     "miro"
 
-    # -------------------------------------------------------------------------
     # Notes & Knowledge
-    # -------------------------------------------------------------------------
     "notion"
     "obsidian"
     "logseq"
 
-    # -------------------------------------------------------------------------
     # Media & Entertainment
-    # -------------------------------------------------------------------------
     "spotify"
     "vlc"
-    "aerial"            # Apple TV screensavers
-    "netnewswire"       # RSS reader
+    "aerial"
+    "netnewswire"
 
-    # -------------------------------------------------------------------------
     # Office & Business
-    # -------------------------------------------------------------------------
     "microsoft-office"
 
-    # -------------------------------------------------------------------------
     # Hardware & Devices
-    # -------------------------------------------------------------------------
-    "airbuddy"          # AirPods integration
+    "airbuddy"
     "rfidresearchgroup/proxmark3/proxmark3"
 
-    # -------------------------------------------------------------------------
     # Development Languages
-    # -------------------------------------------------------------------------
-    "mamp"              # Local web server
-    "rig"               # R version manager
+    "mamp"
+    "rig"
 
-    # -------------------------------------------------------------------------
     # Text Expansion
-    # -------------------------------------------------------------------------
     "espanso"
 
-    # -------------------------------------------------------------------------
     # Other
-    # -------------------------------------------------------------------------
-    "clay"              # Contacts manager
-    "rescuetime"        # Time tracking
+    "clay"
+    "rescuetime"
 )
 
-# Mac App Store Apps (App IDs)
+# ============================================================================
+# MAC APP STORE (App IDs)
+# ============================================================================
 APPSTORE=(
     "441258766"   # Magnet
     "937984704"   # Amphetamine
@@ -423,11 +365,12 @@ APPSTORE=(
     "1484348796"  # Endel
     "1423210932"  # Flow
     "1039633667"  # Irvue
-    "1436522307"  # Transmit 5 (file transfer)
-    # ... Add other app IDs as needed
+    "1436522307"  # Transmit 5
 )
 
-# Global Node.js Packages
+# ============================================================================
+# GLOBAL PACKAGES
+# ============================================================================
 GLOBAL_NODE_PACKAGES=(
     "eslint"
     "prettier"
@@ -436,10 +379,8 @@ GLOBAL_NODE_PACKAGES=(
     "yarn"
     "pnpm"
     "gatsby"
-    # ... other Node.js packages ...
 )
 
-# Global Python Packages
 GLOBAL_PYTHON_PACKAGES=(
     "pip"
     "virtualenv"
@@ -466,17 +407,13 @@ GLOBAL_PYTHON_PACKAGES=(
     "dbt-core"
     "PyYAML"
     "sqlfluff"
-    # ... other Python packages ...
 )
 
-# Global PHP Composer Packages
 GLOBAL_PHP_PACKAGES=(
     "phpunit/phpunit"
     "laravel/installer"
-    # Add other global Composer packages as needed
 )
 
-# Default PEAR Packages
 PEAR_PACKAGES=(
     "pear/Archive_Tar"
     "pear/Console_Getopt"
@@ -490,10 +427,11 @@ PEAR_PACKAGES=(
     "pear/PEAR"
     "pear/Structures_Graph"
     "pear/XML_Util"
-    # Add other PEAR packages as needed
 )
 
-# Applications to kill after setup
+# ============================================================================
+# APPS TO RESTART AFTER SETUP
+# ============================================================================
 KILLAPPS=(
     "Address Book"
     "Dock"
