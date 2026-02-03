@@ -38,13 +38,17 @@ ensure_brew_path() {
         eval "$("$brew_path" shellenv)"
         if [[ -f "$HOME/.zprofile" ]]; then
             if ! grep -q "brew shellenv" "$HOME/.zprofile" 2>/dev/null; then
-                echo "" >> "$HOME/.zprofile"
-                echo "# Homebrew" >> "$HOME/.zprofile"
-                echo "eval \"\$($brew_path shellenv)\"" >> "$HOME/.zprofile"
+                {
+                    echo ""
+                    echo "# Homebrew"
+                    echo "eval \"\$($brew_path shellenv)\""
+                } >> "$HOME/.zprofile"
             fi
         else
-            echo "# Homebrew" > "$HOME/.zprofile"
-            echo "eval \"\$($brew_path shellenv)\"" >> "$HOME/.zprofile"
+            {
+                echo "# Homebrew"
+                echo "eval \"\$($brew_path shellenv)\""
+            } > "$HOME/.zprofile"
         fi
         return 0
     fi
