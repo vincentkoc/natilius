@@ -238,7 +238,7 @@ APPSTORE=(
 # NODE.JS PACKAGES (includes moltbot)
 # ============================================================================
 GLOBAL_NODE_PACKAGES=(
-    "moltbot"
+    "openclaw"
     "pnpm"
     "eslint"
     "prettier"
