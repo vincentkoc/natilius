@@ -1,0 +1,82 @@
+/* Custom styles for MkDocs with shadcn theme */
+
+/* Badges inline */
+p img[alt="Version"],
+p img[alt="License"],
+p img[alt="Stars"],
+p img[alt="macOS"] {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 2px;
+}
+
+/* Tab styling for pymdownx.tabbed (alternate style) */
+.tabbed-set {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 1em 0;
+	position: relative;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.tabbed-set > input {
+	display: none;
+}
+
+.tabbed-set > label {
+	padding: 0.6em 1em;
+	cursor: pointer;
+	font-weight: 500;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -1px;
+	color: #666;
+	transition:
+		color 0.2s,
+		border-color 0.2s;
+}
+
+.tabbed-set > label:hover {
+	color: #333;
+}
+
+.tabbed-set > input:checked + label {
+	color: #000;
+	border-bottom-color: #000;
+}
+
+.tabbed-content {
+	width: 100%;
+	display: none;
+	padding: 1em 0;
+	order: 99;
+}
+
+.tabbed-set > input:nth-child(1):checked ~ .tabbed-content:nth-of-type(1),
+.tabbed-set > input:nth-child(3):checked ~ .tabbed-content:nth-of-type(2),
+.tabbed-set > input:nth-child(5):checked ~ .tabbed-content:nth-of-type(3),
+.tabbed-set > input:nth-child(7):checked ~ .tabbed-content:nth-of-type(4) {
+	display: block;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+	.tabbed-set {
+		border-bottom-color: #444;
+	}
+	.tabbed-set > label {
+		color: #999;
+	}
+	.tabbed-set > label:hover {
+		color: #ccc;
+	}
+	.tabbed-set > input:checked + label {
+		color: #fff;
+		border-bottom-color: #fff;
+	}
+}
+
+/* Mermaid diagram styling */
+.mermaid {
+	text-align: center;
+	margin: 1em 0;
+}
