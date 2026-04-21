@@ -2,10 +2,10 @@
 # yamllint disable rule:line-length
 name: Release
 
-'on':
+"on":
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 permissions:
   contents: write

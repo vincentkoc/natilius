@@ -48,11 +48,11 @@ make precommit   # Pre-commit hooks
 
 ## Makefile Commands
 
-| Command | Description |
-|---------|-------------|
+| Command          | Description      |
+| ---------------- | ---------------- |
 | `make dev-setup` | Install dev deps |
-| `make test` | Unit tests |
-| `make test-all` | All tests |
-| `make lint` | ShellCheck |
-| `make precommit` | Pre-commit |
-| `make coverage` | Coverage report |
+| `make test`      | Unit tests       |
+| `make test-all`  | All tests        |
+| `make lint`      | ShellCheck       |
+| `make precommit` | Pre-commit       |
+| `make coverage`  | Coverage report  |

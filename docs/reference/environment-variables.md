@@ -4,28 +4,28 @@ Control Natilius behavior at runtime.
 
 ## Runtime Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SKIP_SUDO` | `false` | Skip sudo validation |
-| `NONINTERACTIVE` | `false` | Disable prompts |
-| `DRY_RUN` | `false` | Preview mode |
-| `VERBOSE_MODE` | `false` | Debug output |
-| `QUIET_MODE` | `false` | Errors only |
-| `SKIP_UPDATE_CHECK` | `false` | Skip update check |
-| `CI` | `false` | CI environment |
+| Variable            | Default | Description          |
+| ------------------- | ------- | -------------------- |
+| `SKIP_SUDO`         | `false` | Skip sudo validation |
+| `NONINTERACTIVE`    | `false` | Disable prompts      |
+| `DRY_RUN`           | `false` | Preview mode         |
+| `VERBOSE_MODE`      | `false` | Debug output         |
+| `QUIET_MODE`        | `false` | Errors only          |
+| `SKIP_UPDATE_CHECK` | `false` | Skip update check    |
+| `CI`                | `false` | CI environment       |
 
 ## Path Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
+| Variable        | Default       | Description            |
+| --------------- | ------------- | ---------------------- |
 | `NATILIUS_HOME` | `~/.natilius` | Installation directory |
 
 ## Installer Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SKIP_RUN` | `false` | Install without running |
-| `NATILIUS_BRANCH` | `main` | Git branch |
+| Variable          | Default | Description             |
+| ----------------- | ------- | ----------------------- |
+| `SKIP_RUN`        | `false` | Install without running |
+| `NATILIUS_BRANCH` | `main`  | Git branch              |
 
 ## Examples
 

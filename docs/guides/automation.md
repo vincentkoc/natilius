@@ -4,15 +4,15 @@ Use Natilius with Terraform, Ansible, and CI/CD pipelines for automated Mac prov
 
 ## Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `NONINTERACTIVE` | `false` | Skip all prompts |
-| `SKIP_SUDO` | `false` | Skip sudo operations |
-| `CI` | `false` | CI mode (implies NONINTERACTIVE) |
-| `DRY_RUN` | `false` | Preview mode |
-| `QUIET_MODE` | `false` | Minimal output |
-| `SKIP_RUN` | `false` | Install only, don't run setup |
-| `NATILIUS_BRANCH` | `main` | Git branch to use |
+| Variable          | Default | Description                      |
+| ----------------- | ------- | -------------------------------- |
+| `NONINTERACTIVE`  | `false` | Skip all prompts                 |
+| `SKIP_SUDO`       | `false` | Skip sudo operations             |
+| `CI`              | `false` | CI mode (implies NONINTERACTIVE) |
+| `DRY_RUN`         | `false` | Preview mode                     |
+| `QUIET_MODE`      | `false` | Minimal output                   |
+| `SKIP_RUN`        | `false` | Install only, don't run setup    |
+| `NATILIUS_BRANCH` | `main`  | Git branch to use                |
 
 ## Fully Automated Run
 

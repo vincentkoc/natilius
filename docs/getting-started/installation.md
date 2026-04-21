@@ -49,12 +49,15 @@ natilius doctor
 ## Uninstallation
 
 /// tab | Homebrew
+
 ```bash
 brew uninstall natilius
 ```
+
 ///
 
 /// tab | Script Install
+
 ```bash
 ~/.natilius/uninstall.sh
 ```
@@ -64,23 +67,28 @@ Or remotely:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/uninstall.sh | bash
 ```
+
 ///
 
 !!! note
-    Uninstalling Natilius does **not** remove software it installed (Homebrew packages, apps, etc.). It only removes Natilius itself.
+Uninstalling Natilius does **not** remove software it installed (Homebrew packages, apps, etc.). It only removes Natilius itself.
 
 ## Updating
 
 /// tab | Homebrew
+
 ```bash
 brew upgrade natilius
 ```
+
 ///
 
 /// tab | Script Install
+
 ```bash
 cd ~/.natilius && git pull
 ```
+
 ///
 
 ## Troubleshooting Installation

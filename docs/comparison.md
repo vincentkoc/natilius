@@ -6,19 +6,19 @@ How Natilius compares to other Mac setup tools.
 
 ## Quick Comparison
 
-| Feature | Natilius | thoughtbot/laptop | mac-setup | strap |
-|---------|----------|-------------------|-----------|-------|
-| One-command install | **Yes** | **Yes** | **Yes** | **Yes** |
-| Modular design | **Yes** | No | Partial | No |
-| Profile support | **Yes** | No | No | No |
-| Idempotent | **Yes** | **Yes** | Partial | **Yes** |
-| Dry-run mode | **Yes** | No | No | No |
-| Terraform ready | **Yes** | No | No | No |
-| Active maintenance | **Yes** | **Yes** | Limited | **Yes** |
-| Security hardening | **Yes** | No | No | No |
-| Custom config file | **Yes** | Limited | **Yes** | **Yes** |
-| IDE setup | **Yes** | No | Partial | No |
-| macOS preferences | **Yes** | No | **Yes** | No |
+| Feature             | Natilius | thoughtbot/laptop | mac-setup | strap   |
+| ------------------- | -------- | ----------------- | --------- | ------- |
+| One-command install | **Yes**  | **Yes**           | **Yes**   | **Yes** |
+| Modular design      | **Yes**  | No                | Partial   | No      |
+| Profile support     | **Yes**  | No                | No        | No      |
+| Idempotent          | **Yes**  | **Yes**           | Partial   | **Yes** |
+| Dry-run mode        | **Yes**  | No                | No        | No      |
+| Terraform ready     | **Yes**  | No                | No        | No      |
+| Active maintenance  | **Yes**  | **Yes**           | Limited   | **Yes** |
+| Security hardening  | **Yes**  | No                | No        | No      |
+| Custom config file  | **Yes**  | Limited           | **Yes**   | **Yes** |
+| IDE setup           | **Yes**  | No                | Partial   | No      |
+| macOS preferences   | **Yes**  | No                | **Yes**   | No      |
 
 ---
 
@@ -29,11 +29,13 @@ How Natilius compares to other Mac setup tools.
 [github.com/thoughtbot/laptop](https://github.com/thoughtbot/laptop)
 
 **Pros:**
+
 - Well-maintained by thoughtbot
 - Simple, focused approach
 - Good for Ruby/Rails developers
 
 **Cons:**
+
 - No modular system
 - Limited customization
 - No profile support
@@ -48,10 +50,12 @@ How Natilius compares to other Mac setup tools.
 [github.com/sb2nov/mac-setup](https://github.com/sb2nov/mac-setup)
 
 **Pros:**
+
 - Comprehensive documentation
 - Wide tool coverage
 
 **Cons:**
+
 - More of a guide than automation
 - Requires manual steps
 - Less actively maintained
@@ -65,11 +69,13 @@ How Natilius compares to other Mac setup tools.
 [github.com/MikeMcQuaid/strap](https://github.com/MikeMcQuaid/strap)
 
 **Pros:**
+
 - GitHub-integrated
 - Works with Brewfile
 - Good for teams
 
 **Cons:**
+
 - Requires GitHub access
 - Limited to Homebrew
 - No system preferences
@@ -84,11 +90,13 @@ How Natilius compares to other Mac setup tools.
 Tools like [chezmoi](https://chezmoi.io/), [GNU Stow](https://www.gnu.org/software/stow/), [yadm](https://yadm.io/)
 
 **Pros:**
+
 - Excellent for config file management
 - Cross-platform
 - Version controlled
 
 **Cons:**
+
 - Don't install software
 - Require separate tool installation
 - Steeper learning curve
@@ -102,12 +110,14 @@ Tools like [chezmoi](https://chezmoi.io/), [GNU Stow](https://www.gnu.org/softwa
 [ansible.com](https://www.ansible.com/)
 
 **Pros:**
+
 - Industry standard
 - Cross-platform
 - Extremely powerful
 - Great for fleets
 
 **Cons:**
+
 - Requires Python
 - Complex YAML syntax
 - Overkill for single machine

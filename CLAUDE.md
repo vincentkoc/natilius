@@ -41,6 +41,7 @@ make check-version     # Check version consistency across files
 **Main Script** (`natilius.sh`): Entry point that parses arguments, loads configuration from `~/.natiliusrc`, sources library functions, and executes enabled modules in sequence.
 
 **Library Functions** (`lib/`):
+
 - `utils.sh` - Version management, sudo handling, update checks
 - `logging.sh` - log_info, log_success, log_warning, log_error functions
 - `config_validator.sh` - Configuration validation
@@ -48,6 +49,7 @@ make check-version     # Check version consistency across files
 - `mdm_utils.sh` - MDM/enterprise detection (Jamf, Kandji)
 
 **Module System** (`modules/`): Self-contained modules enabled via `ENABLED_MODULES` array in config:
+
 - `system/` - system_update, directories, security, cleanup
 - `applications/` - homebrew, apps, espanso
 - `dev_environments/` - python, node, ruby, rust, go, java, php, flutter
@@ -58,6 +60,7 @@ make check-version     # Check version consistency across files
 **Profiles** (`profiles/`): Pre-configured module sets (minimal, devops, developer, clawdbot). Profiles source `base.natiliusrc` and override/extend settings.
 
 **Configuration** (`~/.natiliusrc`): User config file controlling:
+
 - `ENABLED_MODULES` array - which modules run
 - `BREWPACKAGES`, `BREWCASKS`, `APPSTORE` arrays - what gets installed
 - Version variables (`PYTHONVER`, `NODEVER`, etc.)
@@ -82,6 +85,7 @@ make check-version     # Check version consistency across files
 ## Testing Framework
 
 Uses BATS (Bash Automated Testing System):
+
 - `tests/test_natilius.bats` - Unit tests
 - `tests/test_cli_features.bats` - CLI command tests
 - `tests/test_modules.bats` - Module tests
@@ -91,6 +95,7 @@ Uses BATS (Bash Automated Testing System):
 ## Automation/Terraform
 
 `scripts/terraform-provision.sh` - Non-interactive provisioning script for Terraform/Ansible:
+
 - Defaults `NONINTERACTIVE=true`, `SKIP_SUDO=true`, `CI=true`
 - Installs Homebrew, clones natilius, sets up profile, runs setup
 - Usage: `curl -fsSL .../terraform-provision.sh | bash -s <profile>`

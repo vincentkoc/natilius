@@ -6,15 +6,15 @@ Natilius is designed to work seamlessly in enterprise environments with MDM (Mob
 
 ## Supported MDM Providers
 
-| Provider | Detection | Integration Level |
-|----------|-----------|-------------------|
-| **Jamf Pro** | Full | Agent status, policies, recon |
-| **JumpCloud** | Full | Agent status, system key |
-| **Kandji** | Detection | Agent detection |
-| **Mosyle** | Detection | Profile detection |
-| **Microsoft Intune** | Detection | Company Portal check |
-| **VMware Workspace ONE** | Detection | Profile detection |
-| **Generic MDM** | Basic | Enrollment status only |
+| Provider                 | Detection | Integration Level             |
+| ------------------------ | --------- | ----------------------------- |
+| **Jamf Pro**             | Full      | Agent status, policies, recon |
+| **JumpCloud**            | Full      | Agent status, system key      |
+| **Kandji**               | Detection | Agent detection               |
+| **Mosyle**               | Detection | Profile detection             |
+| **Microsoft Intune**     | Detection | Company Portal check          |
+| **VMware Workspace ONE** | Detection | Profile detection             |
+| **Generic MDM**          | Basic     | Enrollment status only        |
 
 ---
 
@@ -120,6 +120,7 @@ natilius doctor
 ```
 
 Output:
+
 ```
 Enterprise/MDM
   ✓ MDM: Enrolled (JumpCloud)
@@ -148,12 +149,12 @@ system_key=$(get_jumpcloud_system_key)
 
 ### Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `SKIP_SUDO=true` | Skip sudo prompts (for NOPASSWD sudo) |
-| `NONINTERACTIVE=true` | No interactive prompts |
-| `ENTERPRISE_MODE=true` | Enable enterprise-aware behavior |
-| `RESPECT_MDM_POLICIES=true` | Don't override MDM settings |
+| Variable                    | Description                           |
+| --------------------------- | ------------------------------------- |
+| `SKIP_SUDO=true`            | Skip sudo prompts (for NOPASSWD sudo) |
+| `NONINTERACTIVE=true`       | No interactive prompts                |
+| `ENTERPRISE_MODE=true`      | Enable enterprise-aware behavior      |
+| `RESPECT_MDM_POLICIES=true` | Don't override MDM settings           |
 
 ### Terraform Example
 
@@ -201,38 +202,38 @@ The `lib/mdm_utils.sh` library provides these functions:
 
 ### Generic MDM
 
-| Function | Description |
-|----------|-------------|
-| `is_mdm_enrolled` | Check if device is MDM enrolled |
-| `is_dep_enrolled` | Check if enrolled via DEP/ABM |
-| `get_mdm_provider` | Get MDM provider name (jamf, jumpcloud, etc.) |
-| `get_mdm_provider_name` | Get human-readable provider name |
-| `get_mdm_server_url` | Get MDM server URL |
-| `is_managed_environment` | Check if device is managed |
-| `warn_if_managed` | Log warning if managed |
-| `has_profile` | Check if a config profile is installed |
+| Function                 | Description                                   |
+| ------------------------ | --------------------------------------------- |
+| `is_mdm_enrolled`        | Check if device is MDM enrolled               |
+| `is_dep_enrolled`        | Check if enrolled via DEP/ABM                 |
+| `get_mdm_provider`       | Get MDM provider name (jamf, jumpcloud, etc.) |
+| `get_mdm_provider_name`  | Get human-readable provider name              |
+| `get_mdm_server_url`     | Get MDM server URL                            |
+| `is_managed_environment` | Check if device is managed                    |
+| `warn_if_managed`        | Log warning if managed                        |
+| `has_profile`            | Check if a config profile is installed        |
 
 ### Jamf-Specific
 
-| Function | Description |
-|----------|-------------|
-| `is_jamf_enrolled` | Check if enrolled in Jamf |
-| `get_jamf_binary` | Get path to jamf binary |
-| `get_jamf_version` | Get Jamf agent version |
-| `has_jamf_connect` | Check if Jamf Connect is installed |
-| `has_jamf_protect` | Check if Jamf Protect is running |
-| `run_jamf_policy` | Run a Jamf policy by trigger |
-| `check_jamf_connectivity` | Check connection to Jamf server |
-| `jamf_recon` | Update Jamf inventory |
+| Function                  | Description                        |
+| ------------------------- | ---------------------------------- |
+| `is_jamf_enrolled`        | Check if enrolled in Jamf          |
+| `get_jamf_binary`         | Get path to jamf binary            |
+| `get_jamf_version`        | Get Jamf agent version             |
+| `has_jamf_connect`        | Check if Jamf Connect is installed |
+| `has_jamf_protect`        | Check if Jamf Protect is running   |
+| `run_jamf_policy`         | Run a Jamf policy by trigger       |
+| `check_jamf_connectivity` | Check connection to Jamf server    |
+| `jamf_recon`              | Update Jamf inventory              |
 
 ### JumpCloud-Specific
 
-| Function | Description |
-|----------|-------------|
-| `is_jumpcloud_enrolled` | Check if enrolled in JumpCloud |
-| `get_jumpcloud_binary` | Get path to JumpCloud agent |
-| `check_jumpcloud_status` | Check agent status |
-| `get_jumpcloud_system_key` | Get system key |
+| Function                   | Description                    |
+| -------------------------- | ------------------------------ |
+| `is_jumpcloud_enrolled`    | Check if enrolled in JumpCloud |
+| `get_jumpcloud_binary`     | Get path to JumpCloud agent    |
+| `check_jumpcloud_status`   | Check agent status             |
+| `get_jumpcloud_system_key` | Get system key                 |
 
 ---
 

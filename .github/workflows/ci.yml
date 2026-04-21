@@ -2,7 +2,7 @@
 # yamllint disable rule:line-length
 name: CI
 
-'on':
+"on":
   push:
     branches: [main, develop]
   pull_request:
@@ -43,8 +43,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-14    # macOS Sonoma
-          - macos-15    # macOS Sequoia (latest)
+          - macos-14 # macOS Sonoma
+          - macos-15 # macOS Sequoia (latest)
 
     env:
       SKIP_SUDO: true
@@ -111,16 +111,16 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
 
       - name: Upload Trivy scan results
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: "trivy-results.sarif"
 
   coverage:
     name: Code Coverage

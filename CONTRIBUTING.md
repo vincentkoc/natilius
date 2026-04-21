@@ -44,6 +44,7 @@ make dev-setup
 ```
 
 This installs:
+
 - `bats-core` — Bash testing framework
 - `shellcheck` — Shell script linter
 - `pre-commit` — Git hooks for code quality
@@ -116,6 +117,7 @@ Follow [Conventional Commits](https://conventionalcommits.org/):
 ```
 
 **Types:**
+
 - `feat:` — New feature
 - `fix:` — Bug fix
 - `docs:` — Documentation only
@@ -125,6 +127,7 @@ Follow [Conventional Commits](https://conventionalcommits.org/):
 - `chore:` — Maintenance tasks
 
 **Examples:**
+
 ```
 feat(python): add support for Python 3.12
 fix(homebrew): handle missing taps gracefully
@@ -243,6 +246,7 @@ fi
 ### Before Submitting
 
 1. **Test thoroughly**
+
    ```bash
    make test-all
    make lint
@@ -271,6 +275,7 @@ fi
 ### Bug Reports
 
 Include:
+
 1. macOS version (`sw_vers`)
 2. Architecture (`uname -m`)
 3. Natilius version (`natilius version`)
@@ -281,6 +286,7 @@ Include:
 ### Feature Requests
 
 Include:
+
 1. Use case description
 2. Proposed solution
 3. Alternatives considered

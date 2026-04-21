@@ -4,20 +4,22 @@ Natilius is configured via `~/.natiliusrc`—a bash script that sets variables c
 
 ## Configuration Files
 
-| File | Purpose |
-|------|---------|
-| `~/.natiliusrc` | Primary configuration |
-| `~/.natiliusrc.{name}` | Named profiles (e.g., `~/.natiliusrc.devops`) |
-| `~/.natilius/profiles/` | Built-in profile templates |
+| File                    | Purpose                                       |
+| ----------------------- | --------------------------------------------- |
+| `~/.natiliusrc`         | Primary configuration                         |
+| `~/.natiliusrc.{name}`  | Named profiles (e.g., `~/.natiliusrc.devops`) |
+| `~/.natilius/profiles/` | Built-in profile templates                    |
 
 ## Creating Your Config
 
 1. **Copy the example:**
+
    ```bash
    cp ~/.natilius/.natiliusrc.example ~/.natiliusrc
    ```
 
 2. **Or start from a profile:**
+
    ```bash
    cp ~/.natilius/profiles/devops.natiliusrc ~/.natiliusrc
    ```

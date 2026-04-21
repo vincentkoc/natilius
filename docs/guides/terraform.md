@@ -8,10 +8,12 @@ For fully automated (passwordless) provisioning:
 
 1. **SSH access** to the target Mac
 2. **Passwordless sudo** (optional) - configure via:
+
    ```bash
    # On target Mac, add to /etc/sudoers.d/natilius
    %admin ALL=(ALL) NOPASSWD: /usr/sbin/softwareupdate, /usr/bin/xcode-select
    ```
+
    Or let the provisioner create a temporary whitelist with `SET_NOPASSWD=true`.
    Or use `SKIP_SUDO=true` to skip operations requiring sudo.
 
@@ -33,16 +35,16 @@ resource "null_resource" "mac_setup" {
 
 Control provisioning behavior with environment variables:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `NATILIUS_BRANCH` | `main` | Git branch to install from |
-| `NONINTERACTIVE` | `true` | Skip all prompts (auto-set) |
-| `CI` | `true` | CI mode (auto-set) |
-| `SKIP_SUDO` | `false` | Skip sudo operations |
-| `SET_NOPASSWD` | `false` | Create a temporary sudoers whitelist for this run |
+| Variable              | Default                      | Description                                             |
+| --------------------- | ---------------------------- | ------------------------------------------------------- |
+| `NATILIUS_BRANCH`     | `main`                       | Git branch to install from                              |
+| `NONINTERACTIVE`      | `true`                       | Skip all prompts (auto-set)                             |
+| `CI`                  | `true`                       | CI mode (auto-set)                                      |
+| `SKIP_SUDO`           | `false`                      | Skip sudo operations                                    |
+| `SET_NOPASSWD`        | `false`                      | Create a temporary sudoers whitelist for this run       |
 | `SKIP_SYSTEM_UPDATES` | `true` (when NONINTERACTIVE) | Skip macOS system updates to avoid volume-owner prompts |
-| `DRY_RUN` | `false` | Preview changes without applying |
-| `QUIET_MODE` | `false` | Minimal output |
+| `DRY_RUN`             | `false`                      | Preview changes without applying                        |
+| `QUIET_MODE`          | `false`                      | Minimal output                                          |
 
 ## Full Example
 
@@ -125,6 +127,7 @@ resource "null_resource" "mac_setup" {
 ```
 
 When `SKIP_SUDO=true`:
+
 - CLI installed to `~/.local/bin` instead of `/usr/local/bin`
 - System-wide completions skipped
 - Security module operations skipped
@@ -187,38 +190,46 @@ resource "null_resource" "mac_preview" {
 
 ## Available Profiles
 
-| Profile | Description |
-|---------|-------------|
-| `minimal` | Essential tools only (git, brew, basic CLI) |
-| `developer` | Full development environment |
-| `devops` | Kubernetes, Terraform, cloud CLIs |
-| `clawdbot` | AI agent machines (moltbot, Node.js 24, Chrome) |
+| Profile     | Description                                     |
+| ----------- | ----------------------------------------------- |
+| `minimal`   | Essential tools only (git, brew, basic CLI)     |
+| `developer` | Full development environment                    |
+| `devops`    | Kubernetes, Terraform, cloud CLIs               |
+| `clawdbot`  | AI agent machines (moltbot, Node.js 24, Chrome) |
 
 See [Profiles](../configuration/profiles.md) for details, or the [Clawdbot Guide](./clawdbot.md) for AI agent provisioning.
 
 ## Troubleshooting
 
 ### Xcode CLT Installation Hangs
+
 The provisioner attempts silent Xcode CLT installation. If it hangs:
+
 1. SSH to the Mac manually
 2. Run `xcode-select --install` and complete the GUI prompt
 3. Re-run Terraform
 
 ### Homebrew Requires Password
+
 Homebrew installation may prompt for password on first run. Solutions:
+
 - Pre-install Homebrew before Terraform
 - Configure passwordless sudo for Homebrew, or use `SET_NOPASSWD=true`
 - Use `SKIP_SUDO=true` (limited functionality)
 
 ### macOS System Updates Prompt for Password
+
 System updates require a volume-owner password and cannot be bypassed by sudoers.
 By default, system updates are skipped in non-interactive runs. To enable:
+
 ```
 SKIP_SYSTEM_UPDATES=false
 ```
 
 ### Timeout Issues
+
 Increase the connection timeout for slow networks or large profiles:
+
 ```hcl
 connection {
   timeout = "60m"

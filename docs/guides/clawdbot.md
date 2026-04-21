@@ -35,14 +35,14 @@ Clawdbot is a dedicated Natilius profile designed for provisioning remote Mac ma
 
 ### Core Components
 
-| Category | Tools |
-|----------|-------|
-| **Runtime** | Node.js 24, Python (latest), pnpm, yarn |
-| **AI Agent** | moltbot (installed globally via npm) |
-| **Security** | 1Password, 1Password CLI, Tailscale, GPG |
-| **Browser** | Google Chrome (for moltbot web interface) |
-| **Terminal** | iTerm2, tmux, zsh with completions |
-| **Dev Tools** | Git, GitHub CLI, claude-code, codex |
+| Category      | Tools                                     |
+| ------------- | ----------------------------------------- |
+| **Runtime**   | Node.js 24, Python (latest), pnpm, yarn   |
+| **AI Agent**  | moltbot (installed globally via npm)      |
+| **Security**  | 1Password, 1Password CLI, Tailscale, GPG  |
+| **Browser**   | Google Chrome (for moltbot web interface) |
+| **Terminal**  | iTerm2, tmux, zsh with completions        |
+| **Dev Tools** | Git, GitHub CLI, claude-code, codex       |
 
 ### Enabled Modules
 
@@ -73,6 +73,7 @@ curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/scripts/te
 ```
 
 This will:
+
 1. Install Xcode Command Line Tools
 2. Install Homebrew
 3. Clone Natilius
@@ -244,16 +245,16 @@ mackup backup
 
 Mackup can sync these clawdbot-relevant configs:
 
-| Application | What's Synced |
-|-------------|---------------|
-| **Google Chrome** | Extensions, bookmarks, settings |
-| **iTerm2** | Profiles, color schemes, keybindings |
-| **1Password CLI** | Account configurations |
-| **Git** | `.gitconfig`, `.gitignore_global` |
-| **SSH** | `~/.ssh/config` (not keys!) |
-| **GPG** | Trust settings |
-| **Zsh** | `.zshrc`, `.zprofile`, plugins |
-| **tmux** | `.tmux.conf` |
+| Application       | What's Synced                        |
+| ----------------- | ------------------------------------ |
+| **Google Chrome** | Extensions, bookmarks, settings      |
+| **iTerm2**        | Profiles, color schemes, keybindings |
+| **1Password CLI** | Account configurations               |
+| **Git**           | `.gitconfig`, `.gitignore_global`    |
+| **SSH**           | `~/.ssh/config` (not keys!)          |
+| **GPG**           | Trust settings                       |
+| **Zsh**           | `.zshrc`, `.zprofile`, plugins       |
+| **tmux**          | `.tmux.conf`                         |
 
 ### Restore on Clawdbot
 
@@ -348,13 +349,13 @@ moltbot service start
 
 Control clawdbot provisioning with these variables:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `NATILIUS_BRANCH` | `main` | Git branch for Natilius |
-| `NATILIUS_FORCE_DOTFILES_RESTORE` | `false` | Auto-restore Mackup configs |
-| `SKIP_SUDO` | `false` | Skip sudo operations |
-| `DRY_RUN` | `false` | Preview without changes |
-| `USE_MOLE_CLEANUP` | `true` | Run Mole cleanup after setup |
+| Variable                          | Default | Description                  |
+| --------------------------------- | ------- | ---------------------------- |
+| `NATILIUS_BRANCH`                 | `main`  | Git branch for Natilius      |
+| `NATILIUS_FORCE_DOTFILES_RESTORE` | `false` | Auto-restore Mackup configs  |
+| `SKIP_SUDO`                       | `false` | Skip sudo operations         |
+| `DRY_RUN`                         | `false` | Preview without changes      |
+| `USE_MOLE_CLEANUP`                | `true`  | Run Mole cleanup after setup |
 
 Example with all options:
 

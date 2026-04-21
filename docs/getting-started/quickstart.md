@@ -5,22 +5,28 @@ Get your Mac set up for development in 5 minutes.
 ## Install Natilius
 
 /// tab | Homebrew
+
 ```bash
 brew install vincentkoc/tap/natilius
 ```
+
 ///
 
 /// tab | Script
+
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
 ```
+
 ///
 
 /// tab | Manual
+
 ```bash
 git clone https://github.com/vincentkoc/natilius.git ~/.natilius
 cd ~/.natilius && make install
 ```
+
 ///
 
 ## Run Setup
@@ -64,11 +70,11 @@ natilius --profile devops
 natilius --profile developer
 ```
 
-| Profile | Best For | Includes |
-|---------|----------|----------|
-| `minimal` | Quick onboarding | Git, Homebrew, VS Code, essential CLI tools |
-| `devops` | Platform/SRE engineers | K8s, Terraform, Docker, cloud CLIs, Python, Go |
-| `developer` | Full-stack developers | Multiple languages, IDEs, databases, all dev tools |
+| Profile     | Best For               | Includes                                           |
+| ----------- | ---------------------- | -------------------------------------------------- |
+| `minimal`   | Quick onboarding       | Git, Homebrew, VS Code, essential CLI tools        |
+| `devops`    | Platform/SRE engineers | K8s, Terraform, Docker, cloud CLIs, Python, Go     |
+| `developer` | Full-stack developers  | Multiple languages, IDEs, databases, all dev tools |
 
 ## Customize Your Setup
 

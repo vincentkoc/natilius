@@ -43,6 +43,7 @@ natilius setup     # Install everything
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/main/install.sh)"
 ```
+
 </details>
 
 <details>
@@ -52,6 +53,7 @@ natilius setup     # Install everything
 git clone https://github.com/vincentkoc/natilius.git ~/.natilius
 cd ~/.natilius && make install
 ```
+
 </details>
 
 ## Why Natilius?

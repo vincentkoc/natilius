@@ -4,55 +4,55 @@ Modules are self-contained scripts that handle specific parts of your setup. Ena
 
 ## System Modules
 
-| Module | Description |
-|--------|-------------|
-| `system/system_update` | macOS updates, Xcode CLI tools, Rosetta 2 |
-| `system/directories` | Create custom directories, Time Machine exclusions |
-| `system/security` | FileVault, Firewall, Gatekeeper hardening |
-| `system/cleanup` | Clear caches, restart Dock/Finder |
+| Module                 | Description                                        |
+| ---------------------- | -------------------------------------------------- |
+| `system/system_update` | macOS updates, Xcode CLI tools, Rosetta 2          |
+| `system/directories`   | Create custom directories, Time Machine exclusions |
+| `system/security`      | FileVault, Firewall, Gatekeeper hardening          |
+| `system/cleanup`       | Clear caches, restart Dock/Finder                  |
 
 ## Application Modules
 
-| Module | Description |
-|--------|-------------|
+| Module                  | Description                        |
+| ----------------------- | ---------------------------------- |
 | `applications/homebrew` | Homebrew taps, packages, and casks |
-| `applications/apps` | Mac App Store apps via `mas` |
-| `applications/espanso` | Text expansion tool |
+| `applications/apps`     | Mac App Store apps via `mas`       |
+| `applications/espanso`  | Text expansion tool                |
 
 ## Development Environments
 
-| Module | Version Variable |
-|--------|------------------|
-| `dev_environments/python` | `PYTHONVER` |
-| `dev_environments/node` | `NODEVER` |
-| `dev_environments/ruby` | `RUBYVER` |
-| `dev_environments/go` | `GOVER` |
-| `dev_environments/rust` | (stable) |
-| `dev_environments/java` | `JDKVER` |
-| `dev_environments/php` | `PHPVER` |
+| Module                     | Version Variable  |
+| -------------------------- | ----------------- |
+| `dev_environments/python`  | `PYTHONVER`       |
+| `dev_environments/node`    | `NODEVER`         |
+| `dev_environments/ruby`    | `RUBYVER`         |
+| `dev_environments/go`      | `GOVER`           |
+| `dev_environments/rust`    | (stable)          |
+| `dev_environments/java`    | `JDKVER`          |
+| `dev_environments/php`     | `PHPVER`          |
 | `dev_environments/flutter` | `FLUTTER_CHANNEL` |
 
 ## IDE Modules
 
-| Module | Config Flag |
-|--------|-------------|
-| `ide/ide_setup` | Orchestrates IDE installs |
-| `ide/vscode_setup` | `INSTALL_VSCODE` |
-| `ide/jetbrains_setup` | `INSTALL_JETBRAINS` |
-| `ide/sublime_setup` | `INSTALL_SUBLIME` |
-| `ide/zed_setup` | `INSTALL_ZED` |
+| Module                | Config Flag               |
+| --------------------- | ------------------------- |
+| `ide/ide_setup`       | Orchestrates IDE installs |
+| `ide/vscode_setup`    | `INSTALL_VSCODE`          |
+| `ide/jetbrains_setup` | `INSTALL_JETBRAINS`       |
+| `ide/sublime_setup`   | `INSTALL_SUBLIME`         |
+| `ide/zed_setup`       | `INSTALL_ZED`             |
 
 ## Preference Modules
 
-| Module | Description |
-|--------|-------------|
-| `preferences/mac_preferences` | Finder, Dock, keyboard settings |
-| `preferences/system_preferences` | System-level macOS preferences |
+| Module                           | Description                     |
+| -------------------------------- | ------------------------------- |
+| `preferences/mac_preferences`    | Finder, Dock, keyboard settings |
+| `preferences/system_preferences` | System-level macOS preferences  |
 
 ## Other
 
-| Module | Description |
-|--------|-------------|
+| Module     | Description                       |
+| ---------- | --------------------------------- |
 | `dotfiles` | Dotfile backup/restore via Mackup |
 
 ## Recommended Order
@@ -83,7 +83,7 @@ ENABLED_MODULES=(
 ```
 
 !!! warning
-    Run `system/system_update` first (installs Xcode CLI tools) and `system/cleanup` last.
+Run `system/system_update` first (installs Xcode CLI tools) and `system/cleanup` last.
 
 ## Listing Modules
 
