@@ -79,7 +79,7 @@ check_for_updates() {
         fi
     else
         # Installed via git - fetch latest version silently
-        git fetch origin main --quiet 2>/dev/null || return
+        git fetch origin main --quiet 2>/dev/null || return 0
 
         LATEST_VERSION=$(git describe --tags --abbrev=0 origin/main 2>/dev/null || echo "v0.0.0")
         CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")

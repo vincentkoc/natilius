@@ -101,21 +101,20 @@ else
     # Show the active Node.js version
     node --version | tee -a "$LOGFILE"
 
-    # Install global Node.js packages
+    log_success "Node.js environment setup complete"
+fi
+
+if [ "${#GLOBAL_NODE_PACKAGES[@]}" -gt 0 ]; then
     log_info "Installing global Node.js packages..."
     npm i -g "${GLOBAL_NODE_PACKAGES[@]}" | tee -a "$LOGFILE"
     log_success "Installed global Node.js packages"
 
-    # Rehash nodenv shims
     log_info "Rehashing nodenv shims..."
     nodenv rehash
 
-    # Verify npm and yarn paths
     log_info "Verifying npm and yarn paths..."
     nodenv which npm
     nodenv which yarn
-
-    log_success "Node.js environment setup complete"
 fi
 
 # Ensure npm matches desired version when specified

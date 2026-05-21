@@ -1070,7 +1070,7 @@ for module in "${SELECTED_MODULES[@]}"; do
     MODULE_PATH="$NATILIUS_DIR/modules/$module.sh"
     if [ -f "$MODULE_PATH" ]; then
         log_info "Running module: $module"
-        refresh_sudo
+        refresh_sudo || log_warning "Continuing without sudo refresh; module may prompt or fail if it needs sudo."
         source "$MODULE_PATH"
         log_info "Finished running module: $module"
     else

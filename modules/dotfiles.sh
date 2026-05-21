@@ -60,7 +60,7 @@ ensure_brew_path() {
 if [[ "${NATILIUS_INSTALL_OHMYZSH:-true}" == "true" ]]; then
     if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
         log_info "Oh My Zsh not found. Installing..."
-        if retry_network_operation GIT_SSH_COMMAND= git -c url."https://github.com/".insteadOf=git@github.com: \
+        if retry_network_operation env GIT_SSH_COMMAND= git -c url."https://github.com/".insteadOf=git@github.com: \
             clone https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"; then
             log_success "Oh My Zsh installed"
         else

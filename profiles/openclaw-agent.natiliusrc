@@ -1,0 +1,242 @@
+#!/bin/bash
+# shellcheck disable=SC2034,SC2088,SC2148
+# Natilius OpenClaw Agent Profile
+# Description: Remote Mac setup for OpenClaw/Codex development boxes
+# Use: natilius --profile openclaw-agent
+
+# Source base configuration for shared versions/defaults, then override app lists.
+# shellcheck source=/dev/null
+[[ -f "$HOME/.natiliusrc.base" ]] && source "$HOME/.natiliusrc.base"
+
+# ============================================================================
+# ENABLED MODULES
+# ============================================================================
+ENABLED_MODULES=(
+    "system/system_update"
+    "system/directories"
+    "system/security"
+    "preferences/mac_preferences"
+    "applications/homebrew"
+    "applications/apps"
+    "dev_environments/node"
+    "dev_environments/go"
+    "dev_environments/rust"
+    "dev_environments/python"
+    "ide/ide_setup"
+    "dotfiles"
+    "system/cleanup"
+)
+
+# ============================================================================
+# LANGUAGE VERSIONS
+# ============================================================================
+NODEVER="24"
+NPMVER="11.8.0"
+PYTHONVER="3.13.0"
+GOVER="1.23.0"
+
+# ============================================================================
+# REMOTE AGENT DEFAULTS
+# ============================================================================
+USE_MOLE_CLEANUP=true
+NATILIUS_DOTFILES_REPO="https://github.com/koconder/dotfiles.git"
+NATILIUS_FORCE_DOTFILES_RESTORE=true
+
+# ============================================================================
+# IDE CONFIGURATION
+# ============================================================================
+INSTALL_VSCODE=false
+INSTALL_CURSOR=false
+INSTALL_JETBRAINS=false
+INSTALL_SUBLIME=true
+INSTALL_ZED=false
+
+# ============================================================================
+# DIRECTORIES
+# ============================================================================
+DIRS=(
+    "~/.config"
+    "~/.local/bin"
+    "~/.mackup"
+    "~/GIT"
+    "~/Library/Mobile Documents/com~apple~CloudDocs/dotfiles"
+)
+
+DIRSTOEXCLUDEFROMTIMEMACHINE=(
+    "~/.aws"
+    "~/.bun"
+    "~/.cache"
+    "~/.cargo"
+    "~/.codex"
+    "~/.config"
+    "~/.factory"
+    "~/.gnupg"
+    "~/.local/share/pnpm"
+    "~/.mackup"
+    "~/.npm"
+    "~/.nodenv"
+    "~/.rustup"
+    "~/.ssh"
+    "~/GIT"
+)
+
+# ============================================================================
+# HOMEBREW TAPS
+# ============================================================================
+BREWTAPS=(
+    "github/gh"
+    "vincentkoc/tap"
+)
+
+# ============================================================================
+# HOMEBREW PACKAGES
+# ============================================================================
+BREWPACKAGES=(
+    # Version Control
+    "git"
+    "gh"
+    "git-lfs"
+    "git-xet"
+    "lazygit"
+    "diff-so-fancy"
+
+    # Shell Essentials
+    "coreutils"
+    "curl"
+    "wget"
+    "jq"
+    "fzf"
+    "bat"
+    "eza"
+    "fd"
+    "ripgrep"
+    "direnv"
+    "tree"
+    "htop"
+    "btop"
+    "procs"
+    "zoxide"
+    "zsh-completions"
+    "zsh-syntax-highlighting"
+    "tree-sitter"
+
+    # Remote Access
+    "mosh"
+    "mole"
+    "httpie"
+    "gping"
+    "telnet"
+
+    # Containers
+    "docker"
+    "docker-buildx"
+    "docker-compose"
+    "colima"
+    "lima"
+    "qemu"
+
+    # Language Runtimes & Build Tools
+    "nodenv"
+    "node-build"
+    "pyenv"
+    "pyenv-virtualenv"
+    "pipenv"
+    "pipx"
+    "rustup"
+    "cmake"
+    "make"
+    "pre-commit"
+    "shellcheck"
+
+    # Datastores
+    "sqlite"
+    "postgresql"
+    "redis"
+
+    # Utilities
+    "mackup"
+    "mas"
+    "trash"
+    "watch"
+    "tmux"
+    "neovim"
+    "reattach-to-user-namespace"
+    "tealdeer"
+    "glow"
+    "gum"
+    "vhs"
+    "tokei"
+    "hexyl"
+    "tokenjuice"
+
+    # Media & Preview
+    "ffmpeg"
+    "imagemagick"
+    "poppler"
+    "p7zip"
+    "resvg"
+
+    # Security
+    "gpg"
+    "pinentry-mac"
+    "openssh"
+    "openssl"
+    "ca-certificates"
+)
+
+# ============================================================================
+# HOMEBREW CASKS
+# ============================================================================
+BREWCASKS=(
+    "1password"
+    "1password-cli"
+    "github"
+    "ghostty"
+    "iterm2"
+    "sublime-text"
+    "tailscale-app"
+    "claude-code"
+    "codex"
+)
+
+# ============================================================================
+# MAC APP STORE
+# ============================================================================
+APPSTORE=(
+    # No App Store installs for remote agent boxes.
+)
+
+# ============================================================================
+# NODE PACKAGES
+# ============================================================================
+GLOBAL_NODE_PACKAGES=(
+    "@openai/codex"
+    "bun"
+    "openclaw"
+    "pnpm"
+    "prettier"
+    "typescript"
+    "ts-node"
+    "yarn"
+)
+
+# ============================================================================
+# PYTHON PACKAGES
+# ============================================================================
+GLOBAL_PYTHON_PACKAGES=(
+    "pip"
+    "virtualenv"
+    "setuptools"
+    "wheel"
+    "pre-commit"
+    "PyYAML"
+)
+
+# ============================================================================
+# APPS TO RESTART
+# ============================================================================
+KILLAPPS=(
+    "Dock"
+    "Finder"
+    "SystemUIServer"
+)
