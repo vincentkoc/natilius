@@ -22,6 +22,7 @@
 VALID_MODULES=(
     "system/system_update"
     "system/directories"
+    "system/repositories"
     "system/security"
     "system/cleanup"
     "preferences/mac_preferences"
@@ -70,6 +71,8 @@ CONFIG_SCHEMA=(
     "APPSTORE:array:no:"
     "DIRS:array:no:"
     "DIRSTOEXCLUDEFROMTIMEMACHINE:array:no:"
+    "GIT_REPOS:array:no:"
+    "GIT_REPO_BASE_DIR:string:no:"
     "GLOBAL_NODE_PACKAGES:array:no:"
     "GLOBAL_PYTHON_PACKAGES:array:no:"
     "GLOBAL_PHP_PACKAGES:array:no:"
@@ -152,6 +155,7 @@ validate_config() {
     validate_array_if_set "BREWCASKS" || errors=$((errors + 1))
     validate_array_if_set "APPSTORE" || errors=$((errors + 1))
     validate_array_if_set "DIRS" || errors=$((errors + 1))
+    validate_array_if_set "GIT_REPOS" || errors=$((errors + 1))
 
     # Check for deprecated or unknown variables (warnings only)
     if [ -n "${HOMEBREW_CASK_OPTS:-}" ]; then

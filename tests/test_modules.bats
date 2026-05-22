@@ -17,6 +17,11 @@
     [ -x "modules/system/directories.sh" ]
 }
 
+@test "repositories module file exists and is executable" {
+    [ -f "modules/system/repositories.sh" ]
+    [ -x "modules/system/repositories.sh" ]
+}
+
 @test "go development environment module exists" {
     [ -f "modules/dev_environments/go.sh" ]
     [ -x "modules/dev_environments/go.sh" ]
@@ -140,11 +145,22 @@
         fi
     done
     [ "$has_homebrew" = true ]
+
+    local has_repositories=false
+    for mod in "${VALID_MODULES[@]}"; do
+        if [[ "$mod" == "system/repositories" ]]; then
+            has_repositories=true
+        fi
+    done
+    [ "$has_repositories" = true ]
 }
 
 @test "is_valid_module function works" {
     source lib/config_validator.sh
     run is_valid_module "applications/homebrew"
+    [ "$status" -eq 0 ]
+
+    run is_valid_module "system/repositories"
     [ "$status" -eq 0 ]
 
     run is_valid_module "nonexistent/module"

@@ -14,6 +14,7 @@
 ENABLED_MODULES=(
     "system/system_update"
     "system/directories"
+    "system/repositories"
     "system/security"
     "preferences/mac_preferences"
     "applications/homebrew"
@@ -60,6 +61,35 @@ DIRS=(
     "~/.mackup"
     "~/GIT"
     "~/Library/Mobile Documents/com~apple~CloudDocs/dotfiles"
+)
+
+# ============================================================================
+# GIT REPOSITORIES
+# ============================================================================
+GIT_REPO_BASE_DIR="$HOME/GIT/_Perso"
+GIT_REPOS=(
+    "openclaw/openclaw:openclaw"
+    "openclaw/kitchen-sink:kitchen-sink"
+    "openclaw/clawpatch:clawpatch"
+    "openclaw/plugin-inspector:plugin-inspector"
+    "openclaw/openclaw-rtt:openclaw-rtt"
+    "openclaw/clawsweeper:clawsweeper"
+    "openclaw/crawlkit:crawlkit"
+    "openclaw/crawlbar:CrawlBar"
+    "openclaw/discrawl:discrawl"
+    "openclaw/discord-store:discord-store"
+    "openclaw/gitcrawl:gitcrawl"
+    "openclaw/gitcrawl-store:gitcrawl-store"
+    "openclaw/slacrawl:slacrawl"
+    "openclaw/notcrawl:notcrawl"
+    "openclaw/graincrawl:graincrawl"
+    "openclaw/crabpot:crabpot"
+    "openclaw/crabbox:crabbox"
+    "vincentkoc/tokenjuice:tokenjuice"
+    "vincentkoc/tap:tap"
+    "vincentkoc/homebrew-tap:homebrew-tap"
+    "vincentkoc/natilius:natilius"
+    "vincentkoc/dotskills:dotskills"
 )
 
 DIRSTOEXCLUDEFROMTIMEMACHINE=(

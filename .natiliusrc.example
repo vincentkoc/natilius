@@ -18,6 +18,7 @@ NATILIUS_INSTALL_OHMYZSH=true
 ENABLED_MODULES=(
     "system/system_update"
     "system/directories"
+    # "system/repositories"
     "system/security"
     "preferences/mac_preferences"
     "preferences/system_preferences"
@@ -101,6 +102,16 @@ DIRSTOEXCLUDEFROMTIMEMACHINE=(
     "~/.rustup"
     "~/.nodenv"
     "~/go"
+)
+
+# ============================================================================
+# GIT REPOSITORIES
+# ============================================================================
+# Optional repositories to clone. Entries are "owner/repo:destination"; relative
+# destinations are created under GIT_REPO_BASE_DIR.
+GIT_REPO_BASE_DIR="$HOME/GIT/_Perso"
+GIT_REPOS=(
+    # "vincentkoc/tokenjuice:tokenjuice"
 )
 
 # ============================================================================
