@@ -31,11 +31,14 @@ export PATH="$HOME/.nodenv/bin:$PATH"
 export PATH="$HOME/.nodenv/shims:$PATH"
 eval "$(nodenv init -)"
 
+NODE_MAJOR_ALIAS=""
+
 # Resolve major-only versions (e.g., "24") to latest available patch.
 resolve_node_version() {
     if [[ "$NODEVER" =~ ^[0-9]+$ ]]; then
         local major="$NODEVER"
         local resolved=""
+        NODE_MAJOR_ALIAS="$major"
         resolved=$(nodenv install -l 2>/dev/null | tr -d ' ' | grep -E "^${major}\\.[0-9]+\\.[0-9]+$" | tail -n 1)
         if [[ -z "$resolved" ]]; then
             log_warning "Node.js [$major] not found in node-build list. Updating node-build..."
@@ -49,6 +52,32 @@ resolve_node_version() {
             log_warning "Could not resolve Node.js major [$major]. Will try as-is."
         fi
     fi
+}
+
+ensure_node_major_alias() {
+    local major="$NODE_MAJOR_ALIAS"
+    local version="$NODEVER"
+    local nodenv_root version_path alias_path
+
+    [[ -n "$major" ]] || return 0
+    [[ "$version" =~ ^${major}\.[0-9]+\.[0-9]+$ ]] || return 0
+
+    nodenv_root="$(nodenv root)"
+    version_path="$nodenv_root/versions/$version"
+    alias_path="$nodenv_root/versions/$major"
+
+    if [[ ! -d "$version_path" ]]; then
+        log_warning "Cannot create nodenv major alias [$major]; Node.js [$version] is not installed."
+        return 0
+    fi
+
+    if [[ -e "$alias_path" && ! -L "$alias_path" ]]; then
+        log_warning "Cannot create nodenv major alias [$major]; [$alias_path] exists and is not a symlink."
+        return 0
+    fi
+
+    ln -sfn "$version" "$alias_path"
+    log_info "Linked nodenv major alias [$major] -> [$version]"
 }
 
 install_node_version() {
@@ -76,6 +105,7 @@ done <<< "$(nodenv versions --bare)"
 if [ "$INSTALLED" = true ]; then
     log_success "Node.js [$NODEVER] is already installed."
     log_info "Skipping installation of Node.js."
+    ensure_node_major_alias
     node --version | tee -a "$LOGFILE"
     which node | tee -a "$LOGFILE"
 else
@@ -86,6 +116,8 @@ else
         log_error "Try: brew upgrade node-build"
         exit 1
     fi
+
+    ensure_node_major_alias
 
     # Set NODEVER as the local and global Node.js version
     nodenv global "$NODEVER"
