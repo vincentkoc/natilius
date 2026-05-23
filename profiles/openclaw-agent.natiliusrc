@@ -247,6 +247,7 @@ GLOBAL_NODE_PACKAGES=(
     "prettier"
     "typescript"
     "ts-node"
+    "wrangler@4.87.0"
     "yarn"
 )
 
