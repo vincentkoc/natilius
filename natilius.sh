@@ -249,7 +249,7 @@ apply_env_overrides
 SKIP_UPDATE_CHECK=${SKIP_UPDATE_CHECK:-false}
 
 # Version information
-NATILIUS_VERSION="1.4.0"
+NATILIUS_VERSION="1.5.3"
 
 # Colors for terminal output
 CYAN='\033[1;36m'
