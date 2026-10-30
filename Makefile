@@ -109,7 +109,7 @@ test-cli: install-deps
 # Run module tests
 test-modules: install-deps
 	@echo "📦 Running module tests..."
-	@BATS_LIB_PATH="$(pwd)/lib" bats tests/test_modules.bats
+	@BATS_LIB_PATH="$(pwd)/lib" bats tests/test_modules.bats tests/test_applications.bats
 
 # Run integration tests
 integration-test: install-deps
