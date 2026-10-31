@@ -19,6 +19,14 @@ Modules are self-contained scripts that handle specific parts of your setup. Ena
 | `applications/apps`     | Mac App Store apps via `mas`       |
 | `applications/espanso`  | Text expansion tool                |
 
+The Homebrew module skips registered packages and installs missing casks one at
+a time with `brew install --adopt`. Homebrew adopts an existing app only when
+its artifacts match; a different app is reported as a failure and is preserved.
+This module does not restart System Settings or stop running apps. Failed taps,
+packages, casks, and App Store installs return a nonzero status instead of
+reporting setup as complete. Cask and App Store failures identify the affected
+package or app ID.
+
 ## Development Environments
 
 | Module                     | Version Variable  |

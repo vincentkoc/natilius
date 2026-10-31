@@ -66,6 +66,7 @@ jobs:
           cp -r modules release-package/
           cp -r lib release-package/
           cp -r completions release-package/
+          cp -r profiles release-package/
 
           # Create tarball
           tar -czf natilius-${{ github.ref_name }}.tar.gz -C release-package .
@@ -83,11 +84,6 @@ jobs:
             ${{ steps.changelog.outputs.changelog }}
 
             ## Installation
-
-            ### Quick Install
-            ```bash
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vincentkoc/natilius/${{ github.ref_name }}/install.sh)"
-            ```
 
             ### Manual Install
             1. Download the tarball below

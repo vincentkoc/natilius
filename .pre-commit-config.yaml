@@ -29,7 +29,8 @@ repos:
           bash -c 'cd "$(git rev-parse --show-toplevel)" &&
           BATS_LIB_PATH="$(pwd)/lib" bats
           tests/test_natilius.bats tests/test_cli_features.bats
-          tests/test_modules.bats tests/integration_tests.bats'
+          tests/test_modules.bats tests/test_applications.bats
+          tests/integration_tests.bats'
         language: system
         pass_filenames: false
       - id: config-validator

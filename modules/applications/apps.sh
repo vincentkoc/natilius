@@ -23,12 +23,25 @@ log_info "Installing Mac App Store applications..."
 
 # Ensure mas is installed
 if ! command -v mas &> /dev/null; then
-    brew install mas
+    if ! brew install mas; then
+        log_error "Could not install mas."
+        return 1
+    fi
     log_success "Installed mas"
 fi
 
 # Install apps
+app_failures=0
 for app_id in "${APPSTORE[@]}"; do
-    mas install "$app_id" || true
-    log_success "Installed App Store app with ID: $app_id"
+    if mas install "$app_id"; then
+        log_success "Installed App Store app with ID: $app_id"
+    else
+        log_error "App Store installation failed for ID: $app_id"
+        app_failures=$((app_failures + 1))
+    fi
 done
+
+if [ "$app_failures" -ne 0 ]; then
+    log_error "$app_failures App Store installation(s) failed."
+    return 1
+fi
